@@ -159,6 +159,116 @@ const INITIAL_BOOKMARKS = [
   { id: 102, title: "Google Classroom", url: "https://classroom.google.com", icon: "Laptop" }
 ];
 
+const INITIAL_WEEKLY_PLANS = [
+  {
+    id: "plan-semana-22-26-sep",
+    weekTitle: "Semana del 22 al 26 de Septiembre",
+    academicYear: "2026/2027",
+    summary: "Puesta en marcha de reuniones de ciclo, evaluación inicial y coordinación de pastoral.",
+    publishedAt: "2026-09-20",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    days: [
+      {
+        day: "Lunes",
+        date: "22 Sep",
+        items: [
+          "08:30h - Oración colegial en el patio",
+          "14:15h - Reunión de tutores de Primaria",
+          "16:00h - Claustro ordinario de inicio de curso"
+        ]
+      },
+      {
+        day: "Martes",
+        date: "23 Sep",
+        items: [
+          "Revisión de informes psicopedagógicos con Orientación",
+          "Entrega de listados de comensales al comedor"
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "24 Sep",
+        items: [
+          "14:15h - Comisión de Pastoral: Preparación San Francisco",
+          "Revisión de asignación de dispositivos (Chromebooks/iPads)"
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "25 Sep",
+        items: [
+          "Pruebas de evaluación inicial de Lengua y Matemáticas",
+          "Inicio de actividades extraescolares"
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "26 Sep",
+        items: [
+          "13:30h - Cierre de partes de asistencia semanal en Educamos",
+          "Envío de circulares a familias de Infantil y Primaria"
+        ]
+      }
+    ],
+    generalNotes: "Recordad revisar el estado de los partes TIC en la app de Incidencias y confirmar las dietas especiales de comedor.",
+    fullEmailText: "Estimados compañeros:\n\nOs compartimos la programación prevista para esta semana del 22 al 26 de Septiembre. Por favor, revisad los horarios de reuniones de ciclo y la preparación de las pruebas iniciales.\n\n¡Buen inicio de semana a todos!"
+  },
+  {
+    id: "plan-semana-15-19-sep",
+    weekTitle: "Semana del 15 al 19 de Septiembre",
+    academicYear: "2026/2027",
+    summary: "Acogida de alumnos, adaptación en Infantil y entrega de agendas escolares.",
+    publishedAt: "2026-09-13",
+    author: "Jefatura de Estudios",
+    isCurrent: false,
+    days: [
+      {
+        day: "Lunes",
+        date: "15 Sep",
+        items: [
+          "Jornada de acogida y presentación de tutores",
+          "Reparto de material escolar en las aulas"
+        ]
+      },
+      {
+        day: "Martes",
+        date: "16 Sep",
+        items: [
+          "Periodo de adaptación en 3 años",
+          "Reunión de departamento de idiomas"
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "17 Sep",
+        items: [
+          "Pruebas de conectividad WiFi en aulas de Primaria",
+          "Reunión con equipo de orientación"
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "18 Sep",
+        items: [
+          "Coordinación de comedor y patios",
+          "Configuración de perfiles en Google Classroom"
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "19 Sep",
+        items: [
+          "Evaluación de la primera semana lectiva",
+          "Envío de programación de la siguiente semana"
+        ]
+      }
+    ],
+    generalNotes: "Agradecemos la dedicación de todo el claustro en los primeros días de acogida.",
+    fullEmailText: "Claustro:\n\nComenzamos el nuevo curso escolar con entusiasmo. Aquí tenéis la planificación de las jornadas de acogida y adaptación.\n\nUn abrazo a todos."
+  }
+];
+
 const CALENDAR_ACTIVIDADES_ID = "sanbuenaventura.org_ov4v5dqkv5cn5gvh8sqkv8ljbk@group.calendar.google.com";
 const CALENDAR_SUSTITUCIONES_ID = "sanbuenaventura.org_a3l1eg1rpu9a4si7ihp48gqjns@group.calendar.google.com";
 
@@ -385,6 +495,34 @@ export function App() {
   const [newAuthor, setNewAuthor] = useState("Dirección / Equipo Directivo");
   const [newExpiryDays, setNewExpiryDays] = useState("never");
 
+  // ESTADOS PROGRAMACIÓN SEMANAL DEL CLAUSTRO
+  const [weeklyPlans, setWeeklyPlans] = useState(() => {
+    const saved = localStorage.getItem("sb_weekly_plans");
+    return saved ? JSON.parse(saved) : INITIAL_WEEKLY_PLANS;
+  });
+  const [selectedWeekId, setSelectedWeekId] = useState(() => {
+    const saved = localStorage.getItem("sb_weekly_plans");
+    const list = saved ? JSON.parse(saved) : INITIAL_WEEKLY_PLANS;
+    const current = list.find(w => w.isCurrent);
+    return current ? current.id : (list[0] ? list[0].id : "");
+  });
+  const [isWeeklyPlanModalOpen, setIsWeeklyPlanModalOpen] = useState(false);
+  const [editingPlanId, setEditingPlanId] = useState(null);
+  const [isEmailViewExpanded, setIsEmailViewExpanded] = useState(false);
+
+  // Formulario Programación Semanal
+  const [planWeekTitle, setPlanWeekTitle] = useState("");
+  const [planSummary, setPlanSummary] = useState("");
+  const [planAuthor, setPlanAuthor] = useState("Dirección & Jefatura de Estudios");
+  const [planLunes, setPlanLunes] = useState("");
+  const [planMartes, setPlanMartes] = useState("");
+  const [planMiercoles, setPlanMiercoles] = useState("");
+  const [planJueves, setPlanJueves] = useState("");
+  const [planViernes, setPlanViernes] = useState("");
+  const [planGeneralNotes, setPlanGeneralNotes] = useState("");
+  const [planFullEmail, setPlanFullEmail] = useState("");
+  const [planIsCurrent, setPlanIsCurrent] = useState(true);
+
   useEffect(() => {
     localStorage.setItem("sb_theme_mode", themeMode);
     if (themeMode === "dark") {
@@ -529,16 +667,187 @@ export function App() {
     }
   };
 
+  const FIREBASE_PLANS_URL = "https://avengers-6a-cbbcc-default-rtdb.europe-west1.firebasedatabase.app/portal_docente_programaciones_semanales";
+
+  const fetchCloudWeeklyPlans = async () => {
+    try {
+      const res = await fetch(`${FIREBASE_PLANS_URL}.json`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data) {
+        const list = Array.isArray(data)
+          ? data.filter(Boolean)
+          : Object.entries(data).map(([key, val]) => ({ ...val, id: key }));
+        list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        setWeeklyPlans(list);
+        localStorage.setItem("sb_weekly_plans", JSON.stringify(list));
+        if (!list.some(w => w.id === selectedWeekId)) {
+          const current = list.find(w => w.isCurrent);
+          setSelectedWeekId(current ? current.id : (list[0] ? list[0].id : ""));
+        }
+      }
+    } catch (err) {}
+  };
+
   useEffect(() => {
     fetchCloudNotices();
-    const interval = setInterval(fetchCloudNotices, 20000);
-    const handleFocus = () => fetchCloudNotices();
+    fetchCloudWeeklyPlans();
+    const interval = setInterval(() => {
+      fetchCloudNotices();
+      fetchCloudWeeklyPlans();
+    }, 20000);
+    const handleFocus = () => {
+      fetchCloudNotices();
+      fetchCloudWeeklyPlans();
+    };
     window.addEventListener('focus', handleFocus);
     return () => {
       clearInterval(interval);
       window.removeEventListener('focus', handleFocus);
     };
   }, []);
+
+  const handleOpenCreatePlan = () => {
+    if (!isPinAuthenticated) {
+      setIsAdminOpen(true);
+      setToastMessage("🔒 Introduce la clave Joselider para gestionar la programación");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+    setEditingPlanId(null);
+    setPlanWeekTitle(`Semana del ${new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}`);
+    setPlanSummary("");
+    setPlanAuthor("Dirección & Jefatura de Estudios");
+    setPlanLunes("");
+    setPlanMartes("");
+    setPlanMiercoles("");
+    setPlanJueves("");
+    setPlanViernes("");
+    setPlanGeneralNotes("");
+    setPlanFullEmail("");
+    setPlanIsCurrent(true);
+    setIsWeeklyPlanModalOpen(true);
+  };
+
+  const handleEditPlan = (plan) => {
+    if (!isPinAuthenticated) {
+      setIsAdminOpen(true);
+      setToastMessage("🔒 Introduce la clave Joselider para editar la programación");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+    setEditingPlanId(plan.id);
+    setPlanWeekTitle(plan.weekTitle || "");
+    setPlanSummary(plan.summary || "");
+    setPlanAuthor(plan.author || "Dirección & Jefatura de Estudios");
+    
+    const getDayItems = (dayName) => {
+      const d = plan.days?.find(item => item.day.toLowerCase().includes(dayName.toLowerCase()));
+      return d?.items ? d.items.join("\n") : "";
+    };
+
+    setPlanLunes(getDayItems("Lunes"));
+    setPlanMartes(getDayItems("Martes"));
+    setPlanMiercoles(getDayItems("Miércoles") || getDayItems("Miercoles"));
+    setPlanJueves(getDayItems("Jueves"));
+    setPlanViernes(getDayItems("Viernes"));
+    setPlanGeneralNotes(plan.generalNotes || "");
+    setPlanFullEmail(plan.fullEmailText || "");
+    setPlanIsCurrent(!!plan.isCurrent);
+    setIsWeeklyPlanModalOpen(true);
+  };
+
+  const handleSaveWeeklyPlan = (e) => {
+    e.preventDefault();
+    if (!planWeekTitle.trim()) return;
+
+    const parseLines = (text) => text.split("\n").map(l => l.trim()).filter(Boolean);
+
+    const days = [
+      { day: "Lunes", date: "Lun", items: parseLines(planLunes) },
+      { day: "Martes", date: "Mar", items: parseLines(planMartes) },
+      { day: "Miércoles", date: "Mié", items: parseLines(planMiercoles) },
+      { day: "Jueves", date: "Jue", items: parseLines(planJueves) },
+      { day: "Viernes", date: "Vie", items: parseLines(planViernes) }
+    ];
+
+    const planId = editingPlanId || `plan_${Date.now()}`;
+    const newPlan = {
+      id: planId,
+      weekTitle: planWeekTitle.trim(),
+      summary: planSummary.trim(),
+      author: planAuthor.trim() || "Dirección & Jefatura de Estudios",
+      publishedAt: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
+      isCurrent: planIsCurrent,
+      days,
+      generalNotes: planGeneralNotes.trim(),
+      fullEmailText: planFullEmail.trim(),
+      createdAt: Date.now()
+    };
+
+    let updatedList = [];
+    if (editingPlanId) {
+      updatedList = weeklyPlans.map(p => p.id === editingPlanId ? newPlan : (planIsCurrent ? { ...p, isCurrent: false } : p));
+    } else {
+      updatedList = [newPlan, ...weeklyPlans.map(p => planIsCurrent ? { ...p, isCurrent: false } : p)];
+    }
+
+    setWeeklyPlans(updatedList);
+    setSelectedWeekId(planId);
+    localStorage.setItem("sb_weekly_plans", JSON.stringify(updatedList));
+
+    fetch(`${FIREBASE_PLANS_URL}/${planId}.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newPlan)
+    }).catch(() => {});
+
+    setIsWeeklyPlanModalOpen(false);
+    setToastMessage("📋 Programación semanal guardada y publicada");
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleDeleteWeeklyPlan = (planId) => {
+    if (!isPinAuthenticated) {
+      setIsAdminOpen(true);
+      return;
+    }
+    if (!confirm("¿Seguro que deseas eliminar esta programación semanal del historial?")) return;
+    const updatedList = weeklyPlans.filter(p => p.id !== planId);
+    setWeeklyPlans(updatedList);
+    localStorage.setItem("sb_weekly_plans", JSON.stringify(updatedList));
+    if (selectedWeekId === planId) {
+      setSelectedWeekId(updatedList[0] ? updatedList[0].id : "");
+    }
+    fetch(`${FIREBASE_PLANS_URL}/${planId}.json`, { method: "DELETE" }).catch(() => {});
+    setToastMessage("🗑️ Programación eliminada");
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const handleCopyPlanText = (plan) => {
+    if (!plan) return;
+    let text = `📅 ${plan.weekTitle.toUpperCase()}\nPublicado por: ${plan.author}\n\n`;
+    if (plan.summary) text += `📌 Resumen: ${plan.summary}\n\n`;
+    plan.days?.forEach(d => {
+      text += `🔹 ${d.day.toUpperCase()}:\n`;
+      if (d.items?.length > 0) {
+        d.items.forEach(it => text += `  • ${it}\n`);
+      } else {
+        text += `  • Sin eventos especiales\n`;
+      }
+      text += `\n`;
+    });
+    if (plan.generalNotes) text += `⚠️ Notas Generales:\n${plan.generalNotes}\n\n`;
+    if (plan.fullEmailText) text += `✉️ Texto del Correo:\n${plan.fullEmailText}\n`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      setToastMessage("📋 Programación copiada al portapapeles");
+      setTimeout(() => setToastMessage(null), 3000);
+    }).catch(() => {
+      setToastMessage("📋 Selección de texto lista");
+      setTimeout(() => setToastMessage(null), 2000);
+    });
+  };
 
   const nowTs = Date.now();
   const activeNotices = notices.filter(n => !n.expiresAt || n.expiresAt > nowTs);
@@ -1221,6 +1530,204 @@ export function App() {
             </div>
           </section>
 
+          {/* SECCIÓN PROGRAMACIÓN SEMANAL DEL CLAUSTRO */}
+          <section id="programacion-semanal" className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
+            {(() => {
+              const currentSelectedPlan = weeklyPlans.find(p => p.id === selectedWeekId) || weeklyPlans[0];
+
+              return (
+                <div>
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-slate-100 dark:border-slate-800/80 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 sm:p-2.5 rounded-2xl bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 shrink-0">
+                        <IconRenderer name="ClipboardList" className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h2 className="font-display font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">
+                            Programación Semanal del Claustro
+                          </h2>
+                          {currentSelectedPlan?.isCurrent && (
+                            <span className="text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 font-extrabold px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-500/40">
+                              🌟 Semana en Curso
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Planificación, reuniones y avisos enviados por Dirección</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                      {/* Selector de Semanas Guardadas (Historial) */}
+                      <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <IconRenderer name="History" className="w-3.5 h-3.5 text-slate-500" />
+                        <select
+                          value={selectedWeekId}
+                          onChange={(e) => setSelectedWeekId(e.target.value)}
+                          className="bg-transparent text-xs font-bold text-slate-800 dark:text-slate-200 outline-none cursor-pointer"
+                          title="Seleccionar semana del historial"
+                        >
+                          {weeklyPlans.map(wp => (
+                            <option key={wp.id} value={wp.id} className="dark:bg-slate-900">
+                              {wp.weekTitle} {wp.isCurrent ? "🌟 (Actual)" : ""}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Botón Copiar Plan */}
+                      <button
+                        onClick={() => handleCopyPlanText(currentSelectedPlan)}
+                        className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/80 px-3 py-1.5 rounded-xl font-bold transition border border-slate-200 dark:border-slate-700 shadow-sm"
+                        title="Copiar texto de la programación"
+                      >
+                        <IconRenderer name="Copy" className="w-3.5 h-3.5 text-indigo-500" />
+                        <span className="hidden sm:inline">Copiar</span>
+                      </button>
+
+                      {/* Botón Publicar / Editar */}
+                      <button
+                        onClick={handleOpenCreatePlan}
+                        className="flex items-center gap-1.5 text-xs text-white bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded-xl font-bold transition shadow-sm"
+                        title="Publicar una nueva programación semanal"
+                      >
+                        <IconRenderer name="PlusCircle" className="w-3.5 h-3.5" />
+                        <span>+ Nueva Semana</span>
+                      </button>
+
+                      {isPinAuthenticated && currentSelectedPlan && (
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => handleEditPlan(currentSelectedPlan)}
+                            className="p-1.5 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 bg-slate-100 dark:bg-slate-800 rounded-lg transition"
+                            title="Editar esta programación"
+                          >
+                            <IconRenderer name="Edit3" className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteWeeklyPlan(currentSelectedPlan.id)}
+                            className="p-1.5 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 bg-slate-100 dark:bg-slate-800 rounded-lg transition"
+                            title="Eliminar esta programación del historial"
+                          >
+                            <IconRenderer name="Trash2" className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {currentSelectedPlan ? (
+                    <div className="space-y-4">
+                      {/* Tarjeta de Cabecera de la Semana */}
+                      <div className="p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                              {currentSelectedPlan.weekTitle}
+                            </h3>
+                          </div>
+                          {currentSelectedPlan.summary && (
+                            <p className="text-xs text-indigo-900 dark:text-indigo-200 mt-1 font-medium">
+                              {currentSelectedPlan.summary}
+                            </p>
+                          )}
+                        </div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 flex sm:flex-col sm:items-end gap-2 sm:gap-0.5 shrink-0">
+                          <span>✍️ {currentSelectedPlan.author}</span>
+                          {currentSelectedPlan.publishedAt && (
+                            <span>📅 {currentSelectedPlan.publishedAt}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Desglose por Días (Lunes a Viernes) */}
+                      <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                        {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dayName, idx) => {
+                          const dayData = currentSelectedPlan.days?.find(d => d.day.toLowerCase().includes(dayName.toLowerCase())) || { day: dayName, date: "", items: [] };
+                          const dayColors = [
+                            "border-blue-200 dark:border-blue-900/40 bg-blue-50/30 dark:bg-slate-900",
+                            "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/30 dark:bg-slate-900",
+                            "border-amber-200 dark:border-amber-900/40 bg-amber-50/30 dark:bg-slate-900",
+                            "border-purple-200 dark:border-purple-900/40 bg-purple-50/30 dark:bg-slate-900",
+                            "border-rose-200 dark:border-rose-900/40 bg-rose-50/30 dark:bg-slate-900"
+                          ];
+                          const headerColors = [
+                            "text-blue-700 dark:text-blue-300 bg-blue-100/60 dark:bg-blue-500/20",
+                            "text-emerald-700 dark:text-emerald-300 bg-emerald-100/60 dark:bg-emerald-500/20",
+                            "text-amber-700 dark:text-amber-300 bg-amber-100/60 dark:bg-amber-500/20",
+                            "text-purple-700 dark:text-purple-300 bg-purple-100/60 dark:bg-purple-500/20",
+                            "text-rose-700 dark:text-rose-300 bg-rose-100/60 dark:bg-rose-500/20"
+                          ];
+
+                          return (
+                            <div key={dayName} className={`rounded-2xl border p-3 flex flex-col justify-between transition ${dayColors[idx]}`}>
+                              <div>
+                                <div className={`px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center justify-between mb-2.5 ${headerColors[idx]}`}>
+                                  <span>{dayName}</span>
+                                  {dayData.date && <span className="text-[10px] opacity-80">{dayData.date}</span>}
+                                </div>
+
+                                {dayData.items && dayData.items.length > 0 ? (
+                                  <ul className="space-y-1.5 text-xs text-slate-800 dark:text-slate-200">
+                                    {dayData.items.map((item, iIdx) => (
+                                      <li key={iIdx} className="flex items-start gap-1.5 leading-snug">
+                                        <span className="text-indigo-500 shrink-0 font-bold">•</span>
+                                        <span>{item}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                ) : (
+                                  <p className="text-[11px] text-slate-400 dark:text-slate-500 italic py-2">
+                                    Sin eventos especiales
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Notas Generales / Recordatorios */}
+                      {currentSelectedPlan.generalNotes && (
+                        <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
+                          <IconRenderer name="AlertCircle" className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                          <div>
+                            <strong className="font-bold block mb-0.5">Notas y Recordatorios de la Semana:</strong>
+                            <span>{currentSelectedPlan.generalNotes}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Desplegable de Correo Original */}
+                      {currentSelectedPlan.fullEmailText && (
+                        <div className="border-t border-slate-100 dark:border-slate-800 pt-3">
+                          <button
+                            onClick={() => setIsEmailViewExpanded(!isEmailViewExpanded)}
+                            className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition"
+                          >
+                            <IconRenderer name="Mail" className="w-3.5 h-3.5" />
+                            <span>{isEmailViewExpanded ? "Ocultar correo completo" : "Ver texto completo del correo semanal"}</span>
+                            <IconRenderer name={isEmailViewExpanded ? "ChevronUp" : "ChevronDown"} className="w-3.5 h-3.5" />
+                          </button>
+
+                          {isEmailViewExpanded && (
+                            <div className="mt-2.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 font-mono whitespace-pre-wrap leading-relaxed">
+                              {currentSelectedPlan.fullEmailText}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-slate-500 dark:text-slate-400 text-xs">
+                      No hay programaciones semanales registradas. Haz clic en <strong>+ Nueva Semana</strong> para publicar la primera.
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </section>
+
         </main>
 
       </div>
@@ -1243,6 +1750,16 @@ export function App() {
         >
           <IconRenderer name="Calendar" className="w-4 h-4" />
           <span>Calendario</span>
+        </button>
+
+        <button
+          onClick={() => {
+            document.getElementById('programacion-semanal')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[10px] p-1"
+        >
+          <IconRenderer name="ClipboardList" className="w-4 h-4" />
+          <span>Semana</span>
         </button>
 
         <a
@@ -1797,6 +2314,190 @@ export function App() {
               )}
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* MODAL PUBLICAR / EDITAR PROGRAMACIÓN SEMANAL */}
+      {isWeeklyPlanModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md">
+          <div className="w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 flex items-center justify-center">
+                  <IconRenderer name="CalendarPlus" className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-base leading-tight">
+                    {editingPlanId ? "Editar Programación Semanal" : "Publicar Programación de la Semana"}
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Guarda y archiva la planificación del claustro por semanas</p>
+                </div>
+              </div>
+              <button onClick={() => setIsWeeklyPlanModalOpen(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-white font-bold text-sm">✕</button>
+            </div>
+
+            <form onSubmit={handleSaveWeeklyPlan} className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                    Título de la Semana *
+                  </label>
+                  <input
+                    type="text"
+                    value={planWeekTitle}
+                    onChange={(e) => setPlanWeekTitle(e.target.value)}
+                    placeholder="Ej. Semana del 22 al 26 de Septiembre"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                    Autor / Emisor
+                  </label>
+                  <input
+                    type="text"
+                    value={planAuthor}
+                    onChange={(e) => setPlanAuthor(e.target.value)}
+                    placeholder="Ej. Dirección / Jefatura de Estudios"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                  Resumen / Frase Clave de la Semana (Opcional)
+                </label>
+                <input
+                  type="text"
+                  value={planSummary}
+                  onChange={(e) => setPlanSummary(e.target.value)}
+                  placeholder="Ej. Inicio de curso, reuniones de ciclo y puesta en marcha de comisiones."
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                  📅 Planificación por Días (Escribe un evento por línea):
+                </label>
+
+                <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
+                  <div>
+                    <span className="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 block mb-1">Lunes</span>
+                    <textarea
+                      rows={3}
+                      value={planLunes}
+                      onChange={(e) => setPlanLunes(e.target.value)}
+                      placeholder="08:30 Oración&#10;14:15 Reunión"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-blue-500 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 block mb-1">Martes</span>
+                    <textarea
+                      rows={3}
+                      value={planMartes}
+                      onChange={(e) => setPlanMartes(e.target.value)}
+                      placeholder="Revisión DUA&#10;Comedor"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-emerald-500 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] font-extrabold text-amber-600 dark:text-amber-400 block mb-1">Miércoles</span>
+                    <textarea
+                      rows={3}
+                      value={planMiercoles}
+                      onChange={(e) => setPlanMiercoles(e.target.value)}
+                      placeholder="Comisión Pastoral&#10;Chromebooks"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-amber-500 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] font-extrabold text-purple-600 dark:text-purple-400 block mb-1">Jueves</span>
+                    <textarea
+                      rows={3}
+                      value={planJueves}
+                      onChange={(e) => setPlanJueves(e.target.value)}
+                      placeholder="Pruebas de nivel&#10;Extraescolares"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-purple-500 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] font-extrabold text-rose-600 dark:text-rose-400 block mb-1">Viernes</span>
+                    <textarea
+                      rows={3}
+                      value={planViernes}
+                      onChange={(e) => setPlanViernes(e.target.value)}
+                      placeholder="13:30 Cierre Educamos&#10;Circulares"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-rose-500 resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                  ⚠️ Notas y Avisos Generales del Claustro
+                </label>
+                <textarea
+                  rows={2}
+                  value={planGeneralNotes}
+                  onChange={(e) => setPlanGeneralNotes(e.target.value)}
+                  placeholder="Ej. Recordar que las autorizaciones deben estar firmadas..."
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500 resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                  ✉️ Texto Completo del Correo Semanal (Opcional)
+                </label>
+                <textarea
+                  rows={3}
+                  value={planFullEmail}
+                  onChange={(e) => setPlanFullEmail(e.target.value)}
+                  placeholder="Pega aquí el correo completo que envías al claustro para que quede archivado íntegramente..."
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white font-mono outline-none focus:border-indigo-500 resize-none"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="planIsCurrentCheckboxApp"
+                  checked={planIsCurrent}
+                  onChange={(e) => setPlanIsCurrent(e.target.checked)}
+                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <label htmlFor="planIsCurrentCheckboxApp" className="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer">
+                  🌟 Marcar como "Semana en Curso / Actual" (Se mostrará destacada para el profesorado)
+                </label>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setIsWeeklyPlanModalOpen(false)}
+                  className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow transition"
+                >
+                  {editingPlanId ? "Guardar Cambios" : "Guardar y Publicar Programación"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
