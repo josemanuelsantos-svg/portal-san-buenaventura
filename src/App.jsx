@@ -708,12 +708,6 @@ export function App() {
   }, []);
 
   const handleOpenCreatePlan = () => {
-    if (!isPinAuthenticated) {
-      setIsAdminOpen(true);
-      setToastMessage("🔒 Introduce la clave Joselider para gestionar la programación");
-      setTimeout(() => setToastMessage(null), 3000);
-      return;
-    }
     setEditingPlanId(null);
     setPlanWeekTitle(`Semana del ${new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}`);
     setPlanSummary("");
@@ -726,16 +720,11 @@ export function App() {
     setPlanGeneralNotes("");
     setPlanFullEmail("");
     setPlanIsCurrent(true);
+    setPinError("");
     setIsWeeklyPlanModalOpen(true);
   };
 
   const handleEditPlan = (plan) => {
-    if (!isPinAuthenticated) {
-      setIsAdminOpen(true);
-      setToastMessage("🔒 Introduce la clave Joselider para editar la programación");
-      setTimeout(() => setToastMessage(null), 3000);
-      return;
-    }
     setEditingPlanId(plan.id);
     setPlanWeekTitle(plan.weekTitle || "");
     setPlanSummary(plan.summary || "");
@@ -754,6 +743,7 @@ export function App() {
     setPlanGeneralNotes(plan.generalNotes || "");
     setPlanFullEmail(plan.fullEmailText || "");
     setPlanIsCurrent(!!plan.isCurrent);
+    setPinError("");
     setIsWeeklyPlanModalOpen(true);
   };
 
@@ -2325,179 +2315,233 @@ export function App() {
             <div className="flex items-center justify-between px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 flex items-center justify-center">
-                  <IconRenderer name="CalendarPlus" className="w-4 h-4" />
+                  <IconRenderer name={isPinAuthenticated ? "CalendarPlus" : "Lock"} className="w-4 h-4" />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white text-base leading-tight">
-                    {editingPlanId ? "Editar Programación Semanal" : "Publicar Programación de la Semana"}
+                    {isPinAuthenticated 
+                      ? (editingPlanId ? "Editar Programación Semanal" : "Publicar Programación de la Semana")
+                      : "Acceso de Dirección · Programación Semanal"}
                   </h3>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Guarda y archiva la planificación del claustro por semanas</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {isPinAuthenticated ? "Guarda y archiva la planificación del claustro por semanas" : "Introduce la clave de Dirección para gestionar la programación"}
+                  </p>
                 </div>
               </div>
               <button onClick={() => setIsWeeklyPlanModalOpen(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-white font-bold text-sm">✕</button>
             </div>
 
-            <form onSubmit={handleSaveWeeklyPlan} className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {!isPinAuthenticated ? (
+              <div className="p-6 sm:p-8 text-center space-y-4 max-w-md mx-auto my-auto w-full">
+                <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30 flex items-center justify-center mx-auto">
+                  <IconRenderer name="Lock" className="w-7 h-7" />
+                </div>
                 <div>
-                  <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
-                    Título de la Semana *
-                  </label>
+                  <h3 className="font-extrabold text-slate-900 dark:text-white text-base">Identificación de Dirección</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Introduce la clave de Dirección para redactar o editar la programación semanal</p>
+                </div>
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  if (pinInput.trim() === ADMIN_PIN) {
+                    setIsPinAuthenticated(true);
+                    setPinError("");
+                    setPinInput("");
+                    setToastMessage("🔓 Acceso de Dirección concedido");
+                    setTimeout(() => setToastMessage(null), 2500);
+                  } else {
+                    setPinError("Contraseña incorrecta. Introduce la clave de Dirección.");
+                  }
+                }} className="space-y-3 pt-2">
                   <input
-                    type="text"
-                    value={planWeekTitle}
-                    onChange={(e) => setPlanWeekTitle(e.target.value)}
-                    placeholder="Ej. Semana del 22 al 26 de Septiembre"
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                    type="password"
+                    value={pinInput}
+                    onChange={(e) => setPinInput(e.target.value)}
+                    placeholder="Introduce la clave de Dirección..."
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-center text-xs font-mono text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                    autoFocus
                     required
                   />
+                  {pinError && <p className="text-[11px] text-rose-500 font-semibold">{pinError}</p>}
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsWeeklyPlanModalOpen(false)}
+                      className="w-1/2 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow transition"
+                    >
+                      Desbloquear
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <form onSubmit={handleSaveWeeklyPlan} className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                      Título de la Semana *
+                    </label>
+                    <input
+                      type="text"
+                      value={planWeekTitle}
+                      onChange={(e) => setPlanWeekTitle(e.target.value)}
+                      placeholder="Ej. Semana del 22 al 26 de Septiembre"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                      Autor / Emisor
+                    </label>
+                    <input
+                      type="text"
+                      value={planAuthor}
+                      onChange={(e) => setPlanAuthor(e.target.value)}
+                      placeholder="Ej. Dirección / Jefatura de Estudios"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500"
+                    />
+                  </div>
                 </div>
 
                 <div>
                   <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
-                    Autor / Emisor
+                    Resumen / Frase Clave de la Semana (Opcional)
                   </label>
                   <input
                     type="text"
-                    value={planAuthor}
-                    onChange={(e) => setPlanAuthor(e.target.value)}
-                    placeholder="Ej. Dirección / Jefatura de Estudios"
+                    value={planSummary}
+                    onChange={(e) => setPlanSummary(e.target.value)}
+                    placeholder="Ej. Inicio de curso, reuniones de ciclo y puesta en marcha de comisiones."
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500"
                   />
                 </div>
-              </div>
 
-              <div>
-                <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
-                  Resumen / Frase Clave de la Semana (Opcional)
-                </label>
-                <input
-                  type="text"
-                  value={planSummary}
-                  onChange={(e) => setPlanSummary(e.target.value)}
-                  placeholder="Ej. Inicio de curso, reuniones de ciclo y puesta en marcha de comisiones."
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500"
-                />
-              </div>
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                    📅 Planificación por Días (Escribe un evento por línea):
+                  </label>
 
-              <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-                <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
-                  📅 Planificación por Días (Escribe un evento por línea):
-                </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
+                    <div>
+                      <span className="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 block mb-1">Lunes</span>
+                      <textarea
+                        rows={3}
+                        value={planLunes}
+                        onChange={(e) => setPlanLunes(e.target.value)}
+                        placeholder="08:30 Oración&#10;14:15 Reunión"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-blue-500 resize-none"
+                      />
+                    </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
-                  <div>
-                    <span className="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 block mb-1">Lunes</span>
-                    <textarea
-                      rows={3}
-                      value={planLunes}
-                      onChange={(e) => setPlanLunes(e.target.value)}
-                      placeholder="08:30 Oración&#10;14:15 Reunión"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-blue-500 resize-none"
-                    />
-                  </div>
+                    <div>
+                      <span className="text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 block mb-1">Martes</span>
+                      <textarea
+                        rows={3}
+                        value={planMartes}
+                        onChange={(e) => setPlanMartes(e.target.value)}
+                        placeholder="Revisión DUA&#10;Comedor"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-emerald-500 resize-none"
+                      />
+                    </div>
 
-                  <div>
-                    <span className="text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 block mb-1">Martes</span>
-                    <textarea
-                      rows={3}
-                      value={planMartes}
-                      onChange={(e) => setPlanMartes(e.target.value)}
-                      placeholder="Revisión DUA&#10;Comedor"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-emerald-500 resize-none"
-                    />
-                  </div>
+                    <div>
+                      <span className="text-[11px] font-extrabold text-amber-600 dark:text-amber-400 block mb-1">Miércoles</span>
+                      <textarea
+                        rows={3}
+                        value={planMiercoles}
+                        onChange={(e) => setPlanMiercoles(e.target.value)}
+                        placeholder="Comisión Pastoral&#10;Chromebooks"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-amber-500 resize-none"
+                      />
+                    </div>
 
-                  <div>
-                    <span className="text-[11px] font-extrabold text-amber-600 dark:text-amber-400 block mb-1">Miércoles</span>
-                    <textarea
-                      rows={3}
-                      value={planMiercoles}
-                      onChange={(e) => setPlanMiercoles(e.target.value)}
-                      placeholder="Comisión Pastoral&#10;Chromebooks"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-amber-500 resize-none"
-                    />
-                  </div>
+                    <div>
+                      <span className="text-[11px] font-extrabold text-purple-600 dark:text-purple-400 block mb-1">Jueves</span>
+                      <textarea
+                        rows={3}
+                        value={planJueves}
+                        onChange={(e) => setPlanJueves(e.target.value)}
+                        placeholder="Pruebas de nivel&#10;Extraescolares"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-purple-500 resize-none"
+                      />
+                    </div>
 
-                  <div>
-                    <span className="text-[11px] font-extrabold text-purple-600 dark:text-purple-400 block mb-1">Jueves</span>
-                    <textarea
-                      rows={3}
-                      value={planJueves}
-                      onChange={(e) => setPlanJueves(e.target.value)}
-                      placeholder="Pruebas de nivel&#10;Extraescolares"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-purple-500 resize-none"
-                    />
-                  </div>
-
-                  <div>
-                    <span className="text-[11px] font-extrabold text-rose-600 dark:text-rose-400 block mb-1">Viernes</span>
-                    <textarea
-                      rows={3}
-                      value={planViernes}
-                      onChange={(e) => setPlanViernes(e.target.value)}
-                      placeholder="13:30 Cierre Educamos&#10;Circulares"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-rose-500 resize-none"
-                    />
+                    <div>
+                      <span className="text-[11px] font-extrabold text-rose-600 dark:text-rose-400 block mb-1">Viernes</span>
+                      <textarea
+                        rows={3}
+                        value={planViernes}
+                        onChange={(e) => setPlanViernes(e.target.value)}
+                        placeholder="13:30 Cierre Educamos&#10;Circulares"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-white outline-none focus:border-rose-500 resize-none"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
-                  ⚠️ Notas y Avisos Generales del Claustro
-                </label>
-                <textarea
-                  rows={2}
-                  value={planGeneralNotes}
-                  onChange={(e) => setPlanGeneralNotes(e.target.value)}
-                  placeholder="Ej. Recordar que las autorizaciones deben estar firmadas..."
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500 resize-none"
-                />
-              </div>
+                <div>
+                  <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                    ⚠️ Notas y Avisos Generales del Claustro
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={planGeneralNotes}
+                    onChange={(e) => setPlanGeneralNotes(e.target.value)}
+                    placeholder="Ej. Recordar que las autorizaciones deben estar firmadas..."
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white outline-none focus:border-indigo-500 resize-none"
+                  />
+                </div>
 
-              <div>
-                <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
-                  ✉️ Texto Completo del Correo Semanal (Opcional)
-                </label>
-                <textarea
-                  rows={3}
-                  value={planFullEmail}
-                  onChange={(e) => setPlanFullEmail(e.target.value)}
-                  placeholder="Pega aquí el correo completo que envías al claustro para que quede archivado íntegramente..."
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white font-mono outline-none focus:border-indigo-500 resize-none"
-                />
-              </div>
+                <div>
+                  <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
+                    ✉️ Texto Completo del Correo Semanal (Opcional)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={planFullEmail}
+                    onChange={(e) => setPlanFullEmail(e.target.value)}
+                    placeholder="Pega aquí el correo completo que envías al claustro para que quede archivado íntegramente..."
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white font-mono outline-none focus:border-indigo-500 resize-none"
+                  />
+                </div>
 
-              <div className="flex items-center gap-2 pt-2">
-                <input
-                  type="checkbox"
-                  id="planIsCurrentCheckboxApp"
-                  checked={planIsCurrent}
-                  onChange={(e) => setPlanIsCurrent(e.target.checked)}
-                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label htmlFor="planIsCurrentCheckboxApp" className="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer">
-                  🌟 Marcar como "Semana en Curso / Actual" (Se mostrará destacada para el profesorado)
-                </label>
-              </div>
+                <div className="flex items-center gap-2 pt-2">
+                  <input
+                    type="checkbox"
+                    id="planIsCurrentCheckboxApp"
+                    checked={planIsCurrent}
+                    onChange={(e) => setPlanIsCurrent(e.target.checked)}
+                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label htmlFor="planIsCurrentCheckboxApp" className="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer">
+                    🌟 Marcar como "Semana en Curso / Actual" (Se mostrará destacada para el profesorado)
+                  </label>
+                </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setIsWeeklyPlanModalOpen(false)}
-                  className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow transition"
-                >
-                  {editingPlanId ? "Guardar Cambios" : "Guardar y Publicar Programación"}
-                </button>
-              </div>
-            </form>
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() => setIsWeeklyPlanModalOpen(false)}
+                    className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow transition"
+                  >
+                    {editingPlanId ? "Guardar Cambios" : "Guardar y Publicar Programación"}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}
