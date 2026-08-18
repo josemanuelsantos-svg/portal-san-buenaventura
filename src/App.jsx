@@ -321,12 +321,13 @@ export function App() {
   const [isPwaModalOpen, setIsPwaModalOpen] = useState(false);
 
   const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [isPinAuthenticated, setIsPinAuthenticated] = useState(true);
+  const [isPinAuthenticated, setIsPinAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState("");
   const [pinError, setPinError] = useState("");
   const [formError, setFormError] = useState("");
   const [toastMessage, setToastMessage] = useState(null);
-  const ADMIN_PIN = "1234";
+  const [logoClicks, setLogoClicks] = useState(0);
+  const ADMIN_PIN = "Joselider";
 
   const [textSize, setTextSize] = useState(() => {
     return localStorage.getItem("sb_text_size") || "normal";
@@ -501,13 +502,30 @@ export function App() {
   const activeNotices = notices.filter(n => !n.expiresAt || n.expiresAt > nowTs);
   const urgentNotice = activeNotices.find(n => n.priority === "urgent" && n.id !== dismissedUrgentId);
 
+  useEffect(() => {
+    console.log("%c👑 El lider fue, es y será por siempre", "color: #f59e0b; font-size: 14px; font-weight: bold; background: #0f172a; padding: 6px 12px; border-radius: 8px; border: 1px solid #f59e0b;");
+  }, []);
+
+  const handleLogoClick = () => {
+    const next = logoClicks + 1;
+    if (next >= 5) {
+      setToastMessage("👑 El lider fue, es y será por siempre");
+      setTimeout(() => setToastMessage(null), 5000);
+      setLogoClicks(0);
+    } else {
+      setLogoClicks(next);
+    }
+  };
+
   const handlePinSubmit = (e) => {
     e.preventDefault();
-    if (pinInput === ADMIN_PIN || pinInput === "") {
+    if (pinInput.trim() === ADMIN_PIN) {
       setIsPinAuthenticated(true);
       setPinError("");
+      setToastMessage("🔓 Acceso de Administración concedido");
+      setTimeout(() => setToastMessage(null), 2500);
     } else {
-      setPinError("PIN incorrecto. (PIN por defecto: 1234)");
+      setPinError("Contraseña incorrecta. Introduce la clave de Dirección.");
     }
   };
 
@@ -658,7 +676,9 @@ export function App() {
             </button>
 
             <div className="flex items-center gap-3">
-              <GoogleTauFranciscanLogo className="w-11 h-11 drop-shadow-sm" />
+              <button onClick={handleLogoClick} className="focus:outline-none transition transform active:scale-95" title="Colegio San Buenaventura">
+                <GoogleTauFranciscanLogo className="w-11 h-11 drop-shadow-sm cursor-pointer" />
+              </button>
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight leading-none">
@@ -1382,7 +1402,7 @@ export function App() {
                 </div>
                 <div>
                   <h4 className="font-bold text-slate-900 dark:text-white text-base">Acceso Restringido para Dirección</h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Introduce el PIN de administración para gestionar avisos.</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Introduce la clave de administración para publicar avisos.</p>
                 </div>
 
                 <div className="max-w-xs mx-auto">
@@ -1390,7 +1410,7 @@ export function App() {
                     type="password"
                     value={pinInput}
                     onChange={(e) => setPinInput(e.target.value)}
-                    placeholder="PIN (por defecto: 1234)"
+                    placeholder="Introduce la clave de acceso"
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-center text-sm font-mono text-slate-900 dark:text-white outline-none focus:border-amber-500"
                     autoFocus
                   />
