@@ -294,9 +294,14 @@ export function App() {
   });
 
   const [activeCalTab, setActiveCalTab] = useState("unificados");
-  const [calViewMode, setCalViewMode] = useState("MONTH");
+  const [calViewMode, setCalViewMode] = useState(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      return "AGENDA";
+    }
+    return "MONTH";
+  });
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isNoticesCollapsed, setIsNoticesCollapsed] = useState(false);
 
@@ -702,33 +707,33 @@ export function App() {
       )}
 
       {/* HEADER SUPERIOR LIMPIO Y PROPORCIONAL */}
-      <header className="bg-white/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-6 py-2.5 sticky top-0 z-30 backdrop-blur-md shadow-sm transition-colors">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <header className="bg-white/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 px-3 sm:px-6 py-2.5 sticky top-0 z-30 backdrop-blur-md shadow-sm transition-colors">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
           
-          {/* MARCA & IDENTIDAD */}
-          <div className="flex items-center gap-3">
+          {/* MARCA & IDENTIDAD (LOGO SIEMPRE VISIBLE) */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl bg-slate-100 dark:bg-slate-800 md:hidden transition"
+              className="p-1.5 sm:p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl bg-slate-100 dark:bg-slate-800 md:hidden transition shrink-0"
               title="Abrir menú lateral"
             >
               <IconRenderer name="Menu" className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center gap-3">
-              <button onClick={handleLogoClick} className="focus:outline-none transition transform active:scale-95" title="Colegio San Buenaventura">
-                <GoogleTauFranciscanLogo className="w-11 h-11 drop-shadow-sm cursor-pointer" />
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <button onClick={handleLogoClick} className="focus:outline-none transition transform active:scale-95 shrink-0" title="Colegio San Buenaventura">
+                <GoogleTauFranciscanLogo className="w-10 h-10 sm:w-11 sm:h-11 drop-shadow-sm cursor-pointer shrink-0" />
               </button>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight leading-none">
-                    Colegio San Buenaventura
+              <div className="shrink min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <h1 className="font-extrabold text-sm sm:text-base md:text-lg text-slate-900 dark:text-white tracking-tight leading-none truncate">
+                    San Buenaventura
                   </h1>
                   <span className="hidden lg:inline-flex text-[10px] font-bold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-200/60 dark:border-indigo-500/20 uppercase tracking-wider">
                     Portal Docente
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 hidden sm:block">
+                <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 hidden sm:block truncate">
                   Acceso Central & Agenda Escolar
                 </p>
               </div>
@@ -736,7 +741,7 @@ export function App() {
           </div>
 
           {/* BOTONERA LIMPIA, SIMÉTRICA Y UNIFICADA */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             
             {/* BOTÓN PRIMARIO: PASE LISTA COMEDOR */}
             <a
@@ -774,7 +779,7 @@ export function App() {
                   setToastMessage(`Tamaño de letra: ${nextSize === "normal" ? "Estándar (100%)" : nextSize === "large" ? "Grande (+15%)" : "Extra Grande (+30%)"}`);
                   setTimeout(() => setToastMessage(null), 2500);
                 }}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 transition"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 transition"
                 title={`Ajustar tamaño de letra (Actual: ${textSize === "normal" ? "100%" : textSize === "large" ? "+15%" : "+30%"})`}
               >
                 <span className="font-serif font-black text-xs">A</span>
@@ -791,41 +796,41 @@ export function App() {
                   setToastMessage(nextHc ? "👁️ Alto Contraste Activado" : "Modo Contraste Estándar");
                   setTimeout(() => setToastMessage(null), 2500);
                 }}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs transition ${
+                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-xs transition ${
                   isHighContrast
                     ? "bg-indigo-600 text-white shadow-sm"
                     : "text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700"
                 }`}
                 title={isHighContrast ? "Desactivar Alto Contraste" : "Activar Alto Contraste (Especial para proyectores)"}
               >
-                <IconRenderer name="Eye" className="w-4 h-4" />
+                <IconRenderer name="Eye" className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
 
               {/* Conmutador Modo Oscuro / Claro */}
               <button
                 onClick={() => setThemeMode(isDark ? "light" : "dark")}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 dark:text-amber-300 hover:bg-white dark:hover:bg-slate-700 transition"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-slate-600 dark:text-amber-300 hover:bg-white dark:hover:bg-slate-700 transition"
                 title={isDark ? "Cambiar a Modo Claro" : "Cambiar a Modo Oscuro"}
               >
-                <IconRenderer name={isDark ? "Sun" : "Moon"} className="w-4 h-4" />
+                <IconRenderer name={isDark ? "Sun" : "Moon"} className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
 
               {/* Instalar App PWA */}
               <button
                 onClick={() => setIsPwaModalOpen(true)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 hover:bg-white dark:hover:bg-slate-700 transition"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 hover:bg-white dark:hover:bg-slate-700 transition hidden sm:flex"
                 title="Instalar App en el Portátil, Chromebook o Móvil"
               >
-                <IconRenderer name="Download" className="w-4 h-4" />
+                <IconRenderer name="Download" className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
 
               {/* Admin Avisos */}
               <button
                 onClick={() => setIsAdminOpen(true)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400 hover:bg-white dark:hover:bg-slate-700 transition"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400 hover:bg-white dark:hover:bg-slate-700 transition"
                 title="Panel de Administración de Avisos"
               >
-                <IconRenderer name="Lock" className="w-4 h-4" />
+                <IconRenderer name="Lock" className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
 
             </div>
@@ -1000,27 +1005,27 @@ export function App() {
           
           {/* TABLÓN DE AVISOS DEL DÍA */}
           <section className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 sm:p-2 rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30 shrink-0">
                   <IconRenderer name="Bell" className="w-4 h-4" />
                 </div>
                 <div>
-                  <h2 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
+                  <h2 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-1.5">
                     <span>Avisos del Día</span>
-                    <span className="text-[10px] bg-amber-100 text-amber-800 dark:bg-slate-800 dark:text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-200 dark:border-slate-700">
+                    <span className="text-[10px] bg-amber-100 text-amber-800 dark:bg-slate-800 dark:text-amber-300 font-bold px-1.5 py-0.2 rounded-full border border-amber-200 dark:border-slate-700">
                       {activeNotices.length}
                     </span>
                   </h2>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Información publicada por Dirección y Jefatura</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block">Información publicada por Dirección y Jefatura</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 {activeNotices.length > 0 && (
                   <button
                     onClick={() => setIsNoticesCollapsed(!isNoticesCollapsed)}
-                    className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 font-semibold bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg transition"
+                    className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 font-semibold bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg transition"
                   >
                     <span>{isNoticesCollapsed ? "Mostrar" : "Plegar"}</span>
                     <IconRenderer name={isNoticesCollapsed ? "ChevronDown" : "ChevronUp"} className="w-3.5 h-3.5" />
@@ -1029,10 +1034,11 @@ export function App() {
 
                 <button
                   onClick={() => { setIsAdminOpen(true); setFormError(""); }}
-                  className="flex items-center gap-1 text-xs text-amber-800 dark:text-amber-200 bg-amber-100 hover:bg-amber-200 dark:bg-amber-500/20 dark:hover:bg-amber-500/30 px-2.5 py-1 rounded-lg border border-amber-300 dark:border-amber-500/40 font-bold transition shadow-sm"
+                  className="flex items-center gap-1 text-xs text-amber-800 dark:text-amber-200 bg-amber-100 hover:bg-amber-200 dark:bg-amber-500/20 dark:hover:bg-amber-500/30 px-2.5 py-1 rounded-lg border border-amber-300 dark:border-amber-500/40 font-bold transition shadow-sm whitespace-nowrap"
                 >
-                  <IconRenderer name="PlusCircle" className="w-3.5 h-3.5" />
-                  <span>+ Publicar Aviso</span>
+                  <IconRenderer name="PlusCircle" className="w-3.5 h-3.5 shrink-0" />
+                  <span className="hidden sm:inline">+ Publicar Aviso</span>
+                  <span className="sm:hidden font-bold">+ Aviso</span>
                 </button>
               </div>
             </div>
@@ -1107,8 +1113,15 @@ export function App() {
               </div>
 
               <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-                {/* Switcher Mes / Semana */}
+                {/* Switcher Agenda / Mes / Semana */}
                 <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700/60 flex-shrink-0">
+                  <button
+                    onClick={() => setCalViewMode("AGENDA")}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] transition ${calViewMode === "AGENDA" ? "bg-white dark:bg-slate-950 text-indigo-600 dark:text-indigo-400 font-extrabold shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
+                    title="Vista Lista / Agenda (Ideal para móvil)"
+                  >
+                    📋 Agenda
+                  </button>
                   <button
                     onClick={() => setCalViewMode("MONTH")}
                     className={`px-2.5 py-1 rounded-lg text-[11px] transition ${calViewMode === "MONTH" ? "bg-white dark:bg-slate-950 text-slate-900 dark:text-white shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
