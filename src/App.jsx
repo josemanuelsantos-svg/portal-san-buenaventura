@@ -643,56 +643,70 @@ export function App() {
         </div>
       )}
 
-      {/* HEADER SUPERIOR GOOGLE WORKSPACE DESIGN CON NUEVO LOGO TAU FRANCISCANA VIBRANTE */}
-      <header className="bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-3 sticky top-0 z-30 backdrop-blur-md shadow-sm transition-colors">
+      {/* HEADER SUPERIOR LIMPIO Y PROPORCIONAL */}
+      <header className="bg-white/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-6 py-2.5 sticky top-0 z-30 backdrop-blur-md shadow-sm transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
+          {/* MARCA & IDENTIDAD */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl bg-slate-100 dark:bg-slate-800 md:hidden"
+              className="p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl bg-slate-100 dark:bg-slate-800 md:hidden transition"
               title="Abrir menú lateral"
             >
               <IconRenderer name="Menu" className="w-5 h-5" />
             </button>
 
             <div className="flex items-center gap-3">
-              <GoogleTauFranciscanLogo className="w-14 h-14 drop-shadow-md" />
+              <GoogleTauFranciscanLogo className="w-11 h-11 drop-shadow-sm" />
               <div>
-                <h1 className="font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white tracking-tight leading-tight">
-                  Colegio San Buenaventura
-                </h1>
-                <p className="text-[11px] text-slate-500 dark:text-slate-300 hidden sm:block">
-                  Portal Central de Acceso & Agenda Escolar
+                <div className="flex items-center gap-2">
+                  <h1 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight leading-none">
+                    Colegio San Buenaventura
+                  </h1>
+                  <span className="hidden lg:inline-flex text-[10px] font-bold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-200/60 dark:border-indigo-500/20 uppercase tracking-wider">
+                    Portal Docente
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 hidden sm:block">
+                  Acceso Central & Agenda Escolar
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* BOTONERA LIMPIA, SIMÉTRICA Y UNIFICADA */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
             
-            {/* BOTÓN INSTALAR APP PWA */}
-            <button
-              onClick={() => setIsPwaModalOpen(true)}
-              className="hidden md:flex items-center gap-1.5 px-3 py-2 bg-indigo-50 dark:bg-slate-800 hover:bg-indigo-100 dark:hover:bg-slate-700 text-indigo-700 dark:text-indigo-300 rounded-xl border border-indigo-200 dark:border-indigo-500/30 text-xs font-bold transition shadow-sm"
-              title="Instalar App en el Portátil, Chromebook o Móvil"
+            {/* BOTÓN PRIMARIO: PASE LISTA COMEDOR */}
+            <a
+              href="https://comedor-san-buenaventura.vercel.app/"
+              target="_blank"
+              rel="noreferrer"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-white font-extrabold text-xs shadow-md transition whitespace-nowrap bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95"
+              title="Acceso directo a Pase de Lista del Comedor Escolar"
             >
-              <IconRenderer name="Download" className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              <span>📲 Instalar App</span>
+              <IconRenderer name="Utensils" className="w-3.5 h-3.5" />
+              <span>🍽️ Comedor</span>
+            </a>
+
+            {/* BOTÓN BUSCADOR COMPACTO */}
+            <button
+              onClick={() => setIsCommandPaletteOpen(true)}
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl border border-slate-200 dark:border-slate-700 text-xs transition shadow-sm"
+              title="Buscar aplicaciones o sitios (Ctrl + K)"
+            >
+              <IconRenderer name="Search" className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+              <span className="text-xs">Buscar...</span>
+              <kbd className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+                ⌘K
+              </kbd>
             </button>
 
-            <button
-              onClick={() => setThemeMode(isDark ? "light" : "dark")}
-              className="p-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-300 rounded-xl border border-slate-300 dark:border-slate-700 transition flex items-center gap-1.5 text-xs font-bold shadow-sm"
-              title={isDark ? "Cambiar a Modo Claro Google Workspace" : "Cambiar a Modo Oscuro"}
-            >
-              <IconRenderer name={isDark ? "Sun" : "Moon"} className="w-4 h-4" />
-              <span className="hidden lg:inline">{isDark ? "Modo Claro" : "Modo Oscuro"}</span>
-            </button>
-
-            {/* GRUPO ACCESIBILIDAD: TAMAÑO DE TEXTO Y ALTO CONTRASTE */}
-            <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-300 dark:border-slate-700">
-              {/* Selector Tamaño de Texto A- / A / A+ */}
+            {/* BARRA UNIFICADA DE ACCIONES RÁPIDAS */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800/90 p-1 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm gap-0.5">
+              
+              {/* Selector Tamaño de Letra A */}
               <button
                 onClick={() => {
                   const nextSize = textSize === "normal" ? "large" : (textSize === "large" ? "xl" : "normal");
@@ -700,65 +714,61 @@ export function App() {
                   setToastMessage(`Tamaño de letra: ${nextSize === "normal" ? "Estándar (100%)" : nextSize === "large" ? "Grande (+15%)" : "Extra Grande (+30%)"}`);
                   setTimeout(() => setToastMessage(null), 2500);
                 }}
-                className="px-2 py-1 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-900 transition flex items-center gap-1"
-                title={`Ajustar tamaño de letra (Actual: ${textSize === "normal" ? "Estándar" : textSize === "large" ? "Grande" : "Extra Grande"})`}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 transition"
+                title={`Ajustar tamaño de letra (Actual: ${textSize === "normal" ? "100%" : textSize === "large" ? "+15%" : "+30%"})`}
               >
                 <span className="font-serif font-black text-xs">A</span>
-                <span className="text-[10px] font-mono text-indigo-600 dark:text-indigo-400 font-extrabold">
-                  {textSize === "normal" ? "1x" : textSize === "large" ? "1.15x" : "1.3x"}
+                <span className="text-[9px] font-mono text-indigo-600 dark:text-indigo-400 font-extrabold ml-0.5">
+                  {textSize === "normal" ? "" : (textSize === "large" ? "+" : "++")}
                 </span>
               </button>
 
-              {/* Conmutador Alto Contraste */}
+              {/* Alto Contraste */}
               <button
                 onClick={() => {
                   const nextHc = !isHighContrast;
                   setIsHighContrast(nextHc);
-                  setToastMessage(nextHc ? "👁️ Modo Alto Contraste Activado" : "Modo Contraste Estándar");
+                  setToastMessage(nextHc ? "👁️ Alto Contraste Activado" : "Modo Contraste Estándar");
                   setTimeout(() => setToastMessage(null), 2500);
                 }}
-                className={`px-2 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs transition ${
                   isHighContrast
                     ? "bg-indigo-600 text-white shadow-sm"
-                    : "text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-900"
+                    : "text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700"
                 }`}
-                title={isHighContrast ? "Desactivar Alto Contraste" : "Activar Alto Contraste (Especial para proyectores y baja visión)"}
+                title={isHighContrast ? "Desactivar Alto Contraste" : "Activar Alto Contraste (Especial para proyectores)"}
               >
-                <span>👁️</span>
-                <span className="text-[10px] hidden xl:inline">Contraste</span>
+                <IconRenderer name="Eye" className="w-4 h-4" />
               </button>
+
+              {/* Conmutador Modo Oscuro / Claro */}
+              <button
+                onClick={() => setThemeMode(isDark ? "light" : "dark")}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 dark:text-amber-300 hover:bg-white dark:hover:bg-slate-700 transition"
+                title={isDark ? "Cambiar a Modo Claro" : "Cambiar a Modo Oscuro"}
+              >
+                <IconRenderer name={isDark ? "Sun" : "Moon"} className="w-4 h-4" />
+              </button>
+
+              {/* Instalar App PWA */}
+              <button
+                onClick={() => setIsPwaModalOpen(true)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 hover:bg-white dark:hover:bg-slate-700 transition"
+                title="Instalar App en el Portátil, Chromebook o Móvil"
+              >
+                <IconRenderer name="Download" className="w-4 h-4" />
+              </button>
+
+              {/* Admin Avisos */}
+              <button
+                onClick={() => setIsAdminOpen(true)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400 hover:bg-white dark:hover:bg-slate-700 transition"
+                title="Panel de Administración de Avisos"
+              >
+                <IconRenderer name="Lock" className="w-4 h-4" />
+              </button>
+
             </div>
-
-            <button
-              onClick={() => setIsCommandPaletteOpen(true)}
-              className="hidden md:flex items-center gap-2 px-3.5 py-2 bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl border border-slate-300 dark:border-slate-700/80 text-xs shadow-inner transition"
-              title="Buscar aplicaciones o sitios (Ctrl + K)"
-            >
-              <IconRenderer name="Search" className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
-              <span>Buscar app...</span>
-              <span className="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700 ml-1">
-                Ctrl K
-              </span>
-            </button>
-
-            <button
-              onClick={() => setIsAdminOpen(true)}
-              className="px-3.5 py-2 bg-amber-50 dark:bg-slate-800 hover:bg-amber-100 dark:hover:bg-slate-700 text-amber-800 dark:text-amber-300 font-bold text-xs rounded-xl border border-amber-300 dark:border-amber-500/30 transition flex items-center gap-1.5 shadow-sm"
-              title="Panel de Administración protegido por PIN"
-            >
-              <IconRenderer name="Lock" className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-              <span className="hidden sm:inline">⚙️ Admin Avisos</span>
-            </button>
-
-            <a
-              href="https://comedor-san-buenaventura.vercel.app/"
-              target="_blank"
-              rel="noreferrer"
-              className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-white font-extrabold text-xs shadow-lg transition bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95"
-            >
-              <IconRenderer name="Utensils" className="w-4 h-4" />
-              <span>🍽️ Pase Lista Comedor</span>
-            </a>
           </div>
 
         </div>
