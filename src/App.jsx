@@ -226,6 +226,15 @@ const SIDEBAR_SECTIONS = [
         color: "text-cyan-500 bg-cyan-50 border-cyan-200 dark:text-cyan-400 dark:bg-cyan-500/20 dark:border-cyan-500/30"
       },
       {
+        id: "orientacion-sb",
+        title: "Orientación Escolar",
+        subtitle: "Gabinete & Atención DUA",
+        url: "https://orientacion.vercel.app/",
+        icon: "Brain",
+        shortcut: "Alt+O",
+        color: "text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-500/20 dark:border-emerald-500/30"
+      },
+      {
         id: "extraescolares",
         title: "Extraescolares SB",
         subtitle: "Deportes y talleres",
@@ -236,30 +245,21 @@ const SIDEBAR_SECTIONS = [
       {
         id: "aiudateca",
         title: "La AIudateca",
-        subtitle: "Asistente IA DUA",
-        url: "file:///Users/jose/.gemini/antigravity/scratch/previsualizacion-la-aiudateca.html",
+        subtitle: "Asistente IA DUA & Prompts",
+        url: "/la-aiudateca.html",
         icon: "Bot",
         color: "text-violet-500 bg-violet-50 border-violet-200 dark:text-violet-400 dark:bg-violet-500/20 dark:border-violet-500/30"
       }
     ]
   },
   {
-    title: "Orientación & Pastoral",
+    title: "Pastoral",
     items: [
       {
-        id: "orientacion-sb",
-        title: "Orientación Escolar",
-        subtitle: "Gabinete & Atención DUA",
-        url: "https://orientacion.vercel.app/",
-        icon: "Brain",
-        shortcut: "Alt+O",
-        color: "text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-500/20 dark:border-emerald-500/30"
-      },
-      {
-        id: "oracion",
-        title: "Oración Franciscana",
-        subtitle: "Espiritualidad y reflexiones",
-        url: "https://franciscanosconventuales.es/oracion-franciscana/",
+        id: "diez-minutos-dios",
+        title: "10 Minutos con Dios",
+        subtitle: "Oración diaria y reflexiones",
+        url: "https://10minutosconjesus.org/",
         icon: "Heart",
         color: "text-amber-500 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-500/20 dark:border-amber-500/30"
       }
