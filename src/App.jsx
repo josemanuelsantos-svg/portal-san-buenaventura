@@ -205,6 +205,35 @@ const SIDEBAR_SECTIONS = [
     ]
   },
   {
+    title: "Documentación & Claustro",
+    items: [
+      {
+        id: "horarios-docentes",
+        title: "Horarios Docentes",
+        subtitle: "Grupos y profesorado",
+        url: "https://drive.google.com/drive/folders/1AMKiIwEadrnxzZQlRUVdBaz_i-D15bYY?usp=sharing",
+        icon: "Clock",
+        color: "text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30"
+      },
+      {
+        id: "listados-alumnos",
+        title: "Listados de Alumnos",
+        subtitle: "Listas de clase y cursos",
+        url: "https://drive.google.com/drive/folders/1jQJhC8_f1uXEDu9DGSOQDHjLELO12cTa?usp=sharing",
+        icon: "Users",
+        color: "text-blue-600 bg-blue-50 border-blue-200 dark:text-blue-300 dark:bg-blue-500/20 dark:border-blue-500/30"
+      },
+      {
+        id: "documentacion-programaciones",
+        title: "Documentación & Programaciones",
+        subtitle: "PGA, RRI y programaciones",
+        url: "https://drive.google.com/drive/folders/1AN9eZvT-snuxCk9yJ0BOON3Rmd-XEz_3?usp=sharing",
+        icon: "Folder",
+        color: "text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-500/20 dark:border-emerald-500/30"
+      }
+    ]
+  },
+  {
     title: "Aplicaciones Escolares & TIC",
     items: [
       {
@@ -266,7 +295,7 @@ const SIDEBAR_SECTIONS = [
     ]
   },
   {
-    title: "Google Sites",
+    title: "Google Sites & Tutoriales",
     items: [
       {
         id: "site-primaria",
@@ -283,6 +312,14 @@ const SIDEBAR_SECTIONS = [
         url: "https://sites.google.com/sanbuenaventura.org/edinfantil/inicio?read_current=1",
         icon: "Smile",
         color: "text-teal-500 bg-teal-50 border-teal-200 dark:text-teal-400 dark:bg-teal-500/20 dark:border-teal-500/30"
+      },
+      {
+        id: "tutoriales-tic",
+        title: "Tutoriales & Guías",
+        subtitle: "Vídeos formativos y ayuda",
+        url: "https://sites.google.com/sanbuenaventura.org/edprimaria/tutoriales?authuser=0",
+        icon: "Video",
+        color: "text-rose-500 bg-rose-50 border-rose-200 dark:text-rose-400 dark:bg-rose-500/20 dark:border-rose-500/30"
       }
     ]
   }
