@@ -1097,12 +1097,14 @@ export function App() {
                       href={
                         activeCalTab === "actividades"
                           ? `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}`
-                          : `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}`
+                          : activeCalTab === "sustituciones"
+                          ? `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}`
+                          : `https://calendar.google.com/calendar/u/0/r`
                       }
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-300 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700 transition whitespace-nowrap"
-                      title="Abrir en Google Calendar web"
+                      title="Abrir en Google Calendar web o app"
                     >
                       <IconRenderer name="ExternalLink" className="w-3 h-3" />
                       <span>Abrir</span>
