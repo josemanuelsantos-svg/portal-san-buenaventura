@@ -503,10 +503,13 @@ export function App() {
   const urgentNotice = activeNotices.find(n => n.priority === "urgent" && n.id !== dismissedUrgentId);
 
   const [isRiddleOpen, setIsRiddleOpen] = useState(false);
-  const [riddleAnswer, setRiddleAnswer] = useState("");
-  const [riddleSolved, setRiddleSolved] = useState(false);
-  const [riddleError, setRiddleError] = useState("");
-  const [isDecoded, setIsDecoded] = useState(false);
+  const [riddle1Answer, setRiddle1Answer] = useState("");
+  const [riddle1Solved, setRiddle1Solved] = useState(false);
+  const [riddle1Error, setRiddle1Error] = useState("");
+
+  const [riddle2Answer, setRiddle2Answer] = useState("");
+  const [riddle2Solved, setRiddle2Solved] = useState(false);
+  const [riddle2Error, setRiddle2Error] = useState("");
 
   useEffect(() => {
     console.log("%c👑 El lider fue, es y será por siempre", "color: #f59e0b; font-size: 14px; font-weight: bold; background: #0f172a; padding: 6px 12px; border-radius: 8px; border: 1px solid #f59e0b;");
@@ -516,24 +519,37 @@ export function App() {
     const next = logoClicks + 1;
     if (next >= 5) {
       setIsRiddleOpen(true);
-      setRiddleAnswer("");
-      setRiddleSolved(false);
-      setRiddleError("");
-      setIsDecoded(false);
+      setRiddle1Answer("");
+      setRiddle1Solved(false);
+      setRiddle1Error("");
+      setRiddle2Answer("");
+      setRiddle2Solved(false);
+      setRiddle2Error("");
       setLogoClicks(0);
     } else {
       setLogoClicks(next);
     }
   };
 
-  const handleRiddleSubmit = (e) => {
+  const handleRiddle1Submit = (e) => {
     e.preventDefault();
-    const clean = riddleAnswer.trim().toLowerCase();
+    const clean = riddle1Answer.trim().toLowerCase();
     if (clean.includes("lider") || clean.includes("líder") || clean.includes("jose")) {
-      setRiddleSolved(true);
-      setRiddleError("");
+      setRiddle1Solved(true);
+      setRiddle1Error("");
     } else {
-      setRiddleError("Respuesta incorrecta. El enigma permanece sellado.");
+      setRiddle1Error("Respuesta incorrecta. El manuscrito sigue oculto.");
+    }
+  };
+
+  const handleRiddle2Submit = (e) => {
+    e.preventDefault();
+    const clean = riddle2Answer.trim().toLowerCase();
+    if (clean.includes("siempre") || clean.includes("eterno") || clean.includes("eternidad") || clean.includes("por siempre") || clean.includes("para siempre")) {
+      setRiddle2Solved(true);
+      setRiddle2Error("");
+    } else {
+      setRiddle2Error("Respuesta incorrecta. La llave de descifrado no encaja.");
     }
   };
 
@@ -1560,7 +1576,7 @@ export function App() {
         </div>
       )}
 
-      {/* MODAL ACERTIJO / ENIGMA FRANCISCANO */}
+      {/* MODAL ACERTIJO / ENIGMA FRANCISCANO (2 FASES) */}
       {isRiddleOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
           <div className="w-full max-w-lg bg-slate-900 border border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col text-white animate-slide-up">
@@ -1573,7 +1589,7 @@ export function App() {
                 </h3>
               </div>
               <button
-                onClick={() => { setIsRiddleOpen(false); setRiddleAnswer(""); setRiddleSolved(false); setRiddleError(""); setIsDecoded(false); }}
+                onClick={() => { setIsRiddleOpen(false); setRiddle1Answer(""); setRiddle1Solved(false); setRiddle1Error(""); setRiddle2Answer(""); setRiddle2Solved(false); setRiddle2Error(""); }}
                 className="text-slate-400 hover:text-white text-sm"
               >
                 ✕
@@ -1581,32 +1597,36 @@ export function App() {
             </div>
 
             <div className="p-6 space-y-5">
-              {!riddleSolved ? (
-                <form onSubmit={handleRiddleSubmit} className="space-y-4">
+              {!riddle1Solved ? (
+                <form onSubmit={handleRiddle1Submit} className="space-y-4">
+                  <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-wider text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full w-fit">
+                    <span>Fase 1</span> · <span>Desbloqueo del Manuscrito</span>
+                  </div>
+                  
                   <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs leading-relaxed italic text-center">
                     "No busca la fama ni el aplauso vano, pero guía con paso firme y visión clara el destino del centro.<br/>
                     <span className="font-bold text-amber-300 not-italic block mt-2">¿Quién es aquel que sostiene el timón del colegio?</span>"
                   </div>
 
                   <div>
-                    <label className="text-[11px] text-slate-400 block mb-1 font-semibold">Introduce la respuesta al acertijo:</label>
+                    <label className="text-[11px] text-slate-400 block mb-1 font-semibold">Introduce la primera respuesta:</label>
                     <input
                       type="text"
-                      value={riddleAnswer}
-                      onChange={(e) => setRiddleAnswer(e.target.value)}
+                      value={riddle1Answer}
+                      onChange={(e) => setRiddle1Answer(e.target.value)}
                       placeholder="Tu respuesta..."
                       className="w-full bg-slate-950 border border-amber-500/30 rounded-xl px-4 py-2.5 text-center text-sm font-semibold text-amber-300 outline-none focus:border-amber-400"
                       autoFocus
                       required
                     />
-                    {riddleError && <p className="text-xs text-rose-400 mt-2 text-center font-medium">{riddleError}</p>}
+                    {riddle1Error && <p className="text-xs text-rose-400 mt-2 text-center font-medium">{riddle1Error}</p>}
                   </div>
 
                   <button
                     type="submit"
                     className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl shadow-lg transition"
                   >
-                    Descifrar Enigma
+                    Abrir Manuscrito Cifrado
                   </button>
                 </form>
               ) : (
@@ -1617,9 +1637,9 @@ export function App() {
 
                   <div>
                     <h4 className="font-extrabold text-amber-400 text-sm uppercase tracking-wider">
-                      Enigma Resuelto · Manuscrito Criptográfico
+                      Manuscrito Arcano Sellado
                     </h4>
-                    <p className="text-[11px] text-slate-400 mt-0.5">El mensaje arcano ha sido revelado en código cifrado:</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">El mensaje está encriptado en código criptográfico y glifos antiguos:</p>
                   </div>
 
                   {/* MENSAJE CIFRADO EN CÓDIGO CRIPTOGRÁFICO */}
@@ -1638,22 +1658,56 @@ export function App() {
                       </p>
                     </div>
 
-                    {isDecoded && (
-                      <div className="pt-2 border-t border-amber-500/30 text-center animate-slide-up">
-                        <span className="text-[9px] uppercase tracking-widest text-emerald-400 block font-sans font-bold">Mensaje Descifrado:</span>
-                        <p className="text-base font-black text-amber-300 font-sans tracking-wide mt-1">
+                    {riddle2Solved && (
+                      <div className="pt-3 border-t border-amber-500/40 text-center animate-slide-up bg-amber-500/10 p-3 rounded-xl">
+                        <span className="text-[9px] uppercase tracking-widest text-emerald-400 block font-sans font-bold">✨ Mensaje Revelado y Traducido:</span>
+                        <p className="text-lg font-black text-amber-300 font-sans tracking-wide mt-1 drop-shadow-md">
                           "El lider fue, es y será por siempre"
                         </p>
                       </div>
                     )}
                   </div>
 
-                  <button
-                    onClick={() => setIsDecoded(!isDecoded)}
-                    className="px-5 py-2 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 mx-auto"
-                  >
-                    <span>{isDecoded ? "🔒 Volver a Cifrar" : "👁️ Descifrar Código Oculto"}</span>
-                  </button>
+                  {/* SEGUNDA PREGUNTA PARA DESCIFRAR */}
+                  {!riddle2Solved ? (
+                    <form onSubmit={handleRiddle2Submit} className="bg-slate-950 p-4 rounded-2xl border border-amber-500/30 space-y-3 text-left">
+                      <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-wider text-amber-400">
+                        <span>Fase 2</span> · <span>Llave de Descifrado</span>
+                      </div>
+
+                      <p className="text-xs text-amber-200/90 italic leading-relaxed">
+                        "En el pasado dejó su huella, en el presente marca el rumbo y en el futuro jamás se borrará. <span className="font-bold not-italic text-amber-300">¿Por cuánto tiempo perdura su legado?</span>"
+                      </p>
+
+                      <div>
+                        <input
+                          type="text"
+                          value={riddle2Answer}
+                          onChange={(e) => setRiddle2Answer(e.target.value)}
+                          placeholder="Introduce la respuesta para descifrar..."
+                          className="w-full bg-slate-900 border border-amber-500/40 rounded-xl px-3 py-2 text-center text-xs font-semibold text-amber-300 outline-none focus:border-amber-400"
+                          autoFocus
+                          required
+                        />
+                        {riddle2Error && <p className="text-[11px] text-rose-400 mt-1.5 text-center font-medium">{riddle2Error}</p>}
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl shadow transition"
+                      >
+                        🗝️ Validar Llave y Descifrar Código
+                      </button>
+                    </form>
+                  ) : (
+                    <button
+                      onClick={() => { setRiddle2Solved(false); setRiddle2Answer(""); }}
+                      className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition"
+                    >
+                      🔒 Volver a Cifrar Manuscrito
+                    </button>
+                  )}
+
                 </div>
               )}
             </div>
