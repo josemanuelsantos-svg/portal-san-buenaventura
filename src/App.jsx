@@ -395,12 +395,21 @@ const SIDEBAR_SECTIONS = [
     title: "Pastoral",
     items: [
       {
-        id: "diez-minutos-dios",
-        title: "10 Minutos con Dios",
-        subtitle: "Oración diaria y reflexiones",
-        url: "https://10minutosconjesus.org/",
+        id: "oracion-franciscana",
+        title: "Oración Franciscana",
+        subtitle: "Espiritualidad y reflexiones",
+        url: "https://franciscanosconventuales.es/oracion-franciscana/",
         icon: "Heart",
         color: "text-amber-500 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-500/20 dark:border-amber-500/30"
+      },
+      {
+        id: "diez-minutos-dios",
+        title: "10 Minutos con Dios",
+        subtitle: "Oración y meditación diaria",
+        url: "#",
+        pendingUrl: true,
+        icon: "Sparkles",
+        color: "text-rose-500 bg-rose-50 border-rose-200 dark:text-rose-400 dark:bg-rose-500/20 dark:border-rose-500/30"
       }
     ]
   },
