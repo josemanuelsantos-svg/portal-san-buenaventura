@@ -837,11 +837,36 @@ export function App() {
       {/* MAIN BODY WITH SIDEBAR (LEFT) + CONTENT (RIGHT) */}
       <div className="flex-1 max-w-7xl w-full mx-auto flex flex-col md:flex-row">
         
-        {/* SIDEBAR ADAPTATIVA */}
-        <aside className={`bg-white/80 dark:bg-slate-900/85 backdrop-blur-xl p-4 shrink-0 border-r border-slate-200 dark:border-slate-800 transition-all ${
-          isSidebarOpen ? 'block' : 'hidden md:block'
-        } ${isSidebarCollapsed ? 'w-full md:w-20' : 'w-full md:w-72'}`}>
+        {/* BACKDROP PARA MÓVIL AL ABRIR LA BARRA LATERAL */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm md:hidden animate-fade-in"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        {/* SIDEBAR ADAPTATIVA (DRAWER EN MÓVIL, COLUMNA FIJA EN PC) */}
+        <aside className={`bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-4 shrink-0 transition-all border-r border-slate-200 dark:border-slate-800 ${
+          isSidebarOpen
+            ? 'fixed inset-y-0 left-0 z-50 w-4/5 max-w-xs shadow-2xl overflow-y-auto block'
+            : 'hidden md:block'
+        } ${isSidebarCollapsed ? 'md:w-20' : 'md:w-72'}`}>
           
+          {/* CABECERA DE LA BARRA LATERAL EN MÓVIL */}
+          <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 md:hidden">
+            <div className="flex items-center gap-2">
+              <IconRenderer name="LayoutGrid" className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">Menú & Marcadores</span>
+            </div>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-100 dark:bg-slate-800 text-xs font-bold"
+            >
+              ✕ Cerrar
+            </button>
+          </div>
+
+          {/* CONTROLES DE COLAPSO EN PC */}
           <div className="hidden md:flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800">
             {!isSidebarCollapsed && (
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300">Navegación</span>
@@ -1051,7 +1076,7 @@ export function App() {
           </section>
 
           {/* CALENDARIO DE GOOGLE CON VISTA MENSUAL POR DEFECTO */}
-          <section className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+          <section id="calendario-escolar" className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80 mb-3">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 flex-shrink-0">
@@ -1135,7 +1160,7 @@ export function App() {
               </div>
             </div>
 
-            <div className="w-full h-[680px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-inner">
+            <div className="w-full h-[520px] sm:h-[680px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-inner">
               <iframe
                 src={activeCalendarSrc}
                 className="w-full h-full border-0 bg-white dark:bg-slate-950"
@@ -1148,15 +1173,33 @@ export function App() {
 
       </div>
 
-      {/* BARRA DE NAVEGACIÓN INFERIOR MÓVIL */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800 backdrop-blur-lg px-4 py-2 flex items-center justify-around">
+      {/* BARRA DE NAVEGACIÓN INFERIOR MÓVIL OPTIMIZADA */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800 backdrop-blur-lg px-2 py-2 flex items-center justify-around shadow-xl">
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[10px] p-1"
+        >
+          <IconRenderer name="Menu" className="w-4 h-4" />
+          <span>Menú Apps</span>
+        </button>
+
+        <button
+          onClick={() => {
+            document.getElementById('calendario-escolar')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="flex flex-col items-center gap-0.5 text-blue-600 dark:text-blue-400 font-bold text-[10px] p-1"
+        >
+          <IconRenderer name="Calendar" className="w-4 h-4" />
+          <span>Calendario</span>
+        </button>
+
         <a
           href="https://comedor-san-buenaventura.vercel.app/"
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold text-[10px]"
+          className="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] p-1"
         >
-          <IconRenderer name="Utensils" className="w-5 h-5" />
+          <IconRenderer name="Utensils" className="w-4 h-4" />
           <span>Comedor</span>
         </a>
 
@@ -1164,29 +1207,19 @@ export function App() {
           href="https://www.snapp.care/login"
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col items-center gap-1 text-rose-600 dark:text-rose-400 font-bold text-[10px]"
+          className="flex flex-col items-center gap-0.5 text-rose-600 dark:text-rose-400 font-bold text-[10px] p-1"
         >
-          <IconRenderer name="HeartPulse" className="w-5 h-5" />
+          <IconRenderer name="HeartPulse" className="w-4 h-4" />
           <span>Enfermería</span>
         </a>
 
         <button
           onClick={() => setIsCommandPaletteOpen(true)}
-          className="flex flex-col items-center gap-1 text-indigo-600 dark:text-indigo-400 font-bold text-[10px]"
+          className="flex flex-col items-center gap-0.5 text-slate-600 dark:text-slate-400 font-bold text-[10px] p-1"
         >
-          <IconRenderer name="Search" className="w-5 h-5" />
+          <IconRenderer name="Search" className="w-4 h-4" />
           <span>Buscar</span>
         </button>
-
-        <a
-          href="https://gestion-dispositivos-three.vercel.app/#view-calendar"
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-col items-center gap-1 text-pink-600 dark:text-pink-400 font-bold text-[10px]"
-        >
-          <IconRenderer name="Laptop2" className="w-5 h-5" />
-          <span>Dispositivos</span>
-        </a>
       </div>
 
       {/* MODAL PALETA DE COMANDOS / BUSCADOR CTRL+K */}
