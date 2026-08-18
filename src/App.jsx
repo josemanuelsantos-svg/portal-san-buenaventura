@@ -451,6 +451,52 @@ export function App() {
     downloadAnchor.remove();
   };
 
+  const FIREBASE_DB_URL = "https://avengers-6a-cbbcc-default-rtdb.europe-west1.firebasedatabase.app/portal_docente_avisos";
+  const [cloudStatus, setCloudStatus] = useState("checking");
+
+  const fetchCloudNotices = async () => {
+    try {
+      const res = await fetch(`${FIREBASE_DB_URL}.json`);
+      if (!res.ok) {
+        setCloudStatus("unauthorized");
+        return;
+      }
+      const data = await res.json();
+      setCloudStatus("connected");
+      if (data) {
+        const list = Array.isArray(data)
+          ? data.filter(Boolean)
+          : Object.entries(data).map(([key, val]) => ({ ...val, id: key }));
+        list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        setNotices(list);
+        localStorage.setItem("sb_school_notices", JSON.stringify(list));
+      } else {
+        if (notices.length > 0) {
+          notices.forEach(n => {
+            fetch(`${FIREBASE_DB_URL}/${n.id}.json`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ...n, createdAt: Date.now() })
+            }).catch(() => {});
+          });
+        }
+      }
+    } catch (err) {
+      setCloudStatus("offline");
+    }
+  };
+
+  useEffect(() => {
+    fetchCloudNotices();
+    const interval = setInterval(fetchCloudNotices, 20000);
+    const handleFocus = () => fetchCloudNotices();
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, []);
+
   const nowTs = Date.now();
   const activeNotices = notices.filter(n => !n.expiresAt || n.expiresAt > nowTs);
   const urgentNotice = activeNotices.find(n => n.priority === "urgent" && n.id !== dismissedUrgentId);
@@ -465,7 +511,7 @@ export function App() {
     }
   };
 
-  const handleAddNotice = (e) => {
+  const handleAddNotice = async (e) => {
     if (e) e.preventDefault();
     if (!newTitle.trim()) {
       setFormError("Por favor escribe el título del aviso.");
@@ -488,13 +534,15 @@ export function App() {
       expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
     }
 
+    const noticeId = `notice_${Date.now()}`;
     const noticeObj = {
-      id: Date.now(),
+      id: noticeId,
       title: newTitle.trim(),
       content: newContent.trim(),
       priority: newPriority,
       author: newAuthor.trim() || "Dirección",
       date: `Hoy, ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
+      createdAt: Date.now(),
       expiresAt
     };
 
@@ -506,15 +554,37 @@ export function App() {
     setIsNoticesCollapsed(false);
     setDismissedUrgentId(null);
     setIsAdminOpen(false);
-    setToastMessage("📢 Aviso publicado correctamente en el portal");
+
+    try {
+      const res = await fetch(`${FIREBASE_DB_URL}/${noticeId}.json`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(noticeObj)
+      });
+      if (res.ok) {
+        setCloudStatus("connected");
+        setToastMessage("📢 Aviso publicado en la nube para todo el colegio");
+      } else {
+        setToastMessage("📢 Aviso guardado localmente (configura las reglas de Firebase)");
+      }
+    } catch (err) {
+      setToastMessage("📢 Aviso guardado localmente");
+    }
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const handleDeleteNotice = (id) => {
+  const handleDeleteNotice = async (id) => {
     const updated = notices.filter(n => n.id !== id);
     setNotices(updated);
     localStorage.setItem("sb_school_notices", JSON.stringify(updated));
-    setToastMessage("Aviso eliminado");
+    try {
+      await fetch(`${FIREBASE_DB_URL}/${id}.json`, {
+        method: "DELETE"
+      });
+      setToastMessage("Aviso eliminado de la nube");
+    } catch (err) {
+      setToastMessage("Aviso eliminado");
+    }
     setTimeout(() => setToastMessage(null), 2500);
   };
 
@@ -1273,9 +1343,19 @@ export function App() {
           <div className="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
             
             <div className="flex items-center justify-between px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <IconRenderer name="ShieldCheck" className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-                <h3 className="font-bold text-slate-900 dark:text-white text-base">Panel de Administración de Avisos</h3>
+                <div>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-base leading-tight">Panel de Administración de Avisos</h3>
+                  <div className="flex items-center gap-1.5 mt-0.5 text-[10px]">
+                    <span className={`w-2 h-2 rounded-full ${cloudStatus === 'connected' ? 'bg-emerald-500 animate-pulse' : (cloudStatus === 'unauthorized' ? 'bg-amber-500' : 'bg-slate-400')}`}></span>
+                    <span className="text-slate-500 dark:text-slate-400 font-medium">
+                      {cloudStatus === 'connected' 
+                        ? 'Sincronizado en la nube (Firebase)' 
+                        : (cloudStatus === 'unauthorized' ? 'Modo local (Pendiente configurar reglas en Firebase)' : 'Verificando nube...')}
+                    </span>
+                  </div>
+                </div>
               </div>
               <button
                 onClick={() => { setIsAdminOpen(false); setIsPinAuthenticated(false); setPinInput(""); }}
