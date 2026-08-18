@@ -502,6 +502,12 @@ export function App() {
   const activeNotices = notices.filter(n => !n.expiresAt || n.expiresAt > nowTs);
   const urgentNotice = activeNotices.find(n => n.priority === "urgent" && n.id !== dismissedUrgentId);
 
+  const [isRiddleOpen, setIsRiddleOpen] = useState(false);
+  const [riddleAnswer, setRiddleAnswer] = useState("");
+  const [riddleSolved, setRiddleSolved] = useState(false);
+  const [riddleError, setRiddleError] = useState("");
+  const [isDecoded, setIsDecoded] = useState(false);
+
   useEffect(() => {
     console.log("%c👑 El lider fue, es y será por siempre", "color: #f59e0b; font-size: 14px; font-weight: bold; background: #0f172a; padding: 6px 12px; border-radius: 8px; border: 1px solid #f59e0b;");
   }, []);
@@ -509,11 +515,25 @@ export function App() {
   const handleLogoClick = () => {
     const next = logoClicks + 1;
     if (next >= 5) {
-      setToastMessage("👑 El lider fue, es y será por siempre");
-      setTimeout(() => setToastMessage(null), 5000);
+      setIsRiddleOpen(true);
+      setRiddleAnswer("");
+      setRiddleSolved(false);
+      setRiddleError("");
+      setIsDecoded(false);
       setLogoClicks(0);
     } else {
       setLogoClicks(next);
+    }
+  };
+
+  const handleRiddleSubmit = (e) => {
+    e.preventDefault();
+    const clean = riddleAnswer.trim().toLowerCase();
+    if (clean.includes("lider") || clean.includes("líder") || clean.includes("jose")) {
+      setRiddleSolved(true);
+      setRiddleError("");
+    } else {
+      setRiddleError("Respuesta incorrecta. El enigma permanece sellado.");
     }
   };
 
@@ -531,6 +551,10 @@ export function App() {
 
   const handleAddNotice = async (e) => {
     if (e) e.preventDefault();
+    if (!isPinAuthenticated) {
+      setFormError("Debes identificarte con la clave de administración.");
+      return;
+    }
     if (!newTitle.trim()) {
       setFormError("Por favor escribe el título del aviso.");
       return;
@@ -963,7 +987,7 @@ export function App() {
                 )}
 
                 <button
-                  onClick={() => { setIsAdminOpen(true); setIsPinAuthenticated(true); setFormError(""); }}
+                  onClick={() => { setIsAdminOpen(true); setFormError(""); }}
                   className="flex items-center gap-1 text-xs text-amber-800 dark:text-amber-200 bg-amber-100 hover:bg-amber-200 dark:bg-amber-500/20 dark:hover:bg-amber-500/30 px-2.5 py-1 rounded-lg border border-amber-300 dark:border-amber-500/40 font-bold transition shadow-sm"
                 >
                   <IconRenderer name="PlusCircle" className="w-3.5 h-3.5" />
@@ -976,7 +1000,7 @@ export function App() {
               <div className="text-center py-6 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-slate-950/50 my-2">
                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">No hay avisos publicados en este momento.</p>
                 <button
-                  onClick={() => { setIsAdminOpen(true); setIsPinAuthenticated(true); setFormError(""); }}
+                  onClick={() => { setIsAdminOpen(true); setFormError(""); }}
                   className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl shadow transition"
                 >
                   + Publicar Primer Aviso
@@ -1531,6 +1555,108 @@ export function App() {
 
               </div>
             )}
+
+          </div>
+        </div>
+      )}
+
+      {/* MODAL ACERTIJO / ENIGMA FRANCISCANO */}
+      {isRiddleOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+          <div className="w-full max-w-lg bg-slate-900 border border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col text-white animate-slide-up">
+            
+            <div className="flex items-center justify-between px-6 py-4 bg-slate-950 border-b border-amber-500/30">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">📜</span>
+                <h3 className="font-extrabold text-amber-400 text-sm tracking-wide">
+                  El Enigma del Claustro Franciscano
+                </h3>
+              </div>
+              <button
+                onClick={() => { setIsRiddleOpen(false); setRiddleAnswer(""); setRiddleSolved(false); setRiddleError(""); setIsDecoded(false); }}
+                className="text-slate-400 hover:text-white text-sm"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-6 space-y-5">
+              {!riddleSolved ? (
+                <form onSubmit={handleRiddleSubmit} className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs leading-relaxed italic text-center">
+                    "No busca la fama ni el aplauso vano, pero guía con paso firme y visión clara el destino del centro.<br/>
+                    <span className="font-bold text-amber-300 not-italic block mt-2">¿Quién es aquel que sostiene el timón del colegio?</span>"
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] text-slate-400 block mb-1 font-semibold">Introduce la respuesta al acertijo:</label>
+                    <input
+                      type="text"
+                      value={riddleAnswer}
+                      onChange={(e) => setRiddleAnswer(e.target.value)}
+                      placeholder="Tu respuesta..."
+                      className="w-full bg-slate-950 border border-amber-500/30 rounded-xl px-4 py-2.5 text-center text-sm font-semibold text-amber-300 outline-none focus:border-amber-400"
+                      autoFocus
+                      required
+                    />
+                    {riddleError && <p className="text-xs text-rose-400 mt-2 text-center font-medium">{riddleError}</p>}
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl shadow-lg transition"
+                  >
+                    Descifrar Enigma
+                  </button>
+                </form>
+              ) : (
+                <div className="space-y-4 text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto text-2xl animate-pulse">
+                    👑
+                  </div>
+
+                  <div>
+                    <h4 className="font-extrabold text-amber-400 text-sm uppercase tracking-wider">
+                      Enigma Resuelto · Manuscrito Criptográfico
+                    </h4>
+                    <p className="text-[11px] text-slate-400 mt-0.5">El mensaje arcano ha sido revelado en código cifrado:</p>
+                  </div>
+
+                  {/* MENSAJE CIFRADO EN CÓDIGO CRIPTOGRÁFICO */}
+                  <div className="p-4 rounded-2xl bg-slate-950 border border-amber-500/40 space-y-3 font-mono text-left">
+                    <div>
+                      <span className="text-[9px] uppercase tracking-widest text-slate-500 block">Cifrado Criptográfico (Hex):</span>
+                      <p className="text-[11px] text-amber-400/90 break-all leading-relaxed">
+                        45 6C 20 6C 69 64 65 72 20 66 75 65 2C 20 65 73 20 79 20 73 65 72 C3 A1 20 70 6F 72 20 73 69 65 6D 70 72 65
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="text-[9px] uppercase tracking-widest text-slate-500 block">Glifos Arcanos:</span>
+                      <p className="text-xs text-amber-300/80 tracking-widest">
+                        ᛖᛚ ᛚᛁᛞᛖᚱ ᚠᚢᛖ, ᛖᛋ ᚤ ᛋᛖᚱᚨ ᛈᛟᚱ ᛋᛁᛖᛗᛈᚱᛖ
+                      </p>
+                    </div>
+
+                    {isDecoded && (
+                      <div className="pt-2 border-t border-amber-500/30 text-center animate-slide-up">
+                        <span className="text-[9px] uppercase tracking-widest text-emerald-400 block font-sans font-bold">Mensaje Descifrado:</span>
+                        <p className="text-base font-black text-amber-300 font-sans tracking-wide mt-1">
+                          "El lider fue, es y será por siempre"
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => setIsDecoded(!isDecoded)}
+                    className="px-5 py-2 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 mx-auto"
+                  >
+                    <span>{isDecoded ? "🔒 Volver a Cifrar" : "👁️ Descifrar Código Oculto"}</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
           </div>
         </div>
