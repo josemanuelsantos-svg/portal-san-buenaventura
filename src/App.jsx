@@ -1346,7 +1346,7 @@ export function App() {
         </aside>
 
         {/* MAIN CONTENT AREA */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 space-y-6 overflow-y-auto">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 pb-28 sm:pb-8 space-y-6 overflow-y-auto">
           
           {/* TABLÓN DE AVISOS DEL DÍA */}
           <section className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
@@ -1731,63 +1731,79 @@ export function App() {
 
       </div>
 
-      {/* BARRA DE NAVEGACIÓN INFERIOR MÓVIL OPTIMIZADA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800 backdrop-blur-lg px-2 py-2 flex items-center justify-around shadow-xl">
+      {/* BARRA DE NAVEGACIÓN INFERIOR MÓVIL OPTIMIZADA (FLOATING DOCK FLUIDO) */}
+      <div className="md:hidden fixed bottom-3 left-2 right-2 sm:left-4 sm:right-4 z-40 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 backdrop-blur-xl px-1.5 py-1.5 rounded-2xl flex items-center justify-around shadow-2xl">
+        
+        {/* 1. Menú Apps */}
         <button
           onClick={() => setIsSidebarOpen(true)}
-          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[10px] p-1"
+          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          title="Abrir Menú de Aplicaciones"
         >
           <IconRenderer name="Menu" className="w-4 h-4" />
-          <span>Menú Apps</span>
+          <span>Menú</span>
         </button>
 
-        <button
-          onClick={() => {
-            document.getElementById('calendario-escolar')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className="flex flex-col items-center gap-0.5 text-blue-600 dark:text-blue-400 font-bold text-[10px] p-1"
+        {/* 2. Reservar Dispositivos */}
+        <a
+          href="https://gestion-dispositivos-three.vercel.app/#view-calendar"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center gap-0.5 text-pink-600 dark:text-pink-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          title="Reserva de Chromebooks e iPads"
         >
-          <IconRenderer name="Calendar" className="w-4 h-4" />
-          <span>Calendario</span>
-        </button>
+          <IconRenderer name="Laptop2" className="w-4 h-4" />
+          <span>Dispositivos</span>
+        </a>
 
-        <button
-          onClick={() => {
-            document.getElementById('programacion-semanal')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[10px] p-1"
+        {/* 3. Incidencias */}
+        <a
+          href="https://incidencias-colegio-1wx3.vercel.app/"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center gap-0.5 text-cyan-600 dark:text-cyan-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          title="Partes de Incidencias & TIC"
         >
-          <IconRenderer name="ClipboardList" className="w-4 h-4" />
-          <span>Semana</span>
-        </button>
+          <IconRenderer name="Wrench" className="w-4 h-4" />
+          <span>Incidencias</span>
+        </a>
 
+        {/* 4. Orientación Escolar */}
+        <a
+          href="https://orientacion.vercel.app/"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          title="Orientación Escolar & DUA"
+        >
+          <IconRenderer name="Brain" className="w-4 h-4" />
+          <span>Orientación</span>
+        </a>
+
+        {/* 5. Comedor */}
         <a
           href="https://comedor-san-buenaventura.vercel.app/"
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] p-1"
+          className="flex flex-col items-center gap-0.5 text-amber-600 dark:text-amber-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          title="Pase de lista Comedor"
         >
           <IconRenderer name="Utensils" className="w-4 h-4" />
           <span>Comedor</span>
         </a>
 
-        <a
-          href="https://www.snapp.care/login"
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 text-rose-600 dark:text-rose-400 font-bold text-[10px] p-1"
-        >
-          <IconRenderer name="HeartPulse" className="w-4 h-4" />
-          <span>Enfermería</span>
-        </a>
-
+        {/* 6. Semana */}
         <button
-          onClick={() => setIsCommandPaletteOpen(true)}
-          className="flex flex-col items-center gap-0.5 text-slate-600 dark:text-slate-400 font-bold text-[10px] p-1"
+          onClick={() => {
+            document.getElementById('programacion-semanal')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          title="Programación Semanal del Claustro"
         >
-          <IconRenderer name="Search" className="w-4 h-4" />
-          <span>Buscar</span>
+          <IconRenderer name="ClipboardList" className="w-4 h-4" />
+          <span>Semana</span>
         </button>
+
       </div>
 
       {/* MODAL PALETA DE COMANDOS / BUSCADOR CTRL+K */}
@@ -2565,7 +2581,7 @@ export function App() {
       )}
 
       {/* FOOTER */}
-      <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800/80 py-3 px-6 text-center text-xs text-slate-500 transition-colors">
+      <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800/80 py-3 px-6 pb-24 md:pb-3 text-center text-xs text-slate-500 transition-colors">
         <span>Colegio San Buenaventura © 2026 · Portal Central de Acceso & Agenda Escolar</span>
       </footer>
 
