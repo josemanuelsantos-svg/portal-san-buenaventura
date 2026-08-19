@@ -95,15 +95,38 @@
   animation: pulseGlow 4s infinite ease-in-out;
 }
 
-/* ACCESIBILIDAD 1: ESCALADO DE TAMAÑO DE TEXTO */
+/* ACCESIBILIDAD 1: ESCALADO DE TAMAÑO DE TEXTO SEGURO Y EQUILIBRADO */
 html.text-size-normal {
-  font-size: 16px;
+  font-size: 15px;
+}
+@media (min-width: 1024px) {
+  html.text-size-normal {
+    font-size: 16px;
+  }
 }
 html.text-size-large {
-  font-size: 18px;
+  font-size: 16px;
+}
+@media (min-width: 1024px) {
+  html.text-size-large {
+    font-size: 17.5px;
+  }
 }
 html.text-size-xl {
-  font-size: 20px;
+  font-size: 17px;
+}
+@media (min-width: 1024px) {
+  html.text-size-xl {
+    font-size: 18.5px;
+  }
+}
+
+*, ::before, ::after {
+  box-sizing: border-box;
+}
+.break-words {
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 /* ACCESIBILIDAD 2: MODO ALTO CONTRASTE (WCAG AAA) */

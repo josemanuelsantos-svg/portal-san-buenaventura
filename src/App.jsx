@@ -1185,7 +1185,7 @@ export function App() {
       </header>
 
       {/* MAIN BODY WITH SIDEBAR (LEFT) + CONTENT (RIGHT) */}
-      <div className="flex-1 max-w-7xl w-full mx-auto flex flex-col md:flex-row">
+      <div className="flex-1 max-w-7xl w-full mx-auto flex flex-col md:flex-row min-w-0">
         
         {/* BACKDROP PARA MÓVIL AL ABRIR LA BARRA LATERAL */}
         {isSidebarOpen && (
@@ -1346,7 +1346,7 @@ export function App() {
         </aside>
 
         {/* MAIN CONTENT AREA */}
-        <main className="flex-1 p-4 sm:p-6 space-y-6 overflow-y-auto">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 space-y-6 overflow-y-auto">
           
           {/* TABLÓN DE AVISOS DEL DÍA */}
           <section className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
@@ -1418,7 +1418,7 @@ export function App() {
                         </div>
                       </div>
                       <h3 className="font-bold text-xs text-slate-900 dark:text-white mb-0.5">{n.title}</h3>
-                      <p className="text-[11px] opacity-90 leading-tight line-clamp-2">{n.content}</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{n.content}</p>
                     </div>
                   ))}
                 </div>
@@ -1640,7 +1640,7 @@ export function App() {
                       </div>
 
                       {/* Desglose por Días (Lunes a Viernes) */}
-                      <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
                         {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dayName, idx) => {
                           const dayData = currentSelectedPlan.days?.find(d => d.day.toLowerCase().includes(dayName.toLowerCase())) || { day: dayName, date: "", items: [] };
                           const dayColors = [
@@ -1659,7 +1659,7 @@ export function App() {
                           ];
 
                           return (
-                            <div key={dayName} className={`rounded-2xl border p-3 flex flex-col justify-between transition ${dayColors[idx]}`}>
+                            <div key={dayName} className={`rounded-2xl border p-3 flex flex-col justify-between transition min-w-0 break-words ${dayColors[idx]}`}>
                               <div>
                                 <div className={`px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center justify-between mb-2.5 ${headerColors[idx]}`}>
                                   <span>{dayName}</span>
@@ -1669,7 +1669,7 @@ export function App() {
                                 {dayData.items && dayData.items.length > 0 ? (
                                   <ul className="space-y-1.5 text-xs text-slate-800 dark:text-slate-200">
                                     {dayData.items.map((item, iIdx) => (
-                                      <li key={iIdx} className="flex items-start gap-1.5 leading-snug">
+                                      <li key={iIdx} className="flex items-start gap-1.5 leading-snug min-w-0 break-words">
                                         <span className="text-indigo-500 shrink-0 font-bold">•</span>
                                         <span>{item}</span>
                                       </li>
