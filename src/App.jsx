@@ -24,7 +24,7 @@ const SCHOOL_PERIODS = [
   { name: "8ª Hora Lectiva", start: "16:10", end: "17:05", type: "class", nextEvent: "Fin de Clases" }
 ];
 
-function PeriodBellTracker() {
+const PeriodBellTracker = React.memo(function PeriodBellTracker() {
   const [timeInfo, setTimeInfo] = useState(null);
 
   useEffect(() => {
@@ -131,7 +131,7 @@ function PeriodBellTracker() {
       )}
     </div>
   );
-}
+});
 
 const INITIAL_NOTICES = [
   {
@@ -518,6 +518,11 @@ export function App() {
   const [isWeeklyPlanModalOpen, setIsWeeklyPlanModalOpen] = useState(false);
   const [editingPlanId, setEditingPlanId] = useState(null);
   const [isEmailViewExpanded, setIsEmailViewExpanded] = useState(false);
+  const [isPreferencesDropdownOpen, setIsPreferencesDropdownOpen] = useState(false);
+  const [mobileDayTab, setMobileDayTab] = useState(() => {
+    const d = new Date().getDay(); // 0 Sun, 1 Mon ... 5 Fri
+    return (d >= 1 && d <= 5) ? d - 1 : 0;
+  });
 
   // Formulario Programación Semanal
   const [planWeekTitle, setPlanWeekTitle] = useState("");
@@ -578,7 +583,16 @@ export function App() {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      if (e.key === 'Escape') {
+        setIsCommandPaletteOpen(false);
+        setIsPreferencesDropdownOpen(false);
+        setIsAdminOpen(false);
+        setIsWeeklyPlanModalOpen(false);
+        setPendingAppModal(null);
+        setIsPwaModalOpen(false);
+        setIsAddBookmarkOpen(false);
+        setIsRiddleOpen(false);
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setIsCommandPaletteOpen(prev => !prev);
       } else if (e.altKey && e.key.toLowerCase() === 'c') {
@@ -701,18 +715,27 @@ export function App() {
   useEffect(() => {
     fetchCloudNotices();
     fetchCloudWeeklyPlans();
-    const interval = setInterval(() => {
-      fetchCloudNotices();
-      fetchCloudWeeklyPlans();
-    }, 20000);
-    const handleFocus = () => {
-      fetchCloudNotices();
-      fetchCloudWeeklyPlans();
+    
+    // Revalidación inteligente: al volver a la pestaña o cambiar visibilidad
+    const handleRevalidate = () => {
+      if (document.visibilityState === 'visible') {
+        fetchCloudNotices();
+        fetchCloudWeeklyPlans();
+      }
     };
-    window.addEventListener('focus', handleFocus);
+
+    window.addEventListener('focus', handleRevalidate);
+    document.addEventListener('visibilitychange', handleRevalidate);
+
+    // Fallback pasivo de 3 minutos (180.000 ms) en lugar de 20s
+    const fallbackInterval = setInterval(() => {
+      handleRevalidate();
+    }, 180000);
+
     return () => {
-      clearInterval(interval);
-      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('focus', handleRevalidate);
+      document.removeEventListener('visibilitychange', handleRevalidate);
+      clearInterval(fallbackInterval);
     };
   }, []);
 
@@ -1051,16 +1074,17 @@ export function App() {
         </div>
       )}
 
-      {/* HEADER SUPERIOR LIMPIO Y PROPORCIONAL */}
-      <header className="bg-white/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 px-3 sm:px-6 py-2.5 sticky top-0 z-30 backdrop-blur-md shadow-sm transition-colors">
+      {/* HEADER SUPERIOR LIMPIO Y CONSOLIDADO (3 ZONAS) */}
+      <header className="bg-white/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 px-3 sm:px-6 py-2.5 sticky top-0 z-30 backdrop-blur-xl shadow-sm transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
           
-          {/* MARCA & IDENTIDAD (LOGO SIEMPRE VISIBLE) */}
+          {/* ZONA 1: MARCA & IDENTIDAD */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="p-1.5 sm:p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl bg-slate-100 dark:bg-slate-800 md:hidden transition shrink-0"
               title="Abrir menú lateral"
+              aria-label="Abrir menú de aplicaciones"
             >
               <IconRenderer name="Menu" className="w-5 h-5" />
             </button>
@@ -1085,100 +1109,154 @@ export function App() {
             </div>
           </div>
 
-          {/* BOTONERA LIMPIA, SIMÉTRICA Y UNIFICADA */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* ZONA 2: TRACKER DE CAMPANA & HORARIO (CENTRAL AISLADO) */}
+          <div className="hidden md:flex items-center justify-center flex-1 max-w-md min-w-0">
+            <PeriodBellTracker />
+          </div>
+
+          {/* ZONA 3: ACCIONES RÁPIDAS & ACCESIBILIDAD CONSOLIDADA */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             
-            {/* BOTÓN PRIMARIO: PASE LISTA COMEDOR */}
+            {/* CTA PRIMARIO: COMEDOR ESCOLAR */}
             <a
               href="https://comedor-san-buenaventura.vercel.app/"
               target="_blank"
               rel="noreferrer"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-white font-extrabold text-xs shadow-md transition whitespace-nowrap bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-white font-extrabold text-xs shadow-sm transition whitespace-nowrap bg-emerald-600 hover:bg-emerald-500"
               title="Acceso directo a Pase de Lista del Comedor Escolar"
             >
               <IconRenderer name="Utensils" className="w-3.5 h-3.5" />
-              <span>🍽️ Comedor</span>
+              <span>Comedor</span>
             </a>
 
-            {/* BOTÓN BUSCADOR COMPACTO */}
+            {/* BUSCADOR COMPACTO CTRL + K */}
             <button
               onClick={() => setIsCommandPaletteOpen(true)}
-              className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl border border-slate-200 dark:border-slate-700 text-xs transition shadow-sm"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-slate-100 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold transition shadow-sm"
               title="Buscar aplicaciones o sitios (Ctrl + K)"
             >
               <IconRenderer name="Search" className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
-              <span className="text-xs">Buscar...</span>
-              <kbd className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+              <span className="hidden lg:inline text-xs">Buscar...</span>
+              <kbd className="hidden sm:inline-block bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">
                 ⌘K
               </kbd>
             </button>
 
-            {/* BARRA UNIFICADA DE ACCIONES RÁPIDAS */}
-            <div className="flex items-center bg-slate-100 dark:bg-slate-800/90 p-1 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm gap-0.5">
-              
-              {/* Selector Tamaño de Letra A */}
+            {/* MENÚ FLOTANTE DE PREFERENCIAS & ACCESIBILIDAD */}
+            <div className="relative">
               <button
-                onClick={() => {
-                  const nextSize = textSize === "normal" ? "large" : (textSize === "large" ? "xl" : "normal");
-                  setTextSize(nextSize);
-                  setToastMessage(`Tamaño de letra: ${nextSize === "normal" ? "Estándar (100%)" : nextSize === "large" ? "Grande (+15%)" : "Extra Grande (+30%)"}`);
-                  setTimeout(() => setToastMessage(null), 2500);
-                }}
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 transition"
-                title={`Ajustar tamaño de letra (Actual: ${textSize === "normal" ? "100%" : textSize === "large" ? "+15%" : "+30%"})`}
-              >
-                <span className="font-serif font-black text-xs">A</span>
-                <span className="text-[9px] font-mono text-indigo-600 dark:text-indigo-400 font-extrabold ml-0.5">
-                  {textSize === "normal" ? "" : (textSize === "large" ? "+" : "++")}
-                </span>
-              </button>
-
-              {/* Alto Contraste */}
-              <button
-                onClick={() => {
-                  const nextHc = !isHighContrast;
-                  setIsHighContrast(nextHc);
-                  setToastMessage(nextHc ? "👁️ Alto Contraste Activado" : "Modo Contraste Estándar");
-                  setTimeout(() => setToastMessage(null), 2500);
-                }}
-                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-xs transition ${
-                  isHighContrast
-                    ? "bg-indigo-600 text-white shadow-sm"
-                    : "text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700"
+                onClick={() => setIsPreferencesDropdownOpen(!isPreferencesDropdownOpen)}
+                className={`p-2 rounded-xl flex items-center justify-center transition border shadow-sm ${
+                  isHighContrast || textSize !== "normal"
+                    ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/40"
+                    : "bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700"
                 }`}
-                title={isHighContrast ? "Desactivar Alto Contraste" : "Activar Alto Contraste (Especial para proyectores)"}
+                title="Preferencias de visualización y accesibilidad"
+                aria-label="Preferencias de visualización y accesibilidad"
               >
-                <IconRenderer name="Eye" className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <IconRenderer name="SlidersHorizontal" className="w-4 h-4" />
               </button>
 
-              {/* Conmutador Modo Oscuro / Claro */}
-              <button
-                onClick={() => setThemeMode(isDark ? "light" : "dark")}
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-slate-600 dark:text-amber-300 hover:bg-white dark:hover:bg-slate-700 transition"
-                title={isDark ? "Cambiar a Modo Claro" : "Cambiar a Modo Oscuro"}
-              >
-                <IconRenderer name={isDark ? "Sun" : "Moon"} className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </button>
+              {isPreferencesDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-72 p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl z-50 text-xs space-y-3 animate-slide-up">
+                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span className="font-extrabold text-slate-900 dark:text-white">Accesibilidad & Pantalla</span>
+                    <button 
+                      onClick={() => setIsPreferencesDropdownOpen(false)}
+                      className="text-slate-400 hover:text-slate-700 dark:hover:text-white font-bold"
+                    >
+                      ✕
+                    </button>
+                  </div>
 
-              {/* Instalar App PWA */}
-              <button
-                onClick={() => setIsPwaModalOpen(true)}
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 hover:bg-white dark:hover:bg-slate-700 transition hidden sm:flex"
-                title="Instalar App en el Portátil, Chromebook o Móvil"
-              >
-                <IconRenderer name="Download" className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </button>
+                  {/* Tamaño de Letra */}
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 block mb-1.5">
+                      Tamaño de Letra
+                    </label>
+                    <div className="grid grid-cols-3 gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                      <button
+                        onClick={() => { setTextSize("normal"); setToastMessage("Tamaño Estándar"); setTimeout(() => setToastMessage(null), 2000); }}
+                        className={`py-1 rounded-lg font-bold text-[11px] transition ${textSize === "normal" ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
+                      >
+                        100%
+                      </button>
+                      <button
+                        onClick={() => { setTextSize("large"); setToastMessage("Tamaño Grande (+15%)"); setTimeout(() => setToastMessage(null), 2000); }}
+                        className={`py-1 rounded-lg font-bold text-[11px] transition ${textSize === "large" ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
+                      >
+                        +15%
+                      </button>
+                      <button
+                        onClick={() => { setTextSize("xl"); setToastMessage("Tamaño Extra Grande (+30%)"); setTimeout(() => setToastMessage(null), 2000); }}
+                        className={`py-1 rounded-lg font-bold text-[11px] transition ${textSize === "xl" ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
+                      >
+                        +30%
+                      </button>
+                    </div>
+                  </div>
 
-              {/* Admin Avisos */}
-              <button
-                onClick={() => setIsAdminOpen(true)}
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400 hover:bg-white dark:hover:bg-slate-700 transition"
-                title="Panel de Administración de Avisos"
-              >
-                <IconRenderer name="Lock" className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </button>
+                  {/* Opciones de Visualización */}
+                  <div className="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-800">
+                    <button
+                      onClick={() => {
+                        const nextHc = !isHighContrast;
+                        setIsHighContrast(nextHc);
+                        setToastMessage(nextHc ? "👁️ Alto Contraste Activado" : "Contraste Estándar");
+                        setTimeout(() => setToastMessage(null), 2000);
+                      }}
+                      className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-800 dark:text-slate-200"
+                    >
+                      <span className="flex items-center gap-2 font-semibold">
+                        <IconRenderer name="Eye" className="w-3.5 h-3.5 text-indigo-500" />
+                        <span>Modo Proyector (WCAG)</span>
+                      </span>
+                      <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${isHighContrast ? "bg-indigo-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"}`}>
+                        {isHighContrast ? "ACTIVO" : "OFF"}
+                      </span>
+                    </button>
 
+                    <button
+                      onClick={() => setThemeMode(isDark ? "light" : "dark")}
+                      className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-800 dark:text-slate-200"
+                    >
+                      <span className="flex items-center gap-2 font-semibold">
+                        <IconRenderer name={isDark ? "Sun" : "Moon"} className="w-3.5 h-3.5 text-amber-500" />
+                        <span>Tema de Color</span>
+                      </span>
+                      <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                        {isDark ? "🌙 Oscuro" : "☀️ Claro"}
+                      </span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setIsPreferencesDropdownOpen(false);
+                        setIsPwaModalOpen(true);
+                      }}
+                      className="w-full flex items-center justify-between p-2 rounded-xl bg-indigo-50/60 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition text-indigo-900 dark:text-indigo-200"
+                    >
+                      <span className="flex items-center gap-2 font-semibold">
+                        <IconRenderer name="Download" className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                        <span>Instalar Aplicación</span>
+                      </span>
+                      <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400">PWA</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* BOTÓN ADMIN DIRECCIÓN */}
+            <button
+              onClick={() => { setIsAdminOpen(true); setFormError(""); }}
+              className="p-2 rounded-xl bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 transition shadow-sm"
+              title="Panel de Administración y Avisos de Dirección"
+              aria-label="Panel de Administración"
+            >
+              <IconRenderer name="Lock" className="w-4 h-4" />
+            </button>
+
           </div>
 
         </div>
@@ -1639,9 +1717,38 @@ export function App() {
                         </div>
                       </div>
 
+                      {/* Selector de Días Móvil (Solo visible en pantallas < md) */}
+                      <div className="md:hidden flex items-center justify-between gap-1 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200 dark:border-slate-700/80">
+                        {["Lun", "Mar", "Mié", "Jue", "Vie"].map((dShort, idx) => (
+                          <button
+                            key={dShort}
+                            onClick={() => setMobileDayTab(idx)}
+                            className={`flex-1 py-1.5 text-center text-xs font-black rounded-xl transition ${
+                              mobileDayTab === idx
+                                ? "bg-indigo-600 text-white shadow-sm"
+                                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                            }`}
+                          >
+                            {dShort}
+                          </button>
+                        ))}
+                        <button
+                          onClick={() => setMobileDayTab(mobileDayTab === "all" ? ((new Date().getDay() >= 1 && new Date().getDay() <= 5) ? new Date().getDay() - 1 : 0) : "all")}
+                          className={`px-2 py-1.5 text-center text-[10px] font-extrabold rounded-xl transition ${
+                            mobileDayTab === "all"
+                              ? "bg-indigo-600 text-white shadow-sm"
+                              : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
+                          }`}
+                          title="Ver todos los días de la semana"
+                        >
+                          {mobileDayTab === "all" ? "Plegar" : "Todos"}
+                        </button>
+                      </div>
+
                       {/* Desglose por Días (Lunes a Viernes) */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
                         {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dayName, idx) => {
+                          const isVisibleOnMobile = mobileDayTab === "all" || mobileDayTab === idx;
                           const dayData = currentSelectedPlan.days?.find(d => d.day.toLowerCase().includes(dayName.toLowerCase())) || { day: dayName, date: "", items: [] };
                           const dayColors = [
                             "border-blue-200 dark:border-blue-900/40 bg-blue-50/30 dark:bg-slate-900",
@@ -1659,7 +1766,12 @@ export function App() {
                           ];
 
                           return (
-                            <div key={dayName} className={`rounded-2xl border p-3 flex flex-col justify-between transition min-w-0 break-words ${dayColors[idx]}`}>
+                            <div 
+                              key={dayName} 
+                              className={`rounded-2xl border p-3.5 flex flex-col justify-between transition min-w-0 break-words ${dayColors[idx]} ${
+                                !isVisibleOnMobile ? "hidden md:flex" : "flex"
+                              }`}
+                            >
                               <div>
                                 <div className={`px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center justify-between mb-2.5 ${headerColors[idx]}`}>
                                   <span>{dayName}</span>
@@ -1808,7 +1920,12 @@ export function App() {
 
       {/* MODAL PALETA DE COMANDOS / BUSCADOR CTRL+K */}
       {isCommandPaletteOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 p-4 bg-slate-950/70 backdrop-blur-md">
+        <div 
+          className="fixed inset-0 z-50 flex items-start justify-center pt-16 p-4 bg-slate-950/70 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Buscador de aplicaciones y accesos directos"
+        >
           <div className="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-indigo-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
             
             <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
@@ -1901,7 +2018,12 @@ export function App() {
 
       {/* MODAL ENLACE PENDIENTE */}
       {pendingAppModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Enlace en preparación"
+        >
           <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-500/30 rounded-3xl shadow-2xl overflow-hidden text-center p-6 space-y-4">
             <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 flex items-center justify-center mx-auto">
               <IconRenderer name={pendingAppModal.icon} className="w-7 h-7" />
@@ -1936,7 +2058,12 @@ export function App() {
 
       {/* MODAL INSTALAR APP PWA */}
       {isPwaModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Instalación de la aplicación San Buenaventura"
+        >
           <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-500/30 rounded-3xl shadow-2xl overflow-hidden p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-3">
@@ -1981,7 +2108,12 @@ export function App() {
 
       {/* MODAL AÑADIR MIS MARCADORES */}
       {isAddBookmarkOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Añadir marcador personal"
+        >
           <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
               <h3 className="font-bold text-slate-900 dark:text-white text-base">📌 Añadir Marcador Personal</h3>
@@ -2026,7 +2158,12 @@ export function App() {
 
       {/* PANEL ADMIN AVISOS */}
       {isAdminOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Panel de administración de avisos de dirección"
+        >
           <div className="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
             
             <div className="flex items-center justify-between px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
@@ -2335,7 +2472,12 @@ export function App() {
 
       {/* MODAL PUBLICAR / EDITAR PROGRAMACIÓN SEMANAL */}
       {isWeeklyPlanModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Editor de programación semanal"
+        >
           <div className="w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="flex items-center justify-between px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2.5">
