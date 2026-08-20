@@ -1109,25 +1109,8 @@ export function App() {
             </div>
           </div>
 
-          {/* ZONA 2: TRACKER DE CAMPANA & HORARIO (CENTRAL AISLADO) */}
-          <div className="hidden md:flex items-center justify-center flex-1 max-w-md min-w-0">
-            <PeriodBellTracker />
-          </div>
-
-          {/* ZONA 3: ACCIONES RÁPIDAS & ACCESIBILIDAD CONSOLIDADA */}
+          {/* ACCIONES RÁPIDAS & ACCESIBILIDAD CONSOLIDADA */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            
-            {/* CTA PRIMARIO: COMEDOR ESCOLAR */}
-            <a
-              href="https://comedor-san-buenaventura.vercel.app/"
-              target="_blank"
-              rel="noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-white font-extrabold text-xs shadow-sm transition whitespace-nowrap bg-emerald-600 hover:bg-emerald-500"
-              title="Acceso directo a Pase de Lista del Comedor Escolar"
-            >
-              <IconRenderer name="Utensils" className="w-3.5 h-3.5" />
-              <span>Comedor</span>
-            </a>
 
             {/* BUSCADOR COMPACTO CTRL + K */}
             <button
@@ -1136,7 +1119,7 @@ export function App() {
               title="Buscar aplicaciones o sitios (Ctrl + K)"
             >
               <IconRenderer name="Search" className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
-              <span className="hidden lg:inline text-xs">Buscar...</span>
+              <span className="hidden sm:inline text-xs">Buscar...</span>
               <kbd className="hidden sm:inline-block bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">
                 ⌘K
               </kbd>
