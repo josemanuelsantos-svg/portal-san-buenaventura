@@ -484,11 +484,28 @@ export function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isPinAuthenticated, setIsPinAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState("");
+  const [showPinPassword, setShowPinPassword] = useState(false);
   const [pinError, setPinError] = useState("");
   const [formError, setFormError] = useState("");
   const [toastMessage, setToastMessage] = useState(null);
   const [logoClicks, setLogoClicks] = useState(0);
-  const ADMIN_PIN = "Joselider";
+
+  // Hash criptográfico SHA-256: la clave en texto plano NUNCA reside en el código
+  const ADMIN_PIN_HASH = "409dbe6c27ffcbbdf28f41b920b91d22ded884bf0122b3b2bdbd78bdaee2b2c4";
+
+  const verifyAdminPin = async (input) => {
+    if (!input || typeof input !== "string") return false;
+    try {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(input.trim());
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex === ADMIN_PIN_HASH;
+    } catch (err) {
+      return false;
+    }
+  };
 
   const [textSize, setTextSize] = useState(() => {
     return localStorage.getItem("sb_text_size") || "normal";
@@ -926,11 +943,13 @@ export function App() {
     }
   };
 
-  const handlePinSubmit = (e) => {
-    e.preventDefault();
-    if (pinInput.trim() === ADMIN_PIN) {
+  const handlePinSubmit = async (e) => {
+    if (e) e.preventDefault();
+    const isValid = await verifyAdminPin(pinInput);
+    if (isValid) {
       setIsPinAuthenticated(true);
       setPinError("");
+      setPinInput("");
       setToastMessage("🔓 Acceso de Administración concedido");
       setTimeout(() => setToastMessage(null), 2500);
     } else {
@@ -2199,14 +2218,25 @@ export function App() {
                 </div>
 
                 <div className="max-w-xs mx-auto">
-                  <input
-                    type="password"
-                    value={pinInput}
-                    onChange={(e) => setPinInput(e.target.value)}
-                    placeholder="Introduce la clave de acceso"
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-center text-sm font-mono text-slate-900 dark:text-white outline-none focus:border-amber-500"
-                    autoFocus
-                  />
+                  <div className="relative flex items-center">
+                    <input
+                      type={showPinPassword ? "text" : "password"}
+                      value={pinInput}
+                      onChange={(e) => setPinInput(e.target.value)}
+                      placeholder="Introduce la clave de acceso"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-center text-sm font-mono text-slate-900 dark:text-white outline-none focus:border-amber-500 pr-10"
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPinPassword(!showPinPassword)}
+                      className="absolute right-2.5 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
+                      title={showPinPassword ? "Ocultar clave" : "Mostrar clave"}
+                      tabIndex={-1}
+                    >
+                      <IconRenderer name={showPinPassword ? "EyeOff" : "Eye"} className="w-4 h-4" />
+                    </button>
+                  </div>
                   {pinError && <p className="text-xs text-rose-500 dark:text-rose-400 mt-2 font-medium">{pinError}</p>}
                 </div>
 
@@ -2506,9 +2536,10 @@ export function App() {
                   <h3 className="font-extrabold text-slate-900 dark:text-white text-base">Identificación de Dirección</h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Introduce la clave de Dirección para redactar o editar la programación semanal</p>
                 </div>
-                <form onSubmit={(e) => {
+                <form onSubmit={async (e) => {
                   e.preventDefault();
-                  if (pinInput.trim() === ADMIN_PIN) {
+                  const isValid = await verifyAdminPin(pinInput);
+                  if (isValid) {
                     setIsPinAuthenticated(true);
                     setPinError("");
                     setPinInput("");
@@ -2518,15 +2549,26 @@ export function App() {
                     setPinError("Contraseña incorrecta. Introduce la clave de Dirección.");
                   }
                 }} className="space-y-3 pt-2">
-                  <input
-                    type="password"
-                    value={pinInput}
-                    onChange={(e) => setPinInput(e.target.value)}
-                    placeholder="Introduce la clave de Dirección..."
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-center text-xs font-mono text-slate-900 dark:text-white outline-none focus:border-indigo-500"
-                    autoFocus
-                    required
-                  />
+                  <div className="relative flex items-center">
+                    <input
+                      type={showPinPassword ? "text" : "password"}
+                      value={pinInput}
+                      onChange={(e) => setPinInput(e.target.value)}
+                      placeholder="Introduce la clave de Dirección..."
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-center text-xs font-mono text-slate-900 dark:text-white outline-none focus:border-indigo-500 pr-10"
+                      autoFocus
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPinPassword(!showPinPassword)}
+                      className="absolute right-2.5 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
+                      title={showPinPassword ? "Ocultar clave" : "Mostrar clave"}
+                      tabIndex={-1}
+                    >
+                      <IconRenderer name={showPinPassword ? "EyeOff" : "Eye"} className="w-4 h-4" />
+                    </button>
+                  </div>
                   {pinError && <p className="text-[11px] text-rose-500 font-semibold">{pinError}</p>}
                   <div className="flex gap-2">
                     <button
