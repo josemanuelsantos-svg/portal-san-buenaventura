@@ -188,13 +188,15 @@ const INITIAL_WEEKLY_PLANS = [
         day: "Miércoles",
         date: "2 Sep",
         items: [
-          "09:00h - Formación TEA en el saloncito (profesorado de 3º a 6º de Primaria)."
+          "09:00h - Formación TEA en el saloncito (profesorado de 3º a 6º de Primaria).",
+          "Reconocimiento médico de Educación Infantil, 1º y 2º de Primaria."
         ]
       },
       {
         day: "Jueves",
         date: "3 Sep",
         items: [
+          "Reconocimiento médico de 3º a 6º de Primaria.",
           "16:00h - Reunión de padres de 4 y 5 años (Infantil)."
         ]
       },
@@ -208,8 +210,8 @@ const INITIAL_WEEKLY_PLANS = [
         ]
       }
     ],
-    generalNotes: "¡Bienvenidos al nuevo curso escolar 2026/2027! Os recordamos acudir puntuales a las reuniones programadas y comprobar la ubicación de vuestras aulas asignadas.",
-    fullEmailText: "Estimados compañeros y compañeras:\n\n¡Bienvenidos al nuevo curso 2026/2027! Os compartimos la planificación para esta primera semana de septiembre:\n\n• Lunes 31 Ago: Sin eventos especiales.\n• Martes 1 Sep:\n  - 09:30h: Recibimiento y reunión de bienvenida del profesorado.\n  - Recolocación y ubicación de las clases.\n  - Reunión de tutores de 6º de Primaria para nuevos grupos de 1º ESO.\n• Miércoles 2 Sep:\n  - 09:00h: Formación TEA en el saloncito (3º a 6º de Primaria).\n• Jueves 3 Sep:\n  - 16:00h: Reunión de padres de 4 y 5 años (Infantil).\n• Viernes 4 Sep:\n  - 09:00h: Reunión de padres de 3 años (Salón de Actos).\n  - 09:30h: Reunión de padres de 1º de Primaria (Salón de Actos).\n  - 11:30h: Claustro de Inicio de Curso.\n\n¡Mucho ánimo y buen inicio de curso a todos!"
+    generalNotes: "¡Bienvenidos al nuevo curso escolar 2026/2027! Os recordamos acudir puntuales a las reuniones programadas, reconocimientos médicos y comprobar la ubicación de vuestras aulas asignadas.",
+    fullEmailText: "Estimados compañeros y compañeras:\n\n¡Bienvenidos al nuevo curso 2026/2027! Os compartimos la planificación para esta primera semana de septiembre:\n\n• Lunes 31 Ago: Sin eventos especiales.\n• Martes 1 Sep:\n  - 09:30h: Recibimiento y reunión de bienvenida del profesorado.\n  - Recolocación y ubicación de las clases.\n  - Reunión de tutores de 6º de Primaria para nuevos grupos de 1º ESO.\n• Miércoles 2 Sep:\n  - 09:00h: Formación TEA en el saloncito (3º a 6º de Primaria).\n  - Reconocimiento médico de Educación Infantil, 1º y 2º de Primaria.\n• Jueves 3 Sep:\n  - Reconocimiento médico de 3º a 6º de Primaria.\n  - 16:00h: Reunión de padres de 4 y 5 años (Infantil).\n• Viernes 4 Sep:\n  - 09:00h: Reunión de padres de 3 años (Salón de Actos).\n  - 09:30h: Reunión de padres de 1º de Primaria (Salón de Actos).\n  - 11:30h: Claustro de Inicio de Curso.\n\n¡Mucho ánimo y buen inicio de curso a todos!"
   },
   {
     id: "plan-semana-22-26-sep",
