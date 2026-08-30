@@ -138,7 +138,7 @@ const INITIAL_NOTICES = [
     id: "notice_cuadro_trabajo_septiembre_2026",
     title: "📊 Cuadro de Organización y Trabajo: 1ª Semana de Septiembre",
     content: "Ya está disponible el documento oficial con el reparto de tareas, horarios, ubicaciones y comisiones docentes para el inicio de curso 2026/2027. Por favor, consultad vuestro horario asignado.",
-    priority: "urgent",
+    priority: "important",
     date: "Hoy, 09:00",
     author: "Dirección / Jefatura de Estudios",
     linkUrl: "https://docs.google.com/spreadsheets/d/16_aV1YupTXwq8XiM32Mbqhgnm9re9f9d1gKVDbWPens/edit?usp=sharing",
@@ -851,6 +851,24 @@ export function App() {
     setPlanIsCurrent(!!plan.isCurrent);
     setPinError("");
     setIsWeeklyPlanModalOpen(true);
+  };
+
+  const handleAutoGenerateEmail = () => {
+    let text = `Estimados compañeros y compañeras:\n\nOs compartimos la planificación para la ${planWeekTitle || "semana"}:\n\n`;
+    if (planSummary) text += `📌 ${planSummary}\n\n`;
+    const formatDay = (name, val) => {
+      if (!val || !val.trim()) return `• ${name}: Sin eventos especiales.\n`;
+      const lines = val.split("\n").map(l => l.trim()).filter(Boolean);
+      return `• ${name}:\n` + lines.map(l => `  - ${l}`).join("\n") + "\n";
+    };
+    text += formatDay("Lunes", planLunes);
+    text += formatDay("Martes", planMartes);
+    text += formatDay("Miércoles", planMiercoles);
+    text += formatDay("Jueves", planJueves);
+    text += formatDay("Viernes", planViernes);
+    if (planGeneralNotes) text += `\n⚠️ Recordatorios: ${planGeneralNotes}\n`;
+    text += `\n¡Mucho ánimo y buen trabajo a todos!`;
+    setPlanFullEmail(text);
   };
 
   const handleSaveWeeklyPlan = (e) => {
@@ -1760,17 +1778,29 @@ export function App() {
                         </select>
                       </div>
 
-                      {/* Botón Copiar Plan */}
+                      {/* Botón Copiar Mail */}
                       <button
-                        onClick={() => handleCopyPlanText(currentSelectedPlan)}
-                        className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/80 px-3 py-1.5 rounded-xl font-bold transition border border-slate-200 dark:border-slate-700 shadow-sm"
-                        title="Copiar texto de la programación"
+                        onClick={handleCopyEmailToClipboard}
+                        className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-xl font-bold transition shadow-xs"
+                        title="Copiar texto del email de la semana"
                       >
-                        <IconRenderer name="Copy" className="w-3.5 h-3.5 text-indigo-500" />
-                        <span className="hidden sm:inline">Copiar</span>
+                        <IconRenderer name="Mail" className="w-3.5 h-3.5 text-indigo-500" />
+                        <span className="hidden sm:inline">Copiar Mail</span>
                       </button>
 
-                      {/* Botón Publicar / Editar */}
+                      {/* Botón Editar Esta Semana (Accesible) */}
+                      {currentSelectedPlan && (
+                        <button
+                          onClick={() => handleEditPlan(currentSelectedPlan)}
+                          className="flex items-center gap-1.5 text-xs text-amber-900 dark:text-amber-300 bg-amber-100 dark:bg-amber-500/20 hover:bg-amber-200 dark:hover:bg-amber-500/30 border border-amber-300 dark:border-amber-500/40 px-3 py-1.5 rounded-xl font-bold transition shadow-xs"
+                          title="Editar el contenido y el mail de esta semana"
+                        >
+                          <IconRenderer name="Edit3" className="w-3.5 h-3.5" />
+                          <span>Editar Semana</span>
+                        </button>
+                      )}
+
+                      {/* Botón Publicar Nueva Semana */}
                       <button
                         onClick={handleOpenCreatePlan}
                         className="flex items-center gap-1.5 text-xs text-white bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded-xl font-bold transition shadow-sm"
@@ -1781,22 +1811,13 @@ export function App() {
                       </button>
 
                       {isPinAuthenticated && currentSelectedPlan && (
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => handleEditPlan(currentSelectedPlan)}
-                            className="p-1.5 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 bg-slate-100 dark:bg-slate-800 rounded-lg transition"
-                            title="Editar esta programación"
-                          >
-                            <IconRenderer name="Edit3" className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteWeeklyPlan(currentSelectedPlan.id)}
-                            className="p-1.5 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 bg-slate-100 dark:bg-slate-800 rounded-lg transition"
-                            title="Eliminar esta programación del historial"
-                          >
-                            <IconRenderer name="Trash2" className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => handleDeleteWeeklyPlan(currentSelectedPlan.id)}
+                          className="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 bg-slate-100 dark:bg-slate-800 rounded-lg transition"
+                          title="Eliminar esta programación del historial"
+                        >
+                          <IconRenderer name="Trash2" className="w-3.5 h-3.5" />
+                        </button>
                       )}
                     </div>
                   </div>
@@ -2821,16 +2842,30 @@ export function App() {
                 </div>
 
                 <div>
-                  <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1">
-                    ✉️ Texto Completo del Correo Semanal (Opcional)
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-slate-700 dark:text-slate-300 font-bold block">
+                      ✉️ Texto Completo del Correo Semanal para el Claustro
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleAutoGenerateEmail}
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 px-2.5 py-1 rounded-lg border border-indigo-200 dark:border-indigo-500/30 transition"
+                      title="Generar automáticamente el texto del correo con la información de los días"
+                    >
+                      <IconRenderer name="Sparkles" className="w-3 h-3 text-amber-500" />
+                      <span>✨ Auto-generar Borrador de Mail</span>
+                    </button>
+                  </div>
                   <textarea
-                    rows={3}
+                    rows={6}
                     value={planFullEmail}
                     onChange={(e) => setPlanFullEmail(e.target.value)}
-                    placeholder="Pega aquí el correo completo que envías al claustro para que quede archivado íntegramente..."
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white font-mono outline-none focus:border-indigo-500 resize-none"
+                    placeholder="Escribe o edita aquí el texto completo del correo del claustro..."
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white font-mono leading-relaxed outline-none focus:border-indigo-500"
                   />
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                    💡 Puedes escribir o editar libremente el texto de este correo. Es el que se copiará al pulsar "Copiar Mail".
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-2 pt-2">
