@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="sbBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4338CA"/>
+      <stop offset="100%" stop-color="#1E1B4B"/>
+    </linearGradient>
+    <linearGradient id="sbTau" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="40%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <filter id="sbShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Base -->
+  <rect width="64" height="64" rx="16" fill="url(#sbBg)"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="14.5" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+
+  <!-- Franciscan Tau Cross -->
+  <g filter="url(#sbShadow)">
+    <path d="M12 18 C12 15.5 14 14 16.5 14 L47.5 14 C50 14 52 15.5 52 18 L52 23 C52 24.2 51 25.2 49.8 25.2 L37 25.2 L37 47.5 C37 50 35 52 32.5 52 L31.5 52 C29 52 27 50 27 47.5 L27 25.2 L14.2 25.2 C13 25.2 12 24.2 12 23 Z" fill="url(#sbTau)"/>
+    <path d="M16 16.5 L48 16.5 C49.2 16.5 50 17.2 50 18 L50 19 L14 19 L14 18 C14 17.2 14.8 16.5 16 16.5 Z" fill="#FFFFFF" opacity="0.4"/>
+  </g>
+</svg>
