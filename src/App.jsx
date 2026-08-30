@@ -963,6 +963,32 @@ export function App() {
     });
   };
 
+  const handleCopyEmailToClipboard = () => {
+    const plan = weeklyPlans.find(p => p.id === selectedWeekId) || weeklyPlans[0];
+    if (!plan) return;
+    const textToCopy = plan.fullEmailText || (
+      `Estimados compañeros y compañeras:\n\n` +
+      `Os compartimos la planificación para la ${plan.weekTitle}:\n\n` +
+      (plan.summary ? `📌 ${plan.summary}\n\n` : "") +
+      (plan.days || []).map(d => `• ${d.day}:\n` + (d.items && d.items.length > 0 ? d.items.map(it => `  - ${it}`).join("\n") : "  - Sin eventos especiales")).join("\n\n") +
+      (plan.generalNotes ? `\n\n⚠️ ${plan.generalNotes}` : "") +
+      `\n\n¡Mucho ánimo y buena semana a todos!`
+    );
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        setToastMessage("✉️ Correo del claustro copiado al portapapeles");
+        setTimeout(() => setToastMessage(null), 3000);
+      }).catch(() => {
+        setToastMessage("✉️ Correo listo");
+        setTimeout(() => setToastMessage(null), 2000);
+      });
+    } else {
+      setToastMessage("✉️ Correo listo");
+      setTimeout(() => setToastMessage(null), 2000);
+    }
+  };
+
   const nowTs = Date.now();
   const activeNotices = notices.filter(n => !n.expiresAt || n.expiresAt > nowTs);
   const urgentNotice = activeNotices.find(n => n.priority === "urgent" && n.id !== dismissedUrgentId);
