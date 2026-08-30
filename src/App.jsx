@@ -135,21 +135,23 @@ const PeriodBellTracker = React.memo(function PeriodBellTracker() {
 
 const INITIAL_NOTICES = [
   {
-    id: 1,
-    title: "Recordatorio: Firma de Actas de Evaluación T3",
-    content: "Recuerden que el plazo para la firma digital finaliza este viernes a las 14:00h.",
+    id: "notice_cuadro_trabajo_septiembre_2026",
+    title: "📊 Cuadro de Organización y Trabajo: 1ª Semana de Septiembre",
+    content: "Ya está disponible el documento oficial con el reparto de tareas, horarios, ubicaciones y comisiones docentes para el inicio de curso 2026/2027. Por favor, consultad vuestro horario asignado.",
     priority: "urgent",
-    date: "Hoy, 08:30",
-    author: "Jefatura de Estudios",
+    date: "Hoy, 09:00",
+    author: "Dirección / Jefatura de Estudios",
+    linkUrl: "https://docs.google.com/spreadsheets/d/16_aV1YupTXwq8XiM32Mbqhgnm9re9f9d1gKVDbWPens/edit?usp=sharing",
+    linkText: "Abrir Cuadro de Trabajo en Google Sheets",
     expiresAt: null
   },
   {
-    id: 2,
-    title: "Comedor Escolar: Confirmación de Alérgenos",
-    content: "Revisar la lista de comensales con dieta especial para las excursiones de esta semana.",
+    id: 1,
+    title: "Recordatorio: Firma de Actas de Evaluación",
+    content: "Recuerden que el plazo para la firma digital finaliza este viernes a las 14:00h.",
     priority: "important",
-    date: "Hoy, 09:00",
-    author: "Comedor Escolar",
+    date: "Hoy, 08:30",
+    author: "Jefatura de Estudios",
     expiresAt: null
   }
 ];
@@ -573,6 +575,8 @@ export function App() {
   const [newPriority, setNewPriority] = useState("urgent");
   const [newAuthor, setNewAuthor] = useState("Dirección / Equipo Directivo");
   const [newExpiryDays, setNewExpiryDays] = useState("never");
+  const [newLinkUrl, setNewLinkUrl] = useState("");
+  const [newLinkText, setNewLinkText] = useState("");
 
   // ESTADOS PROGRAMACIÓN SEMANAL DEL CLAUSTRO
   const [weeklyPlans, setWeeklyPlans] = useState(() => {
@@ -1044,6 +1048,8 @@ export function App() {
       content: newContent.trim(),
       priority: newPriority,
       author: newAuthor.trim() || "Dirección",
+      linkUrl: newLinkUrl.trim() || undefined,
+      linkText: newLinkText.trim() || undefined,
       date: `Hoy, ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
       createdAt: Date.now(),
       expiresAt
@@ -1054,6 +1060,8 @@ export function App() {
     localStorage.setItem("sb_school_notices", JSON.stringify(updated));
     setNewTitle("");
     setNewContent("");
+    setNewLinkUrl("");
+    setNewLinkText("");
     setIsNoticesCollapsed(false);
     setDismissedUrgentId(null);
     setIsAdminOpen(false);
@@ -1136,13 +1144,28 @@ export function App() {
               <span className="text-rose-100 dark:text-slate-200">{urgentNotice.content}</span>
             </div>
           </div>
-          <button
-            onClick={() => setDismissedUrgentId(urgentNotice.id)}
-            className="text-white hover:bg-white/20 text-xs px-2 py-1 bg-black/20 rounded-lg shrink-0 ml-2"
-            title="Descartar aviso"
-          >
-            Entendido ✕
-          </button>
+          <div className="flex items-center gap-2">
+            {urgentNotice.linkUrl && (
+              <a
+                href={urgentNotice.linkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-rose-950 hover:bg-rose-50 font-black text-xs rounded-xl shadow-md transition whitespace-nowrap"
+                title={urgentNotice.linkText || "Abrir enlace adjunto"}
+              >
+                <IconRenderer name="FileSpreadsheet" className="w-3.5 h-3.5 text-emerald-600" />
+                <span>{urgentNotice.linkText || "Abrir Documento"}</span>
+                <IconRenderer name="ExternalLink" className="w-3 h-3 opacity-60" />
+              </a>
+            )}
+            <button
+              onClick={() => setDismissedUrgentId(urgentNotice.id)}
+              className="text-white hover:bg-white/20 text-xs px-2.5 py-1 bg-black/20 rounded-xl shrink-0 transition font-bold"
+              title="Descartar aviso"
+            >
+              Entendido ✕
+            </button>
+          </div>
         </div>
       )}
 
@@ -1568,6 +1591,20 @@ export function App() {
                       </div>
                       <h3 className="font-bold text-xs text-slate-900 dark:text-white mb-0.5">{n.title}</h3>
                       <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{n.content}</p>
+                      {n.linkUrl && (
+                        <div className="mt-2.5 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center">
+                          <a
+                            href={n.linkUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 transition shadow-xs group"
+                          >
+                            <IconRenderer name="FileSpreadsheet" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform shrink-0" />
+                            <span className="truncate">{n.linkText || "Ver Documento Adjunto"}</span>
+                            <IconRenderer name="ExternalLink" className="w-3 h-3 opacity-60 ml-0.5 shrink-0" />
+                          </a>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -2371,6 +2408,29 @@ export function App() {
                         <option value="3days">En 3 días</option>
                         <option value="7days">En 1 semana</option>
                       </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div>
+                      <label className="text-xs text-slate-500 dark:text-slate-400 block mb-1">🔗 Enlace / Documento Adjunto (Opcional)</label>
+                      <input
+                        type="url"
+                        value={newLinkUrl}
+                        onChange={(e) => setNewLinkUrl(e.target.value)}
+                        placeholder="https://docs.google.com/..."
+                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-amber-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-500 dark:text-slate-400 block mb-1">Texto del Botón (Opcional)</label>
+                      <input
+                        type="text"
+                        value={newLinkText}
+                        onChange={(e) => setNewLinkText(e.target.value)}
+                        placeholder="Ej: Abrir Hoja de Cálculo en Google Sheets"
+                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-amber-500"
+                      />
                     </div>
                   </div>
 
