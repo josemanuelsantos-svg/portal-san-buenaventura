@@ -161,13 +161,64 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-31ago-4sep-2026",
+    weekTitle: "Semana del 31 de Agosto al 4 de Septiembre: Inicio de Curso 2026/2027",
+    academicYear: "2026/2027",
+    summary: "Reincorporación del claustro, adecuación de aulas, formación TEA, reuniones de familias y Claustro General de Inicio de Curso.",
+    publishedAt: "2026-09-01",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1788220800000,
+    days: [
+      {
+        day: "Lunes",
+        date: "31 Ago",
+        items: []
+      },
+      {
+        day: "Martes",
+        date: "1 Sep",
+        items: [
+          "09:30h - Recibimiento del profesorado y reunión de bienvenida.",
+          "Recolocación y ubicación de las clases y aulas.",
+          "Reunión de los tutores de 6º de Primaria para hacer los nuevos grupos de 1º de ESO."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "2 Sep",
+        items: [
+          "09:00h - Formación TEA en el saloncito (profesorado de 3º a 6º de Primaria)."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "3 Sep",
+        items: [
+          "16:00h - Reunión de padres de 4 y 5 años (Infantil)."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "4 Sep",
+        items: [
+          "09:00h - Reunión de padres de 3 años en el Salón de Actos.",
+          "09:30h - Reunión de padres de 1º de Primaria en el Salón de Actos.",
+          "11:30h - Claustro de Inicio de Curso."
+        ]
+      }
+    ],
+    generalNotes: "¡Bienvenidos al nuevo curso escolar 2026/2027! Os recordamos acudir puntuales a las reuniones programadas y comprobar la ubicación de vuestras aulas asignadas.",
+    fullEmailText: "Estimados compañeros y compañeras:\n\n¡Bienvenidos al nuevo curso 2026/2027! Os compartimos la planificación para esta primera semana de septiembre:\n\n• Lunes 31 Ago: Sin eventos especiales.\n• Martes 1 Sep:\n  - 09:30h: Recibimiento y reunión de bienvenida del profesorado.\n  - Recolocación y ubicación de las clases.\n  - Reunión de tutores de 6º de Primaria para nuevos grupos de 1º ESO.\n• Miércoles 2 Sep:\n  - 09:00h: Formación TEA en el saloncito (3º a 6º de Primaria).\n• Jueves 3 Sep:\n  - 16:00h: Reunión de padres de 4 y 5 años (Infantil).\n• Viernes 4 Sep:\n  - 09:00h: Reunión de padres de 3 años (Salón de Actos).\n  - 09:30h: Reunión de padres de 1º de Primaria (Salón de Actos).\n  - 11:30h: Claustro de Inicio de Curso.\n\n¡Mucho ánimo y buen inicio de curso a todos!"
+  },
+  {
     id: "plan-semana-22-26-sep",
     weekTitle: "Semana del 22 al 26 de Septiembre",
     academicYear: "2026/2027",
     summary: "Puesta en marcha de reuniones de ciclo, evaluación inicial y coordinación de pastoral.",
     publishedAt: "2026-09-20",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     days: [
       {
         day: "Lunes",
