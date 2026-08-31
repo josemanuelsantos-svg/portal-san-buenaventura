@@ -1,0 +1,68 @@
+{
+  "id": "portal-san-buenaventura-pwa",
+  "name": "Portal Docente · Colegio San Buenaventura",
+  "short_name": "San Buenaventura",
+  "description": "Portal docente, herramientas escolares, calendario oficial, avisos del día y programación semanal del Colegio San Buenaventura.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#4338CA",
+  "theme_color": "#4338CA",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Comedor Escolar",
+      "short_name": "Comedor",
+      "description": "Pase de lista y dietas",
+      "url": "https://comedor-san-buenaventura.vercel.app/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Calendario Escolar",
+      "short_name": "Calendario",
+      "description": "Eventos y sustituciones",
+      "url": "/#calendario-escolar",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Programación Semanal",
+      "short_name": "Semana",
+      "description": "Planificación del claustro",
+      "url": "/#programacion-semanal",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
