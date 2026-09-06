@@ -515,21 +515,20 @@ const SIDEBAR_SECTIONS = [
     title: "Pastoral",
     items: [
       {
-        id: "oracion-franciscana",
-        title: "Oración Franciscana",
-        subtitle: "Espiritualidad y reflexiones",
-        url: "https://franciscanosconventuales.es/oracion-franciscana/",
-        icon: "Heart",
-        color: "text-amber-500 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-500/20 dark:border-amber-500/30"
-      },
-      {
-        id: "diez-minutos-dios",
-        title: "10 Minutos con Dios",
-        subtitle: "Oración y meditación diaria",
-        url: "#",
-        pendingUrl: true,
+        id: "diez-minutos-ei-1-2",
+        title: "10´ EI, 1º y 2º",
+        subtitle: "10 minutos con Dios",
+        url: "https://drive.google.com/drive/folders/15qGrFAKvoaryKB-G4IAt-Cszpz4A_ZBm?usp=drive_link",
         icon: "Sparkles",
         color: "text-rose-500 bg-rose-50 border-rose-200 dark:text-rose-400 dark:bg-rose-500/20 dark:border-rose-500/30"
+      },
+      {
+        id: "diez-minutos-3-6",
+        title: "10´ 3º-6º",
+        subtitle: "10 minutos con Dios",
+        url: "https://drive.google.com/drive/folders/1_CfO0u-CuZOS6ruUUL0HHl9omeWhvYhF?usp=drive_link",
+        icon: "Sun",
+        color: "text-amber-500 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-500/20 dark:border-amber-500/30"
       }
     ]
   },
