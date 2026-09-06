@@ -431,6 +431,22 @@ const SIDEBAR_SECTIONS = [
         url: "https://www.sanbuenaventura.org/",
         icon: "Globe",
         color: "text-indigo-500 bg-indigo-50 border-indigo-200 dark:text-indigo-400 dark:bg-indigo-500/20 dark:border-indigo-500/30"
+      },
+      {
+        id: "diez-minutos-ei-1-2",
+        title: "10´ EI, 1º y 2º",
+        subtitle: "10 minutos con Dios",
+        url: "https://drive.google.com/drive/folders/15qGrFAKvoaryKB-G4IAt-Cszpz4A_ZBm?usp=drive_link",
+        icon: "Sparkles",
+        color: "text-rose-500 bg-rose-50 border-rose-200 dark:text-rose-400 dark:bg-rose-500/20 dark:border-rose-500/30"
+      },
+      {
+        id: "diez-minutos-3-6",
+        title: "10´ 3º-6º",
+        subtitle: "10 minutos con Dios",
+        url: "https://drive.google.com/drive/folders/1_CfO0u-CuZOS6ruUUL0HHl9omeWhvYhF?usp=drive_link",
+        icon: "Sun",
+        color: "text-amber-500 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-500/20 dark:border-amber-500/30"
       }
     ]
   },
@@ -508,27 +524,6 @@ const SIDEBAR_SECTIONS = [
         url: "/la-aiudateca.html",
         icon: "Bot",
         color: "text-violet-500 bg-violet-50 border-violet-200 dark:text-violet-400 dark:bg-violet-500/20 dark:border-violet-500/30"
-      }
-    ]
-  },
-  {
-    title: "Pastoral",
-    items: [
-      {
-        id: "diez-minutos-ei-1-2",
-        title: "10´ EI, 1º y 2º",
-        subtitle: "10 minutos con Dios",
-        url: "https://drive.google.com/drive/folders/15qGrFAKvoaryKB-G4IAt-Cszpz4A_ZBm?usp=drive_link",
-        icon: "Sparkles",
-        color: "text-rose-500 bg-rose-50 border-rose-200 dark:text-rose-400 dark:bg-rose-500/20 dark:border-rose-500/30"
-      },
-      {
-        id: "diez-minutos-3-6",
-        title: "10´ 3º-6º",
-        subtitle: "10 minutos con Dios",
-        url: "https://drive.google.com/drive/folders/1_CfO0u-CuZOS6ruUUL0HHl9omeWhvYhF?usp=drive_link",
-        icon: "Sun",
-        color: "text-amber-500 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-500/20 dark:border-amber-500/30"
       }
     ]
   },
