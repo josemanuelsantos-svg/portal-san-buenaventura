@@ -177,51 +177,39 @@ const INITIAL_WEEKLY_PLANS = [
         date: "7 Sep",
         items: [
           "🎒 Comienzo de clases en Educación Infantil (EI) y Educación Primaria (EP).",
-          "Tutores con sus grupos durante toda la jornada escolar.",
-          "Apoyo de especialistas en EI y profesores de Secundaria disponibles en 3 años (adaptación).",
-          "Entrega en Primaria de documentación para familias (Ficha, modalidad de salida y alergias).",
-          "Entrega de libros y materiales pendientes durante la mañana.",
-          "Entrada en vigor del horario de vigilancia de patios (3 años: 10:00-10:30 y 11:30-12:00 en pared 50 aniversario; 4 años: 10:00-10:30 sin portería).",
-          "Registro diario de comedor y revisión de hoja editable de alergias a primera hora.",
-          "Aparcamiento trasero disponible con normalidad."
+          "Profesorado de Secundaria disponible baja a apoyar en aulas de 3 años.",
+          "Entrega en Primaria de documentación para familias (Ficha del alumno, modalidad de salida y alergias).",
+          "Inicio de turnos de vigilancia de patios."
         ]
       },
       {
         day: "Martes",
         date: "8 Sep",
         items: [
-          "🏫 Comienzo de clases en Educación Secundaria (ESO) y Bachillerato (BTO).",
-          "16:00h - Reunión de familias de 2º, 3º y 4º de Primaria (directamente en las aulas; computa 2h de reunión).",
-          "Envío del resumen de la reunión a las familias por Educamos al finalizar.",
-          "Avance de pruebas de evaluación inicial con los alumnos en el aula."
+          "🏫 Comienzo de clases en ESO y Bachillerato (BTO).",
+          "16:00h - Reunión de familias de 2º, 3º y 4º de Primaria (directamente en las aulas)."
         ]
       },
       {
         day: "Miércoles",
         date: "9 Sep",
         items: [
-          "📸 Fotografías escolares: 1º a 5º de Primaria (EP) (según Google Calendar).",
-          "Seguimiento del periodo de adaptación en 3 años.",
-          "Registro en la app de Orientación (contraseña: Profescano26) de casos para seguimiento o valoración.",
-          "Revisión de incidencias de comedor en el portal de incidencias."
+          "📸 Fotografías escolares: 1º a 5º de Primaria (EP)."
         ]
       },
       {
         day: "Jueves",
         date: "10 Sep",
         items: [
-          "📸 Fotografías escolares: 4 y 5 años de Infantil (EI) (según Google Calendar).",
-          "16:00h - Reunión de familias de 5º y 6º de Primaria (directamente en las aulas; computa 2h de reunión).",
-          "Envío del resumen de la reunión a las familias por Educamos al finalizar."
+          "📸 Fotografías escolares: 4 y 5 años de Infantil (EI).",
+          "16:00h - Reunión de familias de 5º y 6º de Primaria (directamente en las aulas)."
         ]
       },
       {
         day: "Viernes",
         date: "11 Sep",
         items: [
-          "📸 Fotografías escolares: 6º de Primaria (EP) (según Google Calendar).",
-          "Evaluación de la primera semana lectiva y cierre de comensales fijos de comedor.",
-          "Revisión final de partes de incidencias de comedor y patios de la semana."
+          "📸 Fotografías escolares: 6º de Primaria (EP)."
         ]
       }
     ],
