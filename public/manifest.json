@@ -51,6 +51,13 @@
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
+      "name": "Incidencias de Comedor",
+      "short_name": "Incidencias Comedor",
+      "description": "Partes y seguimiento del servicio de comedor",
+      "url": "https://comedorcsb-incidencias.vercel.app/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
       "name": "Calendario Escolar",
       "short_name": "Calendario",
       "description": "Eventos y sustituciones",

@@ -342,6 +342,14 @@ const SIDEBAR_SECTIONS = [
         isHero: true
       },
       {
+        id: "incidencias-comedor",
+        title: "Incidencias de Comedor",
+        subtitle: "Registro y partes del servicio",
+        url: "https://comedorcsb-incidencias.vercel.app/",
+        icon: "ClipboardCheck",
+        color: "text-amber-500 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-500/20 dark:border-amber-500/30"
+      },
+      {
         id: "enfermeria",
         title: "Enfermería Escolar",
         subtitle: "SnappCare registro médico",
