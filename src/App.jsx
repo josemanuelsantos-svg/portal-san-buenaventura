@@ -173,48 +173,51 @@ const INITIAL_WEEKLY_PLANS = [
     createdAt: 1788739200000,
     days: [
       {
-        day: "Lunes",
-        date: "7 Sep",
-        items: [
-          "🎒 Comienzo de clases en Educación Infantil (EI) y Educación Primaria (EP).",
-          "Profesorado de Secundaria disponible baja a apoyar en aulas de 3 años.",
-          "Entrega en Primaria de documentación para familias (Ficha del alumno, modalidad de salida y alergias).",
-          "Inicio de turnos de vigilancia de patios."
-        ]
+            "day": "Lunes",
+            "date": "7 Sep",
+            "items": [
+                  "\ud83c\udf92 Comienzo de clases en Educaci\u00f3n Infantil (EI) y Educaci\u00f3n Primaria (EP).",
+                  "Profesorado de Secundaria disponible baja a apoyar en aulas de 3 a\u00f1os.",
+                  "Entrega en Primaria de documentaci\u00f3n para familias (Ficha del alumno, modalidad de salida y alergias).",
+                  "Inicio de turnos de vigilancia de patios."
+            ]
       },
       {
-        day: "Martes",
-        date: "8 Sep",
-        items: [
-          "🏫 Comienzo de clases en ESO y Bachillerato (BTO).",
-          "16:00h - Reunión de familias de 2º, 3º y 4º de Primaria (directamente en las aulas)."
-        ]
+            "day": "Martes",
+            "date": "8 Sep",
+            "items": [
+                  "\ud83c\udfeb Comienzo de clases en ESO y Bachillerato (BTO).",
+                  "16:00h - Reuni\u00f3n de familias de 2\u00ba, 3\u00ba y 4\u00ba de Primaria (directamente en las aulas).",
+                  "Reuniones de nivel en Infantil: 4 a\u00f1os (07:30-08:00h) y 3 a\u00f1os (13:00-15:00h)."
+            ]
       },
       {
-        day: "Miércoles",
-        date: "9 Sep",
-        items: [
-          "📸 Fotografías escolares: 1º a 5º de Primaria (EP)."
-        ]
+            "day": "Mi\u00e9rcoles",
+            "date": "9 Sep",
+            "items": [
+                  "\ud83d\udcf8 Fotograf\u00edas escolares: 1\u00ba a 5\u00ba de Primaria (EP).",
+                  "Reuni\u00f3n de nivel en Infantil: 4 a\u00f1os (07:30-08:30h)."
+            ]
       },
       {
-        day: "Jueves",
-        date: "10 Sep",
-        items: [
-          "📸 Fotografías escolares: 4 y 5 años de Infantil (EI).",
-          "16:00h - Reunión de familias de 5º y 6º de Primaria (directamente en las aulas)."
-        ]
+            "day": "Jueves",
+            "date": "10 Sep",
+            "items": [
+                  "\ud83d\udcf8 Fotograf\u00edas escolares: 4 y 5 a\u00f1os de Infantil (EI).",
+                  "16:00h - Reuni\u00f3n de familias de 5\u00ba y 6\u00ba de Primaria (directamente en las aulas).",
+                  "Reuniones de nivel en Infantil: 4 a\u00f1os (07:30-08:30h) y 3 y 5 a\u00f1os (13:00-15:00h)."
+            ]
       },
       {
-        day: "Viernes",
-        date: "11 Sep",
-        items: [
-          "📸 Fotografías escolares: 6º de Primaria (EP)."
-        ]
+            "day": "Viernes",
+            "date": "11 Sep",
+            "items": [
+                  "\ud83d\udcf8 Fotograf\u00edas escolares: 6\u00ba de Primaria (EP)."
+            ]
       }
-    ],
-    generalNotes: "Recordad registrar comensales y alergias a primera hora. Las reuniones de familias computan como 2h de reunión (4-5 años y 2º a 6º EP realizan 2h de las 4h semanales). Ya podemos utilizar el aparcamiento trasero.",
-    fullEmailText: "Hola a todos, s\u00e9 que llev\u00e1is aproximadamente dos meses esperando con verdadera impaciencia que volviera a aparecer en vuestro correo, un domingo a las 20:00, uno de estos mensajes\u2026 Pues bien: ya est\u00e1 aqu\u00ed \ud83d\ude02.\nEmpezamos ma\u00f1ana, as\u00ed que os dejo, como siempre, la organizaci\u00f3n y las cuestiones m\u00e1s importantes de la semana.\n\nORGANIZACI\u00d3N DEL PROFESORADO\nDesde ma\u00f1ana y hasta el viernes, tanto en Infantil como en Primaria, todos los tutores permaneceremos con nuestros grupos.\nLos especialistas estar\u00e1n durante estos d\u00edas apoyando principalmente en Educaci\u00f3n Infantil y ma\u00f1ana, adem\u00e1s, bajar\u00e1 tambi\u00e9n el profesorado de Secundaria que tenga disponibilidad para echar una mano en las aulas de 3 a\u00f1os, especialmente importante en estos primeros momentos de adaptaci\u00f3n.\nPor lo dem\u00e1s, durante toda esta semana los tutores estaremos con nuestros alumnos.\nEl horario ordinario especialmente en EP, comenzar\u00e1 a funcionar como tal a partir del pr\u00f3ximo lunes.\n\nHORARIOS DE PATIO\nEl \u00fanico horario que comienza a estar vigente desde ma\u00f1ana es el correspondiente al cuidado y vigilancia de los patios.\nEn Primaria, el horario ser\u00e1 el mismo durante todo el curso.\nEn Infantil, durante el mes de septiembre tendremos una organizaci\u00f3n espec\u00edfica.\nEn 3 a\u00f1os, los patios ser\u00e1n de 10:00 a 10:30 y de 11:30 a 12:00. Para este grupo utilizaremos la zona de la pared del 50 aniversario.\n\ud83d\udc49 Turno de cuidado de patios de 3 a\u00f1os:\nhttps://docs.google.com/spreadsheets/d/1RGnhS9Be5EewvTWQjNLVJ1KKsjFyVdSoIjJijFUmKpI/edit?gid=484556113#gid=484556113\nEn 4 a\u00f1os, el patio ser\u00e1 de 10:00 a 10:30. Es importante que no utilicemos la porter\u00eda situada junto a la pared del 50 aniversario, para evitar que los balones puedan golpear a los ni\u00f1os de 3 a\u00f1os que estar\u00e1n utilizando esa zona.\n\ud83d\udc49 Turnos de cuidado de patios de 4 y 5 a\u00f1os:\nhttps://docs.google.com/spreadsheets/d/1RGnhS9Be5EewvTWQjNLVJ1KKsjFyVdSoIjJijFUmKpI/edit?gid=1826236673#gid=1826236673\nAdem\u00e1s, toda la documentaci\u00f3n de horarios la ten\u00e9is disponible aqu\u00ed:\n\ud83d\udc49 Carpeta con todos los horarios:\nhttps://drive.google.com/drive/folders/1AMKiIwEadrnxzZQlRUVdBaz_i-D15bYY?usp=sharing\n\nENTREGA DE LIBROS Y MATERIALES\nDurante esta semana continuaremos con la entrega de materiales a las familias.\nLas familias que tengan pendiente recoger libros podr\u00e1n hacerlo durante el horario de ma\u00f1ana.\nEn el resto de materiales, especialmente en los cursos superiores de Primaria, conforme \u00d3scar me vaya confirmando que han llegado los materiales que todav\u00eda est\u00e1n pendientes, os ir\u00e9 avisando por cursos para que podamos bajar a recogerlos y repartirlos.\n\nREUNIONES, CONVIVENCIAS Y HORAS DE REUNI\u00d3N\nImportante para que todos tengamos claro c\u00f3mo vamos a organizarnos.\nTanto las reuniones de familias como las convivencias computan como tiempo de reuni\u00f3n.\n\u00bfQu\u00e9 significa esto?\nEn 3 a\u00f1os y 1.\u00ba de Primaria, al celebrarse la reuni\u00f3n de familias por la ma\u00f1ana, no supone tiempo adicional fuera del horario, por lo que sus reuniones semanales se mantienen con normalidad.\nPara el resto de cursos, cuyas reuniones de familias se realizan por la tarde, estas computan como dos horas de reuni\u00f3n.\nPor tanto:\nSi un equipo se re\u00fane dos d\u00edas durante dos horas, esta semana tendr\u00e1 libre una de esas reuniones.\nSi se re\u00fane cuatro d\u00edas durante una hora, tendr\u00e1 libres dos de esas reuniones.\nLo mismo ocurrir\u00e1 posteriormente con las convivencias, tanto en 5 a\u00f1os como en los distintos cursos de Primaria.\nEn resumen, esta semana:\n4 y 5 a\u00f1os: de las cuatro horas de reuni\u00f3n, \u00fanicamente deben realizar dos horas.\nPrimaria: salvo 1.\u00ba, todos los cursos tienen reuni\u00f3n de familias esta semana, por lo que de las cuatro horas de reuni\u00f3n \u00fanicamente deben realizar dos horas, a elecci\u00f3n del equipo de curso.\n\nOBJETIVO DE LAS REUNIONES DE ESTA SEMANA\nEsta semana no vamos a volvernos locos todav\u00eda con documentaci\u00f3n, revisi\u00f3n exhaustiva de horarios, programaciones y dem\u00e1s alegr\u00edas propias de septiembre.\nEl comienzo de curso ha sido muy precipitado y con muy pocos d\u00edas de preparaci\u00f3n, as\u00ed que vamos a utilizar estas primeras reuniones fundamentalmente para aterrizar el curso, organizarnos y solucionar aquello que vayamos viendo que necesitamos.\nAprovechar\u00eda tambi\u00e9n que durante esta semana los tutores permanecemos con nuestros grupos para avanzar todo lo posible las evaluaciones iniciales.\nEn principio, antes de comenzar con contenido nuevo deber\u00edamos tenerlas realizadas, as\u00ed que cuanto antes podamos quit\u00e1rnoslas de encima, antes podremos empezar a trabajar con normalidad.\n\nREUNIONES DE FAMILIAS\nRecordatorio de las reuniones de esta semana:\nMartes a las 16:00: 2.\u00ba, 3.\u00ba y 4.\u00ba de Primaria.\nJueves a las 16:00: 5.\u00ba y 6.\u00ba de Primaria.\nTodas las reuniones comenzar\u00e1n directamente en las aulas. Este a\u00f1o no habr\u00e1 presentaci\u00f3n previa en el Sal\u00f3n de Actos.\nAl terminar cada reuni\u00f3n, recordad que debemos enviar a las familias de nuestra tutor\u00eda, a trav\u00e9s de Educamos, el resumen de la reuni\u00f3n. Ya tenemos acceso a nuestras tutor\u00edas y las familias tambi\u00e9n pueden acceder a ellas.\n\nDOCUMENTACI\u00d3N PARA LAS FAMILIAS\nEn las reuniones aprovecharemos tambi\u00e9n para entregar y recoger la documentaci\u00f3n correspondiente.\nMa\u00f1ana se entregar\u00e1 en Primaria la documentaci\u00f3n que debe llegar a las familias. En Infantil ya se ha entregado.\nDesde 2.\u00ba hasta 6.\u00ba de Primaria recibir\u00e9is:\nFicha del alumno.\nDocumento sobre la modalidad de recogida/salida: salida aut\u00f3noma, acompa\u00f1ado por hermano o recogida por los padres/personas autorizadas.\nY, \u00fanicamente para los alumnos que constan como al\u00e9rgicos, el documento de alergias.\nEste \u00faltimo debemos volver a entregarlo aunque ya conozcamos la alergia, para que la familia nos confirme que la informaci\u00f3n contin\u00faa siendo correcta o pueda comunicarnos cualquier modificaci\u00f3n.\nEvidentemente, no es necesario entregar el documento de alergias a los alumnos que no tengan ninguna alergia registrada.\n\ud83d\udc49 Carpeta de listados actualizados:\nhttps://drive.google.com/drive/folders/1jQJhC8_f1uXEDu9DGSOQDHjLELO12cTa?usp=sharing\n\nFECHAS IMPORTANTES DEL CURSO\nRecordad tambi\u00e9n comunicar a las familias las fechas de las convivencias y de las fotograf\u00edas escolares.\nTodas estas fechas est\u00e1n ya incluidas en Calendar, junto con pr\u00e1cticamente toda la planificaci\u00f3n general del curso.\nAdem\u00e1s, pod\u00e9is consultar durante todo el curso la informaci\u00f3n que vayamos centralizando desde el portal:\n\ud83d\udc49 Portal web de Infantil y Primaria:\nhttps://portal-san-buenaventura.vercel.app/\n\ud83d\udc49 Calendar de Infantil y Primaria:\nhttps://calendar.google.com/calendar/u/0?cid=c2FuYnVlbmF2ZW50dXJhLm9yZ19vdjR2NWRxa3Y1Y241Z3ZoOHNxa3Y4bGpia0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t\n\nCOMEDOR, ALERGIAS E INCIDENCIAS\nUna de las cuestiones m\u00e1s importantes de estos primeros d\u00edas es que, a primera hora de la ma\u00f1ana, recordemos siempre dos cosas:\nRegistrar el n\u00famero de alumnos que se quedan al comedor.\nRevisar especialmente las alergias existentes en nuestra clase.\nOs dejo aqu\u00ed la hoja de alergias editable para que todos revisemos nuestros alumnos y, si detect\u00e1is cualquier error, cambio o informaci\u00f3n que falte, pod\u00e1is indicarlo:\n\ud83d\udc49 Hoja de alergias a revisar:\nhttps://docs.google.com/spreadsheets/d/1Dpx0XS1kdHoLOGBJH7405b-4VUL23WeMLpy01t7Or1c/edit\n\nCuando sepamos definitivamente qu\u00e9 alumnos van a ser fijos de comedor, podr\u00e9 dejarlos prefijados en la aplicaci\u00f3n. De esta manera, al registrar diariamente los datos, el proceso ser\u00e1 bastante m\u00e1s r\u00e1pido y solamente tendremos que modificar las excepciones.\nDurante el mes de septiembre, los profesores de Primaria que realizar\u00e1n servicio de comedor ser\u00e1n Rub\u00e9n Recio, Daniela Asenjo, Julia Rodr\u00edguez y Pedro Zapata.\nEn Infantil, la organizaci\u00f3n durante septiembre ser\u00e1 la siguiente:\n3 a\u00f1os:\n- Acompa\u00f1an a los alumnos al comedor: Alejandra Calvo, Dani y Paula.\n- Profesorado que realiza comedor: Alejandra Calvo y, pendiente de confirmar, Paula.\n- Entrega de los ni\u00f1os que se van a casa: Elena y Nieves.\n- Entrega de los alumnos que tienen hermanos en Primaria: Dani y Paula.\n- Siesta: Yoli y un monitor.\n4 a\u00f1os:\n- Acompa\u00f1an a los alumnos al comedor: Nuria Romero y Gema.\n- Profesorado que realiza comedor: Nuria Romero y Gema del Pozo.\n- Entrega de los ni\u00f1os que se van a casa: Susana.\n5 a\u00f1os:\n- Acompa\u00f1an a los alumnos al comedor: Tere y Ale.\n- Profesorado que realiza comedor: Paqui.\n- Entrega de los ni\u00f1os que se van a casa: Marta.\nEn el patio cubierto de 4 y 5 a\u00f1os, estar\u00e1n Paqui y dos monitores.\n\nRespecto a los alumnos que tienen hermanos en Primaria, cada tutora permanecer\u00e1 inicialmente con ellos en su fila o en el aula. Una vez hayamos terminado de entregar a los ni\u00f1os que se marchan a casa, llevaremos a estos alumnos al aula de 5 a\u00f1os A, donde quedar\u00e1n agrupados hasta que corresponda su salida.\nComo es una organizaci\u00f3n especial de septiembre, estaremos especialmente pendientes estos primeros d\u00edas. Si vemos cualquier punto que pueda funcionar mejor, lo iremos ajustando.\n\nAdem\u00e1s, para que no se nos queden en el aire incidencias que puedan producirse durante el tiempo de comedor ya sea dentro del comedor o durante el patio posterior vamos a utilizar un portal de incidencias.\nNosotros podremos acceder directamente a \u00e9l tanto desde la aplicaci\u00f3n del comedor como desde el portal web, y los monitores podr\u00e1n tambi\u00e9n dejar reflejada all\u00ed cualquier incidencia, observaci\u00f3n o situaci\u00f3n que consideren importante comunicarnos.\nLa idea es que este canal nos ayude a tener toda la informaci\u00f3n centralizada y que no dependamos \u00fanicamente de comentarios de pasillo o de acordarnos despu\u00e9s de comunicar algo.\nPor eso, no est\u00e1 de m\u00e1s que cada d\u00eda echemos un vistazo r\u00e1pido, igual que hacemos con el chat de enfermer\u00eda, especialmente si vemos que aparecen nuevos registros o incidencias relacionados con nuestros alumnos.\n\ud83d\udc49 Incidencias en comedor: https://comedorcsb-incidencias.vercel.app/\n\nREGISTRO DE CASOS PARA ORIENTACI\u00d3N\nRecordad tambi\u00e9n que tenemos disponible la aplicaci\u00f3n para registrar aquellos casos o situaciones que consideremos que pueden necesitar posteriormente una valoraci\u00f3n o seguimiento por parte de Orientaci\u00f3n.\nEs importante que utilicemos este registro para que la informaci\u00f3n quede recogida y podamos hacer posteriormente un seguimiento ordenado, en lugar de que determinadas cuestiones se queden simplemente en una conversaci\u00f3n o comentario puntual.\nPara acceder como profesores debemos hacerlo con contrase\u00f1a. La contrase\u00f1a com\u00fan es: Profescano26\nPod\u00e9is acceder tambi\u00e9n a esta herramienta desde el portal web: https://orientacion.vercel.app/\n\nSALIDA Y REPARTO DE ALUMNOS\nEn Primaria mantenemos el mismo sistema de reparto del curso pasado.\nEn Infantil, durante septiembre, seguiremos la organizaci\u00f3n espec\u00edfica indicada anteriormente para 3, 4 y 5 a\u00f1os, tanto para los alumnos que van al comedor como para los que se marchan a casa o esperan a sus hermanos de Primaria.\nEstos primeros d\u00edas estaremos especialmente pendientes y ajustaremos cualquier cosa que veamos que pueda funcionar mejor.\n\nAPARCAMIENTO\nY una peque\u00f1a buena noticia para terminar la parte log\u00edstica: la obra del archivo est\u00e1 ya pr\u00e1cticamente terminada, por lo que podemos volver a utilizar el aparcamiento trasero con normalidad y aprovechar de nuevo todos los espacios disponibles.\n\nY termino, como me gusta hacer, con una peque\u00f1a reflexi\u00f3n para comenzar la semana.\nEn el Evangelio de este domingo, Jes\u00fas habla de algo tan sencillo de explicar como dif\u00edcil de vivir: cuando tenemos algo con alguien, hablar primero con esa persona, cara a cara y desde el cari\u00f1o. Y san Pablo lo resume todav\u00eda m\u00e1s: al final, nuestra \u00fanica deuda con los dem\u00e1s deber\u00eda ser la del amor.\nCreo que no hay mejor mensaje para empezar un curso.\nVamos a pasar much\u00edsimas horas juntos. Habr\u00e1 prisas, cansancio, decisiones con las que estaremos de acuerdo y otras con las que no, d\u00edas estupendos y seguramente alguno en el que nos costar\u00e1 bastante m\u00e1s llegar al final. Pero tenemos una enorme responsabilidad: cuidarnos entre nosotros para poder cuidar bien a los que tenemos delante.\nEducar tambi\u00e9n consiste muchas veces en eso: decir algo cuando hay que decirlo, escuchar cuando toca escuchar, corregir sin hacer da\u00f1o, pedir ayuda cuando la necesitamos y saber que detr\u00e1s de la puerta de al lado hay un compa\u00f1ero.\nY hay una frase del Evangelio de hoy especialmente bonita para comenzar un curso: Jes\u00fas recuerda que cuando dos o tres se re\u00fanen en su nombre, \u00c9l est\u00e1 en medio de ellos.\nMa\u00f1ana volveremos a llenar las aulas de ni\u00f1os, mochilas, nervios, abrazos, alg\u00fan llanto y seguramente bastante ruido. Y entre todo eso, aunque algunas veces nos cueste verlo, tambi\u00e9n estar\u00e1 \u00c9l.\nQue tengamos un muy buen comienzo de curso.\nGracias por el esfuerzo enorme que hab\u00e9is hecho estos d\u00edas para que ma\u00f1ana todo est\u00e9 preparado."
+],
+    generalNotes: "Recordad registrar comensales y alergias a primera hora. Las reuniones de familias computan como 2h de reuni\u00f3n. Consultad los turnos de patio y las reuniones de nivel fijadas de Infantil. El aparcamiento trasero ya est\u00e1 disponible.",
+    fullEmailText: "Hola a todos, s\u00e9 que llev\u00e1is aproximadamente dos meses esperando con verdadera impaciencia que volviera a aparecer en vuestro correo, un domingo a las 20:00, uno de estos mensajes\u2026 Pues bien: ya est\u00e1 aqu\u00ed \ud83d\ude02.\nEmpezamos ma\u00f1ana, as\u00ed que os dejo, como siempre, la organizaci\u00f3n y las cuestiones m\u00e1s importantes de la semana.Buenas tardes, equipo:\n\nORGANIZACI\u00d3N DEL PROFESORADO\nDesde ma\u00f1ana y hasta el viernes, tanto en Infantil como en Primaria, todos los tutores permaneceremos con nuestros grupos.\nLos especialistas estar\u00e1n durante estos d\u00edas apoyando principalmente en Educaci\u00f3n Infantil y ma\u00f1ana, adem\u00e1s, bajar\u00e1 tambi\u00e9n el profesorado de Secundaria que tenga disponibilidad para echar una mano en las aulas de 3 a\u00f1os, especialmente importante en estos primeros momentos de adaptaci\u00f3n.\nPor lo dem\u00e1s, durante toda esta semana los tutores estaremos con nuestros alumnos.\nEl horario ordinario comenzar\u00e1 a funcionar como tal a partir del pr\u00f3ximo lunes.\n\nHORARIOS DE PATIO\nEl \u00fanico horario que comienza a estar vigente desde ma\u00f1ana es el correspondiente al cuidado y vigilancia de los patios.\nEn Primaria, el horario ser\u00e1 el mismo durante todo el curso.: [Patios EP 26.27](https://docs.google.com/document/d/1leQ9NaJ4srKt08yu8xknIoWmowfAlff4Fd86vswEhGc/edit?usp=sharing)\nEn Infantil, durante el mes de septiembre tendremos una organizaci\u00f3n espec\u00edfica.\nEn 3 a\u00f1os, los patios ser\u00e1n de 10:00 a 10:30 y de 11:30 a 12:00. Para este grupo utilizaremos la zona de la pared del 50 aniversario.\n\ud83d\udc49 Turno de cuidado de patios de 3 a\u00f1os:\nhttps://docs.google.com/spreadsheets/d/1RGnhS9Be5EewvTWQjNLVJ1KKsjFyVdSoIjJijFUmKpI/edit?gid=484556113#gid=484556113\nEn 4 a\u00f1os, el patio ser\u00e1 de 10:00 a 10:30. Es importante que no utilicemos la porter\u00eda situada junto a la pared del 50 aniversario, para evitar que los balones puedan golpear a los ni\u00f1os de 3 a\u00f1os que estar\u00e1n utilizando esa zona.\n\ud83d\udc49 Turnos de cuidado de patios de 4 y 5 a\u00f1os:\nhttps://docs.google.com/spreadsheets/d/1RGnhS9Be5EewvTWQjNLVJ1KKsjFyVdSoIjJijFUmKpI/edit?gid=1826236673#gid=1826236673\nAdem\u00e1s, toda la documentaci\u00f3n de horarios la ten\u00e9is disponible aqu\u00ed:\n\ud83d\udc49 Carpeta con todos los horarios:\nhttps://drive.google.com/drive/folders/1AMKiIwEadrnxzZQlRUVdBaz_i-D15bYY?usp=sharing\n\nENTREGA DE LIBROS Y MATERIALES\nDurante esta semana continuaremos con la entrega de materiales a las familias.\nLas familias que tengan pendiente recoger libros podr\u00e1n hacerlo durante el horario de ma\u00f1ana.\nEn el resto de materiales, especialmente en los cursos superiores de Primaria, conforme \u00d3scar me vaya confirmando que han llegado los materiales que todav\u00eda est\u00e1n pendientes, os ir\u00e9 avisando por cursos para que podamos bajar a recogerlos y repartirlos.\n\nREUNIONES, CONVIVENCIAS Y HORAS DE REUNI\u00d3N\nImportante para que todos tengamos claro c\u00f3mo vamos a organizarnos.\nTanto las reuniones de familias como las convivencias computan como tiempo de reuni\u00f3n.\n\u00bfQu\u00e9 significa esto?\nEn 3 a\u00f1os y 1.\u00ba de Primaria, al celebrarse la reuni\u00f3n de familias por la ma\u00f1ana, no supone tiempo adicional fuera del horario, por lo que sus reuniones semanales se mantienen con normalidad.\nPara el resto de cursos, cuyas reuniones de familias se realizan por la tarde, estas computan como dos horas de reuni\u00f3n.\nPor tanto:\nSi un equipo se re\u00fane dos d\u00edas durante dos horas, esta semana tendr\u00e1 libre una de esas reuniones.\nSi se re\u00fane cuatro d\u00edas durante una hora, tendr\u00e1 libres dos de esas reuniones.\nLo mismo ocurrir\u00e1 posteriormente con las convivencias, tanto en 5 a\u00f1os como en los distintos cursos de Primaria.\nEn resumen, esta semana:\n4 y 5 a\u00f1os: de las cuatro horas de reuni\u00f3n, \u00fanicamente deben realizar dos horas.\nPrimaria: salvo 1.\u00ba, todos los cursos tienen reuni\u00f3n de familias esta semana, por lo que de las cuatro horas de reuni\u00f3n \u00fanicamente deben realizar dos horas, a elecci\u00f3n del equipo de curso.\n\nEn Infantil, para que no tengamos que ir calculando cada semana qu\u00e9 horas corresponden y cu\u00e1les quedan compensadas por reuniones de familias, convivencias o PGA, dejamos ya fijada la organizaci\u00f3n completa del mes.\nEl objetivo general de estas reuniones ser\u00e1 avanzar en proyecto, secuenciaci\u00f3n del trimestre, trabajo individual en el aula y, cuando corresponda, PGA y evaluaciones iniciales.\n\nSemana del 7 al 10 de septiembre\n3 a\u00f1os:\n- Martes 8: 13:00-15:00\n- Jueves 10: 13:00-15:00\nTotal: 4 horas\n4 a\u00f1os:\n- Lunes 7: hora convalidada por la reuni\u00f3n de familias del 3 de septiembre\n- Martes 8: 7:30-8:00\n- Mi\u00e9rcoles 9: 7:30-8:30\n- Jueves 10: 7:30-8:30\nTotal del c\u00f3mputo semanal: 3 horas\n5 a\u00f1os:\n- Martes 8: convalidado por las dos horas de reuni\u00f3n de familias del 3 de septiembre\n- Jueves 10: 13:00-15:00\nTotal del c\u00f3mputo semanal: 2 horas\n\nSemana del 14 al 17 de septiembre\n3 a\u00f1os:\n- Martes 15: 13:00-15:00\n- Jueves 17: 14:00-16:00 \u2013 PGA\nTotal: 4 horas\n4 a\u00f1os:\n- Lunes 14: hora convalidada por la reuni\u00f3n de familias del 3 de septiembre\n- Martes 15: convalidado por una de las dos horas del jueves 17\n- Mi\u00e9rcoles 16: 7:30-8:30\n- Jueves 17: 14:00-16:00 \u2013 PGA\nTotal del c\u00f3mputo semanal: 3 horas\n5 a\u00f1os:\n- Martes 15: 2 horas de convivencia\n- Jueves 17: 14:00-16:00 \u2013 PGA\nTotal: 2 horas\n\nSemana del 21 al 24 de septiembre\n3 a\u00f1os:\n- Martes 22: 14:00-16:00 \u2013 PGA\n- Jueves 24: 13:00-15:00\nTotal: 4 horas\n4 a\u00f1os:\n- Lunes 21: hora convalidada por una hora de la reuni\u00f3n del martes 22\n- Martes 22: 14:00-16:00 \u2013 PGA\n- Mi\u00e9rcoles 23: 7:30-8:30\n- Jueves 24: 7:30-8:30\nTotal del c\u00f3mputo semanal: 4 horas\n5 a\u00f1os:\n- Martes 22: 14:00-16:00 \u2013 PGA\n- Jueves 24: 13:00-15:00\nTotal: 4 horas\n\nSemana del 28 al 30 de septiembre\nEsta semana, al ser m\u00e1s corta, se dedicar\u00e1n \u00fanicamente dos horas a la evaluaci\u00f3n inicial:\n3, 4 y 5 a\u00f1os:\n- Martes 29: 13:00-15:00 \u2013 Evaluaci\u00f3n inicial\n\nOBJETIVO DE LAS REUNIONES DE ESTA SEMANA\nEl comienzo de curso ha sido muy precipitado y con muy pocos d\u00edas de preparaci\u00f3n, as\u00ed que vamos a utilizar estas primeras reuniones fundamentalmente para aterrizar el curso, organizarnos y solucionar aquello que vayamos viendo que necesitamos.\nAprovechar\u00eda tambi\u00e9n que durante esta semana los tutores permanecemos con nuestros grupos para avanzar todo lo posible las evaluaciones iniciales.\nEn principio, antes de comenzar con contenido nuevo deber\u00edamos tenerlas realizadas, as\u00ed que cuanto antes podamos quit\u00e1rnoslas de encima, antes podremos empezar a trabajar con normalidad.\n\nREUNIONES DE FAMILIAS\nRecordatorio de las reuniones de esta semana:\nMartes a las 16:00: 2.\u00ba, 3.\u00ba y 4.\u00ba de Primaria.\nJueves a las 16:00: 5.\u00ba y 6.\u00ba de Primaria.\nTodas las reuniones comenzar\u00e1n directamente en las aulas. Este a\u00f1o no habr\u00e1 presentaci\u00f3n previa en el Sal\u00f3n de Actos.\nAl terminar cada reuni\u00f3n, recordad que debemos enviar a las familias de nuestra tutor\u00eda, a trav\u00e9s de Educamos, el resumen de la reuni\u00f3n. Ya tenemos acceso a nuestras tutor\u00edas y las familias tambi\u00e9n pueden acceder a ellas.\n\nDOCUMENTACI\u00d3N PARA LAS FAMILIAS\nEn las reuniones aprovecharemos tambi\u00e9n para entregar y recoger la documentaci\u00f3n correspondiente.\nMa\u00f1ana se entregar\u00e1 en Primaria la documentaci\u00f3n que debe llegar a las familias. En Infantil ya se ha entregado.\nDesde 2.\u00ba hasta 6.\u00ba de Primaria recibir\u00e9is:\nFicha del alumno.\nDocumento sobre la modalidad de recogida/salida: salida aut\u00f3noma, acompa\u00f1ado por hermano o recogida por los padres/personas autorizadas.\nY, \u00fanicamente para los alumnos que constan como al\u00e9rgicos, el documento de alergias.\nEste \u00faltimo debemos volver a entregarlo aunque ya conozcamos la alergia, para que la familia nos confirme que la informaci\u00f3n contin\u00faa siendo correcta o pueda comunicarnos cualquier modificaci\u00f3n.\nEvidentemente, no es necesario entregar el documento de alergias a los alumnos que no tengan ninguna alergia registrada.\n\ud83d\udc49 Carpeta de listados y documentaci\u00f3n:\nhttps://drive.google.com/drive/folders/1jQJhC8_f1uXEDu9DGSOQDHjLELO12cTa?usp=sharing\n\nFECHAS IMPORTANTES DEL CURSO\nRecordad tambi\u00e9n comunicar a las familias las fechas de las convivencias y de las fotograf\u00edas escolares.\nTodas estas fechas est\u00e1n ya incluidas en Calendar, junto con pr\u00e1cticamente toda la planificaci\u00f3n general del curso.\nAdem\u00e1s, pod\u00e9is consultar durante todo el curso la informaci\u00f3n que vayamos centralizando desde el portal:\n\ud83d\udc49 Portal web de Infantil y Primaria:\nhttps://portal-san-buenaventura.vercel.app/\n\nCOMEDOR, ALERGIAS E INCIDENCIAS\nUna de las cuestiones m\u00e1s importantes de estos primeros d\u00edas es que, a primera hora de la ma\u00f1ana, recordemos siempre dos cosas:\nRegistrar el n\u00famero de alumnos que se quedan al comedor.\nRevisar especialmente las alergias existentes en nuestra clase.\nOs dejo aqu\u00ed la hoja de alergias editable para que todos revisemos nuestros alumnos y, si detect\u00e1is cualquier error, cambio o informaci\u00f3n que falte, pod\u00e1is indicarlo:\n\ud83d\udc49 Hoja de alergias a revisar:\nhttps://docs.google.com/spreadsheets/d/1Dpx0XS1kdHoLOGBJH7405b-4VUL23WeMLpy01t7Or1c/edit\n\nCuando sepamos definitivamente qu\u00e9 alumnos van a ser fijos de comedor, podr\u00e9 dejarlos prefijados en la aplicaci\u00f3n. De esta manera, al registrar diariamente los datos, el proceso ser\u00e1 bastante m\u00e1s r\u00e1pido y solamente tendremos que modificar las excepciones.\nDurante el mes de septiembre, los profesores de Primaria que realizar\u00e1n servicio de comedor ser\u00e1n Rub\u00e9n Redencio, Daniela Senju, Julia Rodr\u00edguez y Pedro Zapata.\nEn Infantil, la organizaci\u00f3n durante septiembre ser\u00e1 la siguiente:\n3 a\u00f1os:\n- Acompa\u00f1an a los alumnos al comedor: Alejandra Calvo, Dani y Paula.\n- Profesorado que realiza comedor: Alejandra Calvo.\n- Entrega de los ni\u00f1os que se van a casa: Elena y Nieves.\n- Entrega de los alumnos que tienen hermanos en Primaria: Dani y Paula.\n- Siesta: Yoli y 1 monitor\n4 a\u00f1os:\n- Acompa\u00f1an a los alumnos al comedor: Nuria Romero y Gema.\n- Profesorado que realiza comedor: Nuria Romero y Gema del Pozo.\n- Entrega de los ni\u00f1os que se van a casa: Susana.\n5 a\u00f1os:\n- Acompa\u00f1an a los alumnos al comedor: Tere y Alejandra P.\n- Entrega de los ni\u00f1os que se van a casa: Marta.\nEn el patio cubierto de 4 y 5 a\u00f1os, estar\u00e1n Paqui y dos monitores.\n\nRespecto a los alumnos que tienen hermanos en Primaria, cada tutora permanecer\u00e1 inicialmente con ellos en su fila o en el aula. Una vez hayamos terminado de entregar a los ni\u00f1os que se marchan a casa, llevaremos a estos alumnos al aula de 5 a\u00f1os A, donde quedar\u00e1n agrupados hasta que corresponda su salida.\nComo es una organizaci\u00f3n especial de septiembre, estaremos especialmente pendientes estos primeros d\u00edas. Si vemos cualquier punto que pueda funcionar mejor, lo iremos ajustando.\n\nAdem\u00e1s, para que no se nos queden en el aire incidencias que puedan producirse durante el tiempo de comedor ya sea dentro del comedor o durante el patio posterior vamos a utilizar una aplicaci\u00f3n espec\u00edfica de incidencias.\nLa idea es que tanto los profesores como los monitores podamos dejar all\u00ed reflejada cualquier situaci\u00f3n que consideremos importante: conflictos, golpes, comportamientos, cuestiones relacionadas con la comida o cualquier otra incidencia que despu\u00e9s pueda ser relevante para el tutor.\nAs\u00ed evitamos depender \u00fanicamente de comentarios de pasillo, mensajes sueltos o de ese cl\u00e1sico \u201cluego te cuento una cosa del comedor\u201d que tres horas despu\u00e9s ha desaparecido de la memoria de todos.\nNo est\u00e1 de m\u00e1s que cada d\u00eda echemos un vistazo r\u00e1pido, igual que hacemos con el chat de enfermer\u00eda, especialmente si vemos que aparecen nuevos registros relacionados con nuestros alumnos.\n\ud83d\udc49 App de incidencias de comedor:\nhttps://comedorcsb-incidencias.vercel.app/\nTambi\u00e9n podr\u00e9is acceder a ella directamente desde la aplicaci\u00f3n del comedor y desde nuestro portal web.\n\nREGISTRO DE CASOS PARA ORIENTACI\u00d3N\nRecordad tambi\u00e9n que tenemos disponible la aplicaci\u00f3n para registrar aquellos casos o situaciones que consideremos que pueden necesitar posteriormente una valoraci\u00f3n o seguimiento por parte de Orientaci\u00f3n.\nEs importante que utilicemos este registro para que la informaci\u00f3n quede recogida y podamos hacer posteriormente un seguimiento ordenado, en lugar de que determinadas cuestiones se queden simplemente en una conversaci\u00f3n o comentario puntual.\nPara acceder como profesores debemos hacerlo con contrase\u00f1a. La contrase\u00f1a com\u00fan es:\nProfescano26\nPod\u00e9is acceder tambi\u00e9n a esta herramienta desde el portal web:\n\ud83d\udc49 https://orientacion.vercel.app/\n\nSALIDA Y REPARTO DE ALUMNOS\nEn Primaria mantenemos el mismo sistema de reparto del curso pasado.\nLos planos y listados los ten\u00e9is disponibles aqu\u00ed, especialmente para los profesores que os incorpor\u00e1is este curso:\n\ud83d\udc49 Listados y organizaci\u00f3n:\nhttps://drive.google.com/drive/folders/1jQJhC8_f1uXEDu9DGSOQDHjLELO12cTa?usp=sharing\nEn Infantil, durante septiembre, seguiremos la organizaci\u00f3n espec\u00edfica indicada anteriormente para 3, 4 y 5 a\u00f1os, tanto para los alumnos que van al comedor como para los que se marchan a casa o esperan a sus hermanos de Primaria.\nEstos primeros d\u00edas estaremos especialmente pendientes y ajustaremos cualquier cosa que veamos que pueda funcionar mejor.\n\nAPARCAMIENTO\nY una peque\u00f1a buena noticia para terminar la parte log\u00edstica: la obra del archivo est\u00e1 ya pr\u00e1cticamente terminada, por lo que podemos volver a utilizar el aparcamiento trasero con normalidad y aprovechar de nuevo todos los espacios disponibles.\n\nY termino, como solemos hacer, con una peque\u00f1a reflexi\u00f3n para comenzar la semana.\nEn el Evangelio de este domingo, Jes\u00fas habla de algo tan sencillo de explicar como dif\u00edcil de vivir: cuando tenemos algo con alguien, hablar primero con esa persona, cara a cara y desde el cari\u00f1o. Y san Pablo lo resume todav\u00eda m\u00e1s: al final, nuestra \u00fanica deuda con los dem\u00e1s deber\u00eda ser la del amor.\nCreo que no hay mejor mensaje para empezar un curso.\nVamos a pasar much\u00edsimas horas juntos. Habr\u00e1 prisas, cansancio, decisiones con las que estaremos de acuerdo y otras con las que no, d\u00edas estupendos y seguramente alguno en el que nos costar\u00e1 bastante m\u00e1s llegar al final. Pero tenemos una enorme responsabilidad: cuidarnos entre nosotros para poder cuidar bien a los que tenemos delante.\nEducar tambi\u00e9n consiste muchas veces en eso: decir algo cuando hay que decirlo, escuchar cuando toca escuchar, corregir sin hacer da\u00f1o, pedir ayuda cuando la necesitamos y saber que detr\u00e1s de la puerta de al lado hay un compa\u00f1ero.\nY hay una frase del Evangelio de hoy especialmente bonita para comenzar un curso: Jes\u00fas recuerda que cuando dos o tres se re\u00fanen en su nombre, \u00c9l est\u00e1 en medio de ellos.\nMa\u00f1ana volveremos a llenar las aulas de ni\u00f1os, mochilas, nervios, abrazos, alg\u00fan llanto y seguramente bastante ruido. Y entre todo eso, aunque algunas veces nos cueste verlo, tambi\u00e9n estar\u00e1 \u00c9l.\nQue tengamos un muy buen comienzo de curso.\nGracias por el esfuerzo enorme que hab\u00e9is hecho estos d\u00edas para que ma\u00f1ana todo est\u00e9 preparado.\n\nUn abrazo a todos."
   },
   {
     id: "plan-semana-31ago-4sep-2026",
@@ -1718,109 +1721,6 @@ export function App() {
             )}
           </section>
 
-          {/* CALENDARIO DE GOOGLE CON VISTA MENSUAL POR DEFECTO */}
-          <section id="calendario-escolar" className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80 mb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 flex-shrink-0">
-                  <IconRenderer name="Calendar" className="w-4 h-4" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="font-extrabold text-base text-slate-900 dark:text-white whitespace-nowrap">
-                      Calendario Escolar
-                    </h2>
-                    <a
-                      href={
-                        activeCalTab === "actividades"
-                          ? `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}`
-                          : activeCalTab === "sustituciones"
-                          ? `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}`
-                          : `https://calendar.google.com/calendar/u/0/r`
-                      }
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-300 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700 transition whitespace-nowrap"
-                      title="Abrir en Google Calendar web o app"
-                    >
-                      <IconRenderer name="ExternalLink" className="w-3 h-3" />
-                      <span>Abrir</span>
-                    </a>
-                  </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Infantil y Primaria · Mes por defecto</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-                {/* Switcher Agenda / Mes / Semana */}
-                <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700/60 flex-shrink-0">
-                  <button
-                    onClick={() => setCalViewMode("AGENDA")}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] transition ${calViewMode === "AGENDA" ? "bg-white dark:bg-slate-950 text-indigo-600 dark:text-indigo-400 font-extrabold shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
-                    title="Vista Lista / Agenda (Ideal para móvil)"
-                  >
-                    📋 Agenda
-                  </button>
-                  <button
-                    onClick={() => setCalViewMode("MONTH")}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] transition ${calViewMode === "MONTH" ? "bg-white dark:bg-slate-950 text-slate-900 dark:text-white shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
-                  >
-                    📅 Mes
-                  </button>
-                  <button
-                    onClick={() => setCalViewMode("WEEK")}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] transition ${calViewMode === "WEEK" ? "bg-white dark:bg-slate-950 text-slate-900 dark:text-white shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
-                  >
-                    📆 Sem
-                  </button>
-                </div>
-
-                {/* Selector de Calendario */}
-                <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200 dark:border-slate-700/60 flex-shrink-0">
-                  <button
-                    onClick={() => setActiveCalTab("unificados")}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
-                      activeCalTab === "unificados"
-                        ? "bg-indigo-600 text-white shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                    title="Ver Actividades y Sustituciones unificadas"
-                  >
-                    🗓️ Unificado
-                  </button>
-                  <button
-                    onClick={() => setActiveCalTab("actividades")}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
-                      activeCalTab === "actividades"
-                        ? "bg-indigo-600 text-white shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                  >
-                    🔵 Actividades
-                  </button>
-                  <button
-                    onClick={() => setActiveCalTab("sustituciones")}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
-                      activeCalTab === "sustituciones"
-                        ? "bg-amber-600 text-white shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                  >
-                    🟠 Sustituciones
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="w-full h-[520px] sm:h-[680px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-inner">
-              <iframe
-                src={activeCalendarSrc}
-                className="w-full h-full border-0 bg-white dark:bg-slate-950"
-                title="Google Calendar San Buenaventura"
-              />
-            </div>
-          </section>
-
           {/* SECCIÓN PROGRAMACIÓN SEMANAL DEL CLAUSTRO */}
           <section id="programacion-semanal" className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
             {(() => {
@@ -2054,6 +1954,109 @@ export function App() {
                 </div>
               );
             })()}
+          </section>
+
+          {/* CALENDARIO DE GOOGLE CON VISTA MENSUAL POR DEFECTO */}
+          <section id="calendario-escolar" className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80 mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 flex-shrink-0">
+                  <IconRenderer name="Calendar" className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="font-extrabold text-base text-slate-900 dark:text-white whitespace-nowrap">
+                      Calendario Escolar
+                    </h2>
+                    <a
+                      href={
+                        activeCalTab === "actividades"
+                          ? `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}`
+                          : activeCalTab === "sustituciones"
+                          ? `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}`
+                          : `https://calendar.google.com/calendar/u/0/r`
+                      }
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-300 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700 transition whitespace-nowrap"
+                      title="Abrir en Google Calendar web o app"
+                    >
+                      <IconRenderer name="ExternalLink" className="w-3 h-3" />
+                      <span>Abrir</span>
+                    </a>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Infantil y Primaria · Mes por defecto</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+                {/* Switcher Agenda / Mes / Semana */}
+                <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700/60 flex-shrink-0">
+                  <button
+                    onClick={() => setCalViewMode("AGENDA")}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] transition ${calViewMode === "AGENDA" ? "bg-white dark:bg-slate-950 text-indigo-600 dark:text-indigo-400 font-extrabold shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
+                    title="Vista Lista / Agenda (Ideal para móvil)"
+                  >
+                    📋 Agenda
+                  </button>
+                  <button
+                    onClick={() => setCalViewMode("MONTH")}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] transition ${calViewMode === "MONTH" ? "bg-white dark:bg-slate-950 text-slate-900 dark:text-white shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
+                  >
+                    📅 Mes
+                  </button>
+                  <button
+                    onClick={() => setCalViewMode("WEEK")}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] transition ${calViewMode === "WEEK" ? "bg-white dark:bg-slate-950 text-slate-900 dark:text-white shadow-sm" : "text-slate-600 dark:text-slate-400"}`}
+                  >
+                    📆 Sem
+                  </button>
+                </div>
+
+                {/* Selector de Calendario */}
+                <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200 dark:border-slate-700/60 flex-shrink-0">
+                  <button
+                    onClick={() => setActiveCalTab("unificados")}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
+                      activeCalTab === "unificados"
+                        ? "bg-indigo-600 text-white shadow-sm"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    }`}
+                    title="Ver Actividades y Sustituciones unificadas"
+                  >
+                    🗓️ Unificado
+                  </button>
+                  <button
+                    onClick={() => setActiveCalTab("actividades")}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
+                      activeCalTab === "actividades"
+                        ? "bg-indigo-600 text-white shadow-sm"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    }`}
+                  >
+                    🔵 Actividades
+                  </button>
+                  <button
+                    onClick={() => setActiveCalTab("sustituciones")}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
+                      activeCalTab === "sustituciones"
+                        ? "bg-amber-600 text-white shadow-sm"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    }`}
+                  >
+                    🟠 Sustituciones
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full h-[520px] sm:h-[680px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-inner">
+              <iframe
+                src={activeCalendarSrc}
+                className="w-full h-full border-0 bg-white dark:bg-slate-950"
+                title="Google Calendar San Buenaventura"
+              />
+            </div>
           </section>
 
         </main>
