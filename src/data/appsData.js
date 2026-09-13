@@ -19,7 +19,7 @@ export const SCHOOL_LINKS = {
       icon: "Wrench",
       color: "from-blue-500 to-cyan-600",
       badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-      url: "https://incidencias-colegio-1wx3.vercel.app/",
+      url: "https://incidenciascsbdor.vercel.app/",
       tag: "Vercel"
     },
     {

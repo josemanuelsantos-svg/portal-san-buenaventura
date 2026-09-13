@@ -495,7 +495,7 @@ const SIDEBAR_SECTIONS = [
         id: "incidencias",
         title: "Incidencias & TIC",
         subtitle: "Partes y averías",
-        url: "https://incidencias-colegio-1wx3.vercel.app/",
+        url: "https://incidenciascsbdor.vercel.app/",
         icon: "Wrench",
         shortcut: "Alt+I",
         color: "text-cyan-500 bg-cyan-50 border-cyan-200 dark:text-cyan-400 dark:bg-cyan-500/20 dark:border-cyan-500/30"
@@ -735,7 +735,7 @@ export function App() {
       } else if (e.altKey && e.key.toLowerCase() === 'n') {
         window.open("https://www.snapp.care/login", "_blank");
       } else if (e.altKey && e.key.toLowerCase() === 'i') {
-        window.open("https://incidencias-colegio-1wx3.vercel.app/", "_blank");
+        window.open("https://incidenciascsbdor.vercel.app/", "_blank");
       } else if (e.altKey && e.key.toLowerCase() === 'd') {
         window.open("https://gestion-dispositivos-three.vercel.app/#view-calendar", "_blank");
       } else if (e.altKey && e.key.toLowerCase() === 'o') {
@@ -2084,7 +2084,7 @@ export function App() {
 
         {/* 3. Incidencias */}
         <a
-          href="https://incidencias-colegio-1wx3.vercel.app/"
+          href="https://incidenciascsbdor.vercel.app/"
           target="_blank"
           rel="noreferrer"
           className="flex flex-col items-center gap-0.5 text-cyan-600 dark:text-cyan-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
