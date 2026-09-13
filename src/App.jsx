@@ -476,6 +476,14 @@ const SIDEBAR_SECTIONS = [
         url: "https://drive.google.com/drive/folders/1AN9eZvT-snuxCk9yJ0BOON3Rmd-XEz_3?usp=sharing",
         icon: "Folder",
         color: "text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-500/20 dark:border-emerald-500/30"
+      },
+      {
+        id: "registro-actividades",
+        title: "Registro de Actividades",
+        subtitle: "Hoja de registro y seguimiento",
+        url: "https://docs.google.com/spreadsheets/d/16Dzgnev5LUDddKrfaZ_T75SpgZe393ZqdybpQsWDXeQ/edit?usp=drive_link",
+        icon: "FileSpreadsheet",
+        color: "text-purple-600 bg-purple-50 border-purple-200 dark:text-purple-300 dark:bg-purple-500/20 dark:border-purple-500/30"
       }
     ]
   },
