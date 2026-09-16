@@ -1,4 +1,4 @@
-const CACHE_NAME = 'portal-san-buenaventura-v1';
+const CACHE_NAME = 'portal-san-buenaventura-v2';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -26,6 +26,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('Eliminando caché obsoleta del Portal:', key);
             return caches.delete(key);
           }
         })
@@ -35,12 +36,31 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests and ignore non-http(s) schemas
   if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
     return;
   }
 
-  // Network first with cache fallback
+  // Navegación (HTML del portal): SIEMPRE intentar Network primero para garantizar la versión más reciente
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match('/index.html') || caches.match('/');
+        })
+    );
+    return;
+  }
+
+  // Assets estáticos (JS, CSS, imágenes): Network first con fallback a caché
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
@@ -53,14 +73,7 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       })
       .catch(() => {
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          if (event.request.mode === 'navigate') {
-            return caches.match('/index.html');
-          }
-        });
+        return caches.match(event.request);
       })
   );
 });

@@ -640,10 +640,21 @@ export function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [notices, setNotices] = useState(() => {
-    const saved = localStorage.getItem("sb_school_notices");
-    return saved ? JSON.parse(saved) : INITIAL_NOTICES;
-  });
+  const getInitialNotices = () => {
+    try {
+      const saved = localStorage.getItem("sb_school_notices");
+      if (!saved) return INITIAL_NOTICES;
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed) || parsed.length === 0) return INITIAL_NOTICES;
+      const initialIds = new Set(INITIAL_NOTICES.map(n => n.id));
+      const customNotices = parsed.filter(n => !initialIds.has(n.id));
+      return [...INITIAL_NOTICES, ...customNotices];
+    } catch (e) {
+      return INITIAL_NOTICES;
+    }
+  };
+
+  const [notices, setNotices] = useState(() => getInitialNotices());
 
   const [customBookmarks, setCustomBookmarks] = useState(() => {
     const saved = localStorage.getItem("sb_teacher_bookmarks");
@@ -700,13 +711,33 @@ export function App() {
   const [newLinkText, setNewLinkText] = useState("");
 
   // ESTADOS PROGRAMACIÓN SEMANAL DEL CLAUSTRO
-  const [weeklyPlans, setWeeklyPlans] = useState(() => {
-    const saved = localStorage.getItem("sb_weekly_plans");
-    return saved ? JSON.parse(saved) : INITIAL_WEEKLY_PLANS;
-  });
+  const getInitialWeeklyPlans = () => {
+    try {
+      const savedStr = localStorage.getItem("sb_weekly_plans");
+      if (!savedStr) {
+        localStorage.setItem("sb_weekly_plans", JSON.stringify(INITIAL_WEEKLY_PLANS));
+        return INITIAL_WEEKLY_PLANS;
+      }
+      const saved = JSON.parse(savedStr);
+      if (!Array.isArray(saved) || saved.length === 0) {
+        localStorage.setItem("sb_weekly_plans", JSON.stringify(INITIAL_WEEKLY_PLANS));
+        return INITIAL_WEEKLY_PLANS;
+      }
+      // Priorizar siempre las semanas oficiales definidas en el código y mantener planes personalizados
+      const initialIds = new Set(INITIAL_WEEKLY_PLANS.map(p => p.id));
+      const customPlans = saved.filter(p => !initialIds.has(p.id));
+      const merged = [...INITIAL_WEEKLY_PLANS, ...customPlans];
+      merged.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      localStorage.setItem("sb_weekly_plans", JSON.stringify(merged));
+      return merged;
+    } catch (e) {
+      return INITIAL_WEEKLY_PLANS;
+    }
+  };
+
+  const [weeklyPlans, setWeeklyPlans] = useState(() => getInitialWeeklyPlans());
   const [selectedWeekId, setSelectedWeekId] = useState(() => {
-    const saved = localStorage.getItem("sb_weekly_plans");
-    const list = saved ? JSON.parse(saved) : INITIAL_WEEKLY_PLANS;
+    const list = getInitialWeeklyPlans();
     const current = list.find(w => w.isCurrent);
     return current ? current.id : (list[0] ? list[0].id : "");
   });
@@ -1500,6 +1531,30 @@ export function App() {
                         <span>Instalar Aplicación</span>
                       </span>
                       <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400">PWA</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        localStorage.removeItem("sb_weekly_plans");
+                        localStorage.removeItem("sb_school_notices");
+                        if ('caches' in window) {
+                          caches.keys().then((names) => {
+                            names.forEach((name) => caches.delete(name));
+                          });
+                        }
+                        setToastMessage("🔄 Actualizando a la última versión...");
+                        setTimeout(() => {
+                          window.location.reload(true);
+                        }, 400);
+                      }}
+                      className="w-full flex items-center justify-between p-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition text-emerald-900 dark:text-emerald-200 border border-emerald-200/60 dark:border-emerald-500/30"
+                      title="Forzar actualización y limpiar caché local"
+                    >
+                      <span className="flex items-center gap-2 font-semibold">
+                        <IconRenderer name="RefreshCw" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                        <span>Recargar última versión</span>
+                      </span>
+                      <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-white">v2</span>
                     </button>
                   </div>
                 </div>
