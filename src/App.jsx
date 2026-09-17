@@ -527,7 +527,7 @@ const SIDEBAR_SECTIONS = [
         id: "documentacion-programaciones",
         title: "Documentación & Programaciones",
         subtitle: "PGA, RRI y programaciones",
-        url: "https://drive.google.com/drive/folders/1jCBspuTFRWSFVxBZ268-3BTKaRFaaP_P?usp=sharing",
+        url: "https://drive.google.com/drive/folders/1AN9eZvT-snuxCk9yJ0BOON3Rmd-XEz_3?usp=drive_link",
         icon: "Folder",
         color: "text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-500/20 dark:border-emerald-500/30"
       },
