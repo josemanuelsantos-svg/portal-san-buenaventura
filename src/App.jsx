@@ -133,28 +133,7 @@ const PeriodBellTracker = React.memo(function PeriodBellTracker() {
   );
 });
 
-const INITIAL_NOTICES = [
-  {
-    id: "notice_cuadro_trabajo_septiembre_2026",
-    title: "📊 Cuadro de Organización y Trabajo: 1ª Semana de Septiembre",
-    content: "Ya está disponible el documento oficial con el reparto de tareas, horarios, ubicaciones y comisiones docentes para el inicio de curso 2026/2027. Por favor, consultad vuestro horario asignado.",
-    priority: "important",
-    date: "Hoy, 09:00",
-    author: "Dirección / Jefatura de Estudios",
-    linkUrl: "https://docs.google.com/spreadsheets/d/16_aV1YupTXwq8XiM32Mbqhgnm9re9f9d1gKVDbWPens/edit?usp=sharing",
-    linkText: "Abrir Cuadro de Trabajo en Google Sheets",
-    expiresAt: null
-  },
-  {
-    id: 1,
-    title: "Recordatorio: Firma de Actas de Evaluación",
-    content: "Recuerden que el plazo para la firma digital finaliza este viernes a las 14:00h.",
-    priority: "important",
-    date: "Hoy, 08:30",
-    author: "Jefatura de Estudios",
-    expiresAt: null
-  }
-];
+const INITIAL_NOTICES = [];
 
 const INITIAL_BOOKMARKS = [
   { id: 101, title: "Mi Google Drive Docente", url: "https://drive.google.com", icon: "Folder" },
@@ -572,6 +551,14 @@ const SIDEBAR_SECTIONS = [
         color: "text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-500/20 dark:border-emerald-500/30"
       },
       {
+        id: "recogida-infantil",
+        title: "Recogida Infantil",
+        subtitle: "Control y entrega de alumnos",
+        url: "https://recogida-infantil.vercel.app/",
+        icon: "UserCheck",
+        color: "text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30"
+      },
+      {
         id: "extraescolares",
         title: "Extraescolares SB",
         subtitle: "Deportes y talleres",
@@ -642,15 +629,17 @@ export function App() {
 
   const getInitialNotices = () => {
     try {
+      const deletedIds = JSON.parse(localStorage.getItem("sb_deleted_notice_ids") || "[]");
       const saved = localStorage.getItem("sb_school_notices");
-      if (!saved) return INITIAL_NOTICES;
-      const parsed = JSON.parse(saved);
-      if (!Array.isArray(parsed) || parsed.length === 0) return INITIAL_NOTICES;
-      const initialIds = new Set(INITIAL_NOTICES.map(n => n.id));
-      const customNotices = parsed.filter(n => !initialIds.has(n.id));
-      return [...INITIAL_NOTICES, ...customNotices];
+      if (saved !== null) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(n => !deletedIds.includes(n.id));
+        }
+      }
+      return INITIAL_NOTICES.filter(n => !deletedIds.includes(n.id));
     } catch (e) {
-      return INITIAL_NOTICES;
+      return [];
     }
   };
 
@@ -894,22 +883,14 @@ export function App() {
       const data = await res.json();
       setCloudStatus("connected");
       if (data) {
-        const list = Array.isArray(data)
+        const deletedIds = JSON.parse(localStorage.getItem("sb_deleted_notice_ids") || "[]");
+        const list = (Array.isArray(data)
           ? data.filter(Boolean)
-          : Object.entries(data).map(([key, val]) => ({ ...val, id: key }));
+          : Object.entries(data).map(([key, val]) => ({ ...val, id: key })))
+          .filter(n => !deletedIds.includes(n.id));
         list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         setNotices(list);
         localStorage.setItem("sb_school_notices", JSON.stringify(list));
-      } else {
-        if (notices.length > 0) {
-          notices.forEach(n => {
-            fetch(`${FIREBASE_DB_URL}/${n.id}.json`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...n, createdAt: Date.now() })
-            }).catch(() => {});
-          });
-        }
       }
     } catch (err) {
       setCloudStatus("offline");
@@ -1284,11 +1265,21 @@ export function App() {
     const updated = notices.filter(n => n.id !== id);
     setNotices(updated);
     localStorage.setItem("sb_school_notices", JSON.stringify(updated));
+
+    // Registrar ID en lista de eliminados permanentes
+    try {
+      const deletedIds = JSON.parse(localStorage.getItem("sb_deleted_notice_ids") || "[]");
+      if (!deletedIds.includes(id)) {
+        deletedIds.push(id);
+        localStorage.setItem("sb_deleted_notice_ids", JSON.stringify(deletedIds));
+      }
+    } catch (e) {}
+
     try {
       await fetch(`${FIREBASE_DB_URL}/${id}.json`, {
         method: "DELETE"
       });
-      setToastMessage("Aviso eliminado de la nube");
+      setToastMessage("Aviso eliminado");
     } catch (err) {
       setToastMessage("Aviso eliminado");
     }

@@ -23,6 +23,17 @@ export const SCHOOL_LINKS = {
       tag: "Vercel"
     },
     {
+      id: "recogida-infantil",
+      title: "Recogida Infantil",
+      type: "App",
+      description: "Control de salidas, entrega de alumnos y autorizaciones.",
+      icon: "UserCheck",
+      color: "from-amber-500 to-orange-600",
+      badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+      url: "https://recogida-infantil.vercel.app/",
+      tag: "Vercel"
+    },
+    {
       id: "extraescolares",
       title: "Extraescolares San Buenaventura",
       type: "App",
