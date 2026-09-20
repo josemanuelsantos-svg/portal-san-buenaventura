@@ -142,13 +142,69 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-21-25-sep-2026",
+    weekTitle: "Semana del 21 al 25 de Septiembre: Convivencias, Jornada de San Francisco y Cierre de PGA",
+    academicYear: "2026/2027",
+    summary: "Convivencias de 5 años, 1º y 2º de Primaria, organización de San Francisco y Robótica, circular de Recogida Infantil, finalización de PGA y 2ª sesión de Educación Vial.",
+    publishedAt: "2026-09-20",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1789948800000,
+    days: [
+      {
+        day: "Lunes",
+        date: "21 Sep",
+        items: [
+          "🚌 09:00h a 16:00h - Convivencias de 5 años (Infantil), 1.º y 2.º de Primaria (salida a Batán a las 09:00h; regreso ~16:00h por c/ Dante).",
+          "🥪 Reparto de picnics a primera hora para comensales habituales y comprobación de autorizaciones en Educamos.",
+          "✉️ Reparto de sobres de actividades a tutores (excepto 5 años, 1.º y 2.º EP).",
+          "🚸 Presentación matinal de la app de Recogida Infantil a monitores y envío de circular a familias por la tarde."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "22 Sep",
+        items: [
+          "✉️ Reparto de sobres de actividades a tutores de 5 años, 1.º y 2.º de Primaria.",
+          "🤖 13:00h a 14:00h - Reunión de profesores de Robótica (3.º a 6.º) en aula de Robótica. En Infantil: reunión por especialidades tras la explicación.",
+          "🕊️ 14:00h a 15:00h - Reunión general de Claustro (EI y EP) en 3.º EP B: Organización y desarrollo de la Jornada de San Francisco (Pastoral)."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "23 Sep",
+        items: [
+          "💰 Recogida de sobres con el dinero de las actividades a los tutores.",
+          "🩺 Consulta y verificación del listado de alumnos adscritos a Enfermería (marcados en verde en la hoja de pagos del portal)."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "24 Sep",
+        items: [
+          "📋 Cierre definitivo de tareas de inicio de curso: PGA terminada, listados de Raíces cotejados con Educamos y revisión concienzuda de alergias (comedor y no comedor)."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "25 Sep",
+        items: [
+          "🚦 2.ª sesión de Educación Vial con agentes de Policía: 1.ª hora (1.º EP), 2.ª hora (3.º EP) y 3.ª hora (5.º EP).",
+          "📊 Preparación del breve informe de grupo para las Juntas de Evaluación del martes 29 (apoyo ordinario, NEE/PT y adaptación)."
+        ]
+      }
+    ],
+    generalNotes: "Convivencias 5 años, 1º y 2º EP el lunes (09:00-16:00h). Alumnos de Enfermería marcados en verde en la hoja de pagos. Reuniones del martes: Robótica (13h) y Pastoral de San Francisco (14h). Cierre definitivo de PGA, Raíces y Alergias. 2ª sesión de Educación Vial el viernes. Preparar informes para juntas de evaluación del 29.",
+    fullEmailText: "Hola a todos, acaba de comenzar el curso y septiembre se va, no se irá el calor con él no...\nOs dejo, como cada semana, un pequeño resumen con las cosas más importantes que tenemos por delante estos días.\n\nConvivencias – 5 años, 1.º y 2.º de Primaria\nMañana tendrán sus convivencias los cursos de 5 años, 1.º y 2.º de Primaria.\nAcompañarán a los grupos sus respectivos tutores y, además, Luis, Susana y Pilar Fuentes. Susana y Pilar dejarán preparado trabajo en sus aulas para que sus sustitutos puedan continuar con normalidad la jornada con los grupos que les corresponderían.\nAntes de salir, recordad revisar en Educamos las autorizaciones de los alumnos. Os dejo también adjunto el estado actual para que podáis comprobarlo.\nIgualmente, a primera hora habrá que recoger y repartir los picnics de todos los alumnos que habitualmente se quedan al comedor.\nLa salida será a las 9:00 h en dirección a Batán, donde cogerán los autobuses. Está previsto que estén de vuelta aproximadamente a las 16:00 h. A la llegada, los autobuses podrán parar en la rotonda de la calle Dante para que los alumnos accedan al colegio directamente por la puerta trasera.\n\nEducación Vial – viernes\nEl viernes tendremos la segunda y última sesión de Educación Vial para 1.º, 3.º y 5.º de Primaria.\nSeguiremos exactamente el mismo orden que la semana pasada:\n1.ª hora → 1.º de Primaria\n2.ª hora → 3.º de Primaria\n3.ª hora → 5.º de Primaria\nFuncionaremos igual que en la primera sesión: los agentes acudirán directamente a las aulas y permanecerá con el grupo el profesor que tenga clase en ese momento.\n\nHoja de pagos y servicio de Enfermería\nUna cuestión importante respecto a la [hoja de pagos:](https://docs.google.com/spreadsheets/d/16Dzgnev5LUDddKrfaZ_T75SpgZe393ZqdybpQsWDXeQ/edit?usp=sharing) los alumnos que aparecen marcados en verde son aquellos que están dados de alta en el servicio de Enfermería.\nAsí, si en algún momento tenemos dudas sobre si un alumno puede acudir o no a la enfermera, podemos consultarlo rápidamente desde esa misma hoja.\nSi todo va bien, mañana tenemos internet y puedo imprimir, mandaré también a cada clase el listado impreso de los alumnos adscritos a Enfermería, para que podamos tenerlo siempre a mano en formato físico.\nRespecto al dinero de las actividades, mañana volveré a repartir los sobres/dinero a los tutores, salvo en 5 años, 1.º y 2.º de Primaria, que, al estar de convivencia, os lo entregaré el martes.\nEl miércoles volveré a recogerlo todo, contando en principio con que para entonces podamos tener ya los pagos completos.\n\nReuniones – martes 22\nEsta semana continuamos con normalidad con nuestras reuniones.\nEl martes 22 nos reuniremos de 13:00 a 15:00 h, aunque tendremos dos cuestiones concretas dentro de ese horario, por lo que si algún curso tenía intención de quedarse 4 días 1 hora pasa a quedarse como máximo 3 días.\nDe 13:00 a 14:00 h, me gustaría que los profesores de Robótica de 3.º a 6.º: Pili, Juan, Rubén, Álvaro Fernández y yo, nos reunamos en el aula de Robótica para organizar el material de la sala y secuenciar el trabajo del curso. En el caso de infantil como ya ha terminado la PGA os reuniréis por especialidades al terminar la explicación de la jornada de San Francisco.\nA las 14:00 h nos reuniremos todo Infantil y Primaria en 3.º de Primaria B. El equipo de Pastoral nos explicará cómo se va a desarrollar la jornada de San Francisco, para que todos tengamos clara la organización.\n\nAdemás, esta semana debemos intentar cerrar definitivamente las tareas que comenzamos la semana pasada. El objetivo es llegar al final de la semana con:\n1. La PGA terminada.\n2. Los listados de Raíces completamente revisados, comprobando que coinciden con los listados actualizados de Educamos.\n3. El listado de alergias completamente revisado y actualizado.\nCon este último punto os pido especialmente que hagamos una revisión concienzuda, porque necesitamos poder trasladar después la información correctamente a cocina.\nDebemos partir de que todo lo que figura actualmente en el listado es correcto. Si algo ha cambiado, hay que modificarlo ahora. Por favor, revisadlo bien para que podamos dar por válido el documento una vez terminado este proceso.\nY una cuestión importante: en el listado de alergias deben aparecer TODOS los alumnos que tengan alguna alergia, independientemente de que utilicen o no el servicio de comedor.\nIndicaremos, siempre que tengamos esa información, si el alumno se queda o no a comedor, pero no eliminaremos a ningún alumno alérgico del listado por no utilizar el comedor.\n\nPersonas autorizadas para la recogida – Infantil\nComo ya hablé con el equipo de Infantil la semana pasada, mañana lunes por la tarde enviaré a las familias la información para que puedan comenzar a utilizar la aplicación y mostrar quiénes son las personas autorizadas para recoger a sus hijos.\nOs dejo adjunto el [correo](https://drive.google.com/drive/folders/1v-qkCq9brqr-_n7LRZvaIUZ--U03gDwD?usp=sharing) que recibirán las familias, junto con la información y el acceso a la aplicación, para que podáis verlo también vosotros.\nMañana se lo presentaré igualmente a los monitores, para que conozcan su funcionamiento y sepan cómo solicitar a las personas que vienen a recoger a un alumno que demuestren que están autorizadas.\nNo será algo que las familias tengan que enseñar obligatoriamente cada día, pero sí podremos solicitarlo siempre que lo consideremos necesario.\nSi antes del envío veis que falta algo, encontráis algún error o hay alguna cuestión que no os encaje, decídmelo para corregirlo\n\nJuntas de evaluación – martes 29\nLa semana siguiente tendremos las juntas de evaluación, que realizaremos por etapas.\nComo estaremos todos reunidos, no necesitamos preparar documentos enormes. Lo importante es que cada tutor lleve un breve informe de su grupo que nos permita tener una primera fotografía del curso.\nPor un lado, comentaremos muy brevemente cómo está funcionando la clase en general, especialmente en aquellos grupos en los que ha habido mezcla de alumnos: adaptación, posibles conflictos que hayan aparecido, situaciones claras de absentismo, alumnos que todavía no hayan asistido al colegio o cualquier circunstancia relevante de este comienzo de curso.\nDespués nos centraremos especialmente en los alumnos que puedan necesitar algún tipo de apoyo.\nEn cuanto a necesidades educativas especiales, revisaremos los alumnos que ya trabajan con PT y aquellos casos en los que consideremos conveniente solicitar que el PT valore la posibilidad de intervenir sabiendo que va estrechamente relacionado con el diagnóstico de nee.\nRespecto al apoyo ordinario, en Infantil haremos una valoración general de las necesidades que observamos y, en Primaria, nos centraremos especialmente en Lengua y Matemáticas, indicando qué alumnos consideramos que deberían acudir a apoyo.\nRecordad también que los alumnos que no han promocionado de curso deben ser propuestos desde el primer momento para recibir apoyo.\nLa idea no es hacer un informe exhaustivo de cada niño, sino llegar con la información importante preparada para que la junta sea ágil y podamos centrarnos especialmente en aquellos alumnos que realmente necesitan que tomemos alguna decisión.\n\nEl Evangelio de hoy nos habla de los trabajadores de la viña. Unos llegan a primera hora, otros más tarde y algunos prácticamente al final… y, sin embargo, el dueño sale una y otra vez a buscar a quien todavía está esperando.\nEn nuestras clases pasa algo parecido. No todos los niños llegan al mismo tiempo, ni aprenden al mismo ritmo, ni necesitan lo mismo de nosotros. Hay algunos que arrancan solos desde septiembre y otros a los que tendremos que salir a buscar varias veces durante el curso.\nQuizá nuestra mirada franciscana esté precisamente ahí: en no comparar tanto, en mirar a cada uno con sencillez, amabilidad y ternura, y en entender que cada niño tiene su momento al igual que lo tuvimos nosotros en su día...\nNuestra tarea no es conseguir que todos recorran el camino de la misma manera, sino intentar que ninguno se quede sin encontrar su lugar en nuestra viña.\n\nMucho ánimo con la semana."
+  },
+  {
     id: "plan-semana-14-18-sep-2026",
     weekTitle: "Semana del 14 al 18 de Septiembre: Consolidación y Convivencias",
     academicYear: "2026/2027",
     summary: "Horario ordinario, convivencias de 3º a 6º de Primaria, inicio de Educación Vial, auxiliares de conversación y protocolo de enfermería.",
     publishedAt: "2026-09-13",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1789344000000,
     days: [
       {
