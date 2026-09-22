@@ -592,7 +592,7 @@ const SIDEBAR_SECTIONS = [
         id: "incidencias",
         title: "Incidencias & TIC",
         subtitle: "Partes y averías",
-        url: "https://incidenciascsbdor.vercel.app/",
+        url: "https://incidencias-colegio-1wx3.vercel.app/",
         icon: "Wrench",
         shortcut: "Alt+I",
         color: "text-cyan-500 bg-cyan-50 border-cyan-200 dark:text-cyan-400 dark:bg-cyan-500/20 dark:border-cyan-500/30"
@@ -613,6 +613,14 @@ const SIDEBAR_SECTIONS = [
         url: "https://recogida-infantil.vercel.app/",
         icon: "UserCheck",
         color: "text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30"
+      },
+      {
+        id: "alumnos-extraescolares",
+        title: "Alumnos Extraescolares",
+        subtitle: "Control y alumnos inscritos",
+        url: "https://alumnos-extraescolares-csb.vercel.app/",
+        icon: "Users",
+        color: "text-indigo-500 bg-indigo-50 border-indigo-200 dark:text-indigo-400 dark:bg-indigo-500/20 dark:border-indigo-500/30"
       },
       {
         id: "extraescolares",
@@ -873,7 +881,7 @@ export function App() {
       } else if (e.altKey && e.key.toLowerCase() === 'n') {
         window.open("https://www.snapp.care/login", "_blank");
       } else if (e.altKey && e.key.toLowerCase() === 'i') {
-        window.open("https://incidenciascsbdor.vercel.app/", "_blank");
+        window.open("https://incidencias-colegio-1wx3.vercel.app/", "_blank");
       } else if (e.altKey && e.key.toLowerCase() === 'd') {
         window.open("https://gestion-dispositivos-three.vercel.app/#view-calendar", "_blank");
       } else if (e.altKey && e.key.toLowerCase() === 'o') {
@@ -2248,7 +2256,7 @@ export function App() {
 
         {/* 3. Incidencias */}
         <a
-          href="https://incidenciascsbdor.vercel.app/"
+          href="https://incidencias-colegio-1wx3.vercel.app/"
           target="_blank"
           rel="noreferrer"
           className="flex flex-col items-center gap-0.5 text-cyan-600 dark:text-cyan-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"

@@ -19,7 +19,7 @@ export const SCHOOL_LINKS = {
       icon: "Wrench",
       color: "from-blue-500 to-cyan-600",
       badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-      url: "https://incidenciascsbdor.vercel.app/",
+      url: "https://incidencias-colegio-1wx3.vercel.app/",
       tag: "Vercel"
     },
     {
@@ -31,6 +31,17 @@ export const SCHOOL_LINKS = {
       color: "from-amber-500 to-orange-600",
       badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/30",
       url: "https://recogida-infantil.vercel.app/",
+      tag: "Vercel"
+    },
+    {
+      id: "alumnos-extraescolares",
+      title: "Alumnos Extraescolares",
+      type: "App",
+      description: "Listados, asistencias y control de alumnos en actividades extraescolares.",
+      icon: "Users",
+      color: "from-blue-600 to-indigo-700",
+      badgeColor: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
+      url: "https://alumnos-extraescolares-csb.vercel.app/",
       tag: "Vercel"
     },
     {
