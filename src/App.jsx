@@ -155,47 +155,46 @@ const INITIAL_WEEKLY_PLANS = [
         day: "Lunes",
         date: "28 Sep",
         items: [
-          "🤝 11:30h a 11:45h - Encuentro de cursos hermanados: breve visita para conocerse antes del viernes (5.º EP visita a 1.º EP; resto de cursos en sus aulas reciben a sus hermanados).",
-          "🍽️ Previsión de comedor de octubre: Infantil facilita a Elena y Primaria a Julia la estimación de comensales. Mantener actualizada la app de comedor.",
-          "⏰ Horarios de octubre: Último día para comunicar a Jefatura cualquier propuesta de reajuste en las asignaturas dentro de la jornada lectiva."
+          "🤝 11:30-11:45h: Hermanados (5.º visita a 1.º EP; resto en aula).",
+          "🍽️ Previsión comedor octubre: comunicar a Elena (EI) o Julia (EP).",
+          "⏰ Horarios de octubre: fin de plazo para ajustes a Jefatura."
         ]
       },
       {
         day: "Martes",
         date: "29 Sep",
         items: [
-          "📊 Juntas de Evaluación Inicial: 13:00h Educación Infantil (sala de profesores) | 13:10h Educación Primaria (aula 3.º B).",
-          "📝 Acta de Evaluación Inicial: Rellenada exclusivamente por el tutor de cada grupo mediante el [formulario oficial de recogida](https://forms.gle/sk4Uxxas8hKUd5UN6) con la información de los especialistas.",
-          "🧠 Diagnósticos y apoyos PT: Cotejo y seguimiento del [listado de alumnos diagnosticados y con PT](https://docs.google.com/document/d/1W6b808OHKokLL6X9d1pg1pdUxY77G0rKSRr4nOgmHXQ/edit?usp=sharing)."
+          "📊 Juntas Evaluación Inicial: 13:00h EI (sala profesores) | 13:10h EP (3.º B).",
+          "📝 Rellenar [Acta de Evaluación](https://forms.gle/sk4Uxxas8hKUd5UN6) (tutores).",
+          "🧠 Revisar [alumnos PT](https://docs.google.com/document/d/1W6b808OHKokLL6X9d1pg1pdUxY77G0rKSRr4nOgmHXQ/edit?usp=sharing) y apoyos curriculares."
         ]
       },
       {
         day: "Miércoles",
         date: "30 Sep",
         items: [
-          "🕊️ Semana de San Francisco: Realización de la tutoría específica de San Francisco y preparación de actividades colegiales.",
-          "👥 Encuentros Franciscanos: Acompaña al grupo el profesor que tenga clase en ese momento (sin intercambios).",
-          "🔄 Atención al calendario de sustituciones ante los movimientos de profesorado por los encuentros.",
-          "☀️ Último día de jornada intensiva de septiembre (mañana jueves entra el horario completo de octubre)."
+          "🕊️ Tutorías y Encuentros Franciscanos (acompaña profe con clase).",
+          "🔄 Revisar sustituciones ante movimientos de grupos.",
+          "☀️ Último día de jornada reducida de septiembre."
         ]
       },
       {
         day: "Jueves",
         date: "1 Oct",
         items: [
-          "🔔 Entrada en vigor del Horario Ordinario de Octubre: Jornada completa lectiva de mañana y tarde (clases hasta las 16:15h).",
-          "⚽ Comienzo de Actividades Extraescolares: A las 16:05h bajada organizada de Primaria a los puntos de extraescolares. Consultar la app [Alumnos Extraescolares](https://alumnos-extraescolares-csb.vercel.app/).",
-          "☕ Sin reunión de claustro por la tarde: Compensada por la asistencia a las Juntas de Evaluación del martes a mediodía (el horario habitual 16:00/16:15h arrancará el próximo jueves 8)."
+          "🔔 Horario ordinario de octubre: clases de tarde hasta 16:15h.",
+          "⚽ Inicio Extraescolares: bajada a las 16:05h ([Ver app](https://alumnos-extraescolares-csb.vercel.app/)).",
+          "☕ Sin reunión de claustro por la tarde."
         ]
       },
       {
         day: "Viernes",
         date: "2 Oct",
         items: [
-          "🎉 Celebración de San Francisco (Día Grande del Colegio): Sin especialidades; tutores con sus grupos toda la jornada.",
-          "🏃‍♂️ Todo el alumnado asiste con el chándal del colegio (aviso previo enviado a las familias de Primaria).",
-          "📸 Recordar fotos para la repesca y 3 años (sesión para alumnos pendientes de foto escolar y clases de 3 años de Infantil).",
-          "⛪ Solemnidad del domingo 4 de octubre: 10:30h Eucaristía en la Iglesia de Santa Clara (preside D. José Cobo), talleres y paellada en el colegio."
+          "🎉 Fiesta de San Francisco: tutores con su grupo todo el día (sin especialistas).",
+          "🏃‍♂️ Todo el alumnado con chándal del colegio.",
+          "📸 Recordar fotos para la repesca y 3 años.",
+          "⛪ Domingo 4 (10:30h): Eucaristía en Santa Clara y paellada colegial."
         ]
       }
     ],
