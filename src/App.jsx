@@ -538,6 +538,15 @@ const SIDEBAR_SECTIONS = [
     title: "Accesos Diarios & Gestión",
     items: [
       {
+        id: "san-francisco-info",
+        title: "Jornada San Francisco",
+        subtitle: "Especial carisma & enlaces",
+        url: "#",
+        icon: "Sparkles",
+        color: "text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30",
+        isHero: true
+      },
+      {
         id: "comedor",
         title: "Comedor Escolar",
         subtitle: "Pase de lista diario",
@@ -863,6 +872,7 @@ export function App() {
     return current ? current.id : (list[0] ? list[0].id : "");
   });
   const [isWeeklyPlanModalOpen, setIsWeeklyPlanModalOpen] = useState(false);
+  const [isSanFranciscoModalOpen, setIsSanFranciscoModalOpen] = useState(false);
   const [editingPlanId, setEditingPlanId] = useState(null);
   const [isEmailViewExpanded, setIsEmailViewExpanded] = useState(false);
   const [isPreferencesDropdownOpen, setIsPreferencesDropdownOpen] = useState(false);
@@ -1419,6 +1429,11 @@ export function App() {
   };
 
   const handleAppClick = (item, e) => {
+    if (item.id === "san-francisco-info") {
+      e.preventDefault();
+      setIsSanFranciscoModalOpen(true);
+      return;
+    }
     if (item.pendingUrl) {
       e.preventDefault();
       setPendingAppModal(item);
@@ -2000,6 +2015,19 @@ export function App() {
                         </select>
                       </div>
 
+                      {/* Botón Destacado: Especial San Francisco */}
+                      <button
+                        onClick={() => setIsSanFranciscoModalOpen(true)}
+                        className="flex items-center gap-1.5 text-xs text-amber-950 dark:text-amber-100 bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 border border-amber-500/40 px-3 py-1.5 rounded-xl font-black transition-all shadow-sm hover:scale-105 active:scale-95 whitespace-nowrap"
+                        title="Ver toda la información, presentación, tutorías y enlaces de San Francisco"
+                      >
+                        <span className="text-sm">🕊️</span>
+                        <span>Info San Francisco</span>
+                        <span className="bg-amber-900/20 text-amber-950 dark:text-amber-900 text-[9px] px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider">
+                          Especial
+                        </span>
+                      </button>
+
                       {/* Botón Copiar Mail */}
                       <button
                         onClick={handleCopyEmailToClipboard}
@@ -2065,6 +2093,40 @@ export function App() {
                           {currentSelectedPlan.publishedAt && (
                             <span>📅 {currentSelectedPlan.publishedAt}</span>
                           )}
+                        </div>
+                      </div>
+
+                      {/* BANNER DESTACADO JORNADA DE SAN FRANCISCO */}
+                      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 text-white shadow-md border border-amber-300/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 relative overflow-hidden">
+                        <div className="flex items-start gap-3 relative z-10">
+                          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl shrink-0 border border-white/30 shadow-inner">
+                            🕊️
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full text-white">
+                                Jornada de San Francisco
+                              </span>
+                              <span className="text-[10px] bg-amber-950/40 px-2 py-0.5 rounded-full text-amber-100 font-bold">
+                                VIII Centenario
+                              </span>
+                            </div>
+                            <h4 className="font-extrabold text-sm sm:text-base text-white mt-1">
+                              Toda la Información, Presentación y Enlaces Oficiales
+                            </h4>
+                            <p className="text-xs text-amber-100 mt-0.5 max-w-xl leading-snug">
+                              Tutorías, horarios de encuentros, organización del viernes, banderines, triduo, misa en TVE2 y paellada.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="relative z-10 shrink-0">
+                          <button
+                            onClick={() => setIsSanFranciscoModalOpen(true)}
+                            className="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-amber-50 text-amber-950 font-black text-xs rounded-xl shadow transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                          >
+                            <span>🕊️ Ver Toda la Información</span>
+                            <IconRenderer name="ArrowRight" className="w-3.5 h-3.5 text-amber-700" />
+                          </button>
                         </div>
                       </div>
 
@@ -3223,6 +3285,357 @@ export function App() {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL ESPECIAL: INFORMACIÓN Y ENLACES DE LA JORNADA DE SAN FRANCISCO */}
+      {isSanFranciscoModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in overflow-y-auto">
+          <div className="w-full max-w-3xl bg-white dark:bg-slate-900 border border-amber-400/40 dark:border-amber-500/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh]">
+            
+            {/* HEADER MODAL CON DEGRADADO FRANCISCANO */}
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 text-white flex items-start justify-between gap-3 relative shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl border border-white/30 shadow-inner shrink-0">
+                  🕊️
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[10px] font-black uppercase tracking-wider bg-white/25 px-2 py-0.5 rounded-full text-white">
+                      Pastoral Colegial
+                    </span>
+                    <span className="text-[10px] bg-amber-950/30 px-2 py-0.5 rounded-full text-amber-100 font-bold">
+                      VIII Centenario del Tránsito
+                    </span>
+                  </div>
+                  <h3 className="font-display font-extrabold text-base sm:text-lg text-white mt-1">
+                    Semana y Jornada de San Francisco de Asís
+                  </h3>
+                  <p className="text-xs text-amber-100 leading-snug">
+                    Guía completa, presentación oficial, tutorías, organización de la jornada y celebraciones
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsSanFranciscoModalOpen(false)}
+                className="p-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white transition text-xs font-bold shrink-0"
+                title="Cerrar ventana"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* CONTENIDO DEL MODAL CON SCROLL */}
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-6 text-slate-800 dark:text-slate-200">
+              
+              {/* MENSAJE INTRODUCTORIO */}
+              <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/20 text-xs text-amber-950 dark:text-amber-200 leading-relaxed italic flex items-start gap-2.5">
+                <span className="text-base leading-none">✨</span>
+                <div>
+                  «Estamos ya preparados para celebrar la mejor semana del año. Es un regalo que sea al inicio de curso y nos impulse a vivir desde el carisma heredado de san Francisco de Asís.»
+                </div>
+              </div>
+
+              {/* 1. DOCUMENTOS Y ENLACES OFICIALES */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                    <span>1. Enlaces y Documentación Oficial</span>
+                  </h4>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">5 recursos vinculados</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  
+                  {/* Presentación */}
+                  <a
+                    href="https://drive.google.com/drive/folders/1toa4yHLylSQnx2IH7BYkYBcXslKdsnF5?usp=drive_link"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-amber-50/60 dark:bg-slate-800/60 dark:hover:bg-amber-950/30 border border-slate-200 hover:border-amber-300 dark:border-slate-700 dark:hover:border-amber-500/40 transition group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="p-2 rounded-xl bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 font-bold text-xs flex items-center gap-1.5">
+                          <IconRenderer name="Presentation" className="w-4 h-4 text-amber-600" />
+                          <span>Presentación Oficial</span>
+                        </span>
+                        <IconRenderer name="ExternalLink" className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 transition" />
+                      </div>
+                      <h5 className="font-bold text-xs text-slate-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-amber-300 transition">
+                        Mes de San Francisco
+                      </h5>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                        Vista en equipos docentes. Contiene emparejamientos de cursos hermanados y visión general.
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-end text-[11px] font-bold text-amber-700 dark:text-amber-400">
+                      <span>Abrir carpeta en Drive →</span>
+                    </div>
+                  </a>
+
+                  {/* Tutorías */}
+                  <a
+                    href="https://drive.google.com/drive/folders/1axltxQVmUBTDTXj6QOb8pV2lWJ76xSCf?usp=drive_link"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50/60 dark:bg-slate-800/60 dark:hover:bg-emerald-950/30 border border-slate-200 hover:border-emerald-300 dark:border-slate-700 dark:hover:border-emerald-500/40 transition group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="p-2 rounded-xl bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 font-bold text-xs flex items-center gap-1.5">
+                          <IconRenderer name="BookOpen" className="w-4 h-4 text-emerald-600" />
+                          <span>Tutorías de San Francisco</span>
+                        </span>
+                        <IconRenderer name="ExternalLink" className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 transition" />
+                      </div>
+                      <h5 className="font-bold text-xs text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition">
+                        Materiales Pedagógicos por Cursos
+                      </h5>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                        Dinámicas, propuestas didácticas y recursos para realizar durante la semana.
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-end text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
+                      <span>Abrir tutorías →</span>
+                    </div>
+                  </a>
+
+                  {/* Organización de la Jornada */}
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1oWh3zhZvt-w2rzbhmzta3CWpCTS-7-74/edit?usp=drive_link&ouid=115912564487750977447&rtpof=true&sd=true"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/60 dark:bg-slate-800/60 dark:hover:bg-indigo-950/30 border border-slate-200 hover:border-indigo-300 dark:border-slate-700 dark:hover:border-indigo-500/40 transition group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="p-2 rounded-xl bg-indigo-100 text-indigo-800 dark:bg-indigo-500/20 dark:text-indigo-300 font-bold text-xs flex items-center gap-1.5">
+                          <IconRenderer name="FileSpreadsheet" className="w-4 h-4 text-indigo-600" />
+                          <span>Organización de la Jornada</span>
+                        </span>
+                        <IconRenderer name="ExternalLink" className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition" />
+                      </div>
+                      <h5 className="font-bold text-xs text-slate-900 dark:text-white group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition">
+                        Hoja de Cuadrantes y Actividades
+                      </h5>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                        Distribución de espacios, horarios del viernes 2 de octubre y cuadrantes de profesores.
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-end text-[11px] font-bold text-indigo-700 dark:text-indigo-400">
+                      <span>Ver hoja de cálculo →</span>
+                    </div>
+                  </a>
+
+                  {/* Horarios Encuentros Franciscanos */}
+                  <a
+                    href="https://drive.google.com/drive/folders/1kK_DHj3o0-s5BEqsXeqtiQjCHx6nmEcb?usp=drive_link"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-purple-50/60 dark:bg-slate-800/60 dark:hover:bg-purple-950/30 border border-slate-200 hover:border-purple-300 dark:border-slate-700 dark:hover:border-purple-500/40 transition group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="p-2 rounded-xl bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300 font-bold text-xs flex items-center gap-1.5">
+                          <IconRenderer name="Clock" className="w-4 h-4 text-purple-600" />
+                          <span>Horarios Encuentros</span>
+                        </span>
+                        <IconRenderer name="ExternalLink" className="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-600 transition" />
+                      </div>
+                      <h5 className="font-bold text-xs text-slate-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-300 transition">
+                        Encuentros Franciscanos
+                      </h5>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                        Cuadrantes de los encuentros entre cursos. Acompaña el profesor que tenga clase.
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-end text-[11px] font-bold text-purple-700 dark:text-purple-400">
+                      <span>Ver horarios →</span>
+                    </div>
+                  </a>
+
+                </div>
+
+                {/* Carpeta Redes Sociales (Banner horizontal) */}
+                <div className="mt-3">
+                  <a
+                    href="https://drive.google.com/drive/folders/1CAVCUXAWRCgpoIOlktcTk99O_sCkG3yO?usp=drive_link"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-3.5 rounded-2xl bg-gradient-to-r from-rose-50 via-pink-50 to-amber-50 dark:from-rose-950/20 dark:via-pink-950/20 dark:to-amber-950/20 border border-rose-200 dark:border-rose-500/30 hover:border-rose-300 flex items-center justify-between gap-3 group transition"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2.5 rounded-xl bg-rose-500 text-white shrink-0 shadow-sm">
+                        <IconRenderer name="Camera" className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h5 className="font-extrabold text-xs text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition">
+                            📸 Carpeta de Fotos y Vídeos para Redes Sociales
+                          </h5>
+                          <span className="text-[10px] bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-300 font-bold px-2 py-0.2 rounded-full">
+                            ¡Compartir aquí!
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+                          Sube fotos y clips de la jornada y actividades para que el equipo de comunicación y redes pueda publicar.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs font-black text-rose-600 dark:text-rose-400 shrink-0">
+                      <span className="hidden sm:inline">Subir Fotos</span>
+                      <IconRenderer name="ExternalLink" className="w-4 h-4" />
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              {/* 2. LOGÍSTICA Y CRONOGRAMA */}
+              <div>
+                <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                  <span>2. Organización Práctica y Avisos Clave</span>
+                </h4>
+
+                <div className="space-y-2.5 text-xs">
+                  
+                  {/* Hermanados */}
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-start gap-3">
+                    <span className="text-xl shrink-0">🤝</span>
+                    <div>
+                      <strong className="text-slate-900 dark:text-white block font-bold mb-0.5">
+                        Lunes 28 de Septiembre (11:30 h) — Cursos Hermanados
+                      </strong>
+                      <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Conoceremos a nuestros hermanos a las 11:30 horas. Los hermanos mayores irán a las clases de los pequeños, salvo <strong>4º ESO – 3 años</strong> que lo harán más adelante. Revisa en la presentación con qué curso estás emparejado.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Banderines y Materiales */}
+                  <div className="p-3.5 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 flex items-start gap-3">
+                    <span className="text-xl shrink-0">🎨</span>
+                    <div>
+                      <strong className="text-amber-950 dark:text-amber-200 block font-bold mb-0.5">
+                        Banderines del Patio (EI - EP) y Materiales de Tutoría
+                      </strong>
+                      <p className="text-amber-900/90 dark:text-amber-300/90 leading-relaxed">
+                        Materiales ya repartidos. Si alguien necesita <strong>lana o cordón</strong>, solicitarlo a Pastoral. 
+                        <span className="block mt-1 font-bold text-amber-950 dark:text-amber-200">
+                          ⚠️ Importante: Dejar la decoración en portería el <u>miércoles 30 de septiembre</u> para que los alumnos de Diver puedan colgarla el <u>jueves 1 de octubre</u>.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Viernes 2 Octubre */}
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-start gap-3">
+                    <span className="text-xl shrink-0">🎉</span>
+                    <div>
+                      <strong className="text-slate-900 dark:text-white block font-bold mb-0.5">
+                        Viernes 2 de Octubre — Gran Celebración en el Colegio
+                      </strong>
+                      <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Día grande colegial. Sin especialidades: <strong>los tutores permanecen con su grupo toda la jornada</strong>. Todos los alumnos asisten con el <strong>chándal del colegio</strong>.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* 3. TRIDUO Y CELEBRACIONES DEL VIII CENTENARIO */}
+              <div>
+                <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                  <span>3. Culto, Triduo y Fiesta Parroquial (VIII Centenario)</span>
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-base">🕯️</span>
+                      <strong className="font-bold text-slate-900 dark:text-white">Triduo de San Francisco</strong>
+                    </div>
+                    <p className="text-slate-600 dark:text-slate-300">
+                      <strong>1 y 2 de octubre · 19:30 h</strong><br/>
+                      Parroquia Nuestra Señora del Rosario.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-base">🕊️</span>
+                      <strong className="font-bold text-slate-900 dark:text-white">Tránsito de San Francisco</strong>
+                    </div>
+                    <p className="text-slate-600 dark:text-slate-300">
+                      <strong>Sábado 3 de octubre · 19:30 h</strong><br/>
+                      Parroquia Ntra. Sra. del Rosario (VIII Centenario del Tránsito).
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-500/30 sm:col-span-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-base">⛪</span>
+                      <strong className="font-bold text-indigo-950 dark:text-indigo-200">
+                        Solemnidad de San Francisco (¡En Directo por TVE2!)
+                      </strong>
+                      <span className="text-[10px] bg-indigo-600 text-white font-extrabold px-2 py-0.5 rounded-full ml-auto">
+                        TVE 2
+                      </span>
+                    </div>
+                    <p className="text-indigo-900/90 dark:text-indigo-200/90 leading-relaxed">
+                      <strong>Domingo 4 de octubre · 10:30 h</strong> en la Iglesia Santa Clara - San Buenaventura.<br/>
+                      A continuación, <strong>tradicional paellada</strong> para celebrar el VIII centenario y las fiestas parroquiales. ¡Estamos todos invitados! <em>Tickets a la venta en la recepción del colegio.</em>
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* MENSAJE FINAL DE PASTORAL */}
+              <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-center space-y-1">
+                <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  «¡Familia, gracias por todo lo que vais a poner en juego estos días! Que sigamos aprendiendo de san Francisco de Asís a ser, a hacer y a vivir desde Jesús de Nazaret, siendo humildes y sencillos de corazón.»
+                </p>
+                <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 block">
+                  ¡Feliz semana a todos! 🕊️
+                </span>
+              </div>
+
+            </div>
+
+            {/* FOOTER MODAL */}
+            <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 shrink-0">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(`Semana de San Francisco 2026 - Enlaces Oficiales:
+- Presentación del Mes: https://drive.google.com/drive/folders/1toa4yHLylSQnx2IH7BYkYBcXslKdsnF5?usp=drive_link
+- Tutorías: https://drive.google.com/drive/folders/1axltxQVmUBTDTXj6QOb8pV2lWJ76xSCf?usp=drive_link
+- Organización de la Jornada (Excel): https://docs.google.com/spreadsheets/d/1oWh3zhZvt-w2rzbhmzta3CWpCTS-7-74/edit?usp=drive_link&ouid=115912564487750977447&rtpof=true&sd=true
+- Horarios Encuentros: https://drive.google.com/drive/folders/1kK_DHj3o0-s5BEqsXeqtiQjCHx6nmEcb?usp=drive_link
+- Subir Fotos/Vídeos para Redes: https://drive.google.com/drive/folders/1CAVCUXAWRCgpoIOlktcTk99O_sCkG3yO?usp=drive_link`);
+                  setToastMessage("📋 Enlaces copiados al portapapeles");
+                  setTimeout(() => setToastMessage(null), 2500);
+                }}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              >
+                <IconRenderer name="Copy" className="w-3.5 h-3.5 text-indigo-500" />
+                <span>Copiar Enlaces</span>
+              </button>
+
+              <button
+                onClick={() => setIsSanFranciscoModalOpen(false)}
+                className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-sm"
+              >
+                Cerrar
+              </button>
+            </div>
+
           </div>
         </div>
       )}
