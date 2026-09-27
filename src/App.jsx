@@ -627,6 +627,14 @@ const SIDEBAR_SECTIONS = [
         color: "text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-500/20 dark:border-emerald-500/30"
       },
       {
+        id: "actas-juntas-evaluacion",
+        title: "Actas & Juntas de Evaluación",
+        subtitle: "Carpetas de evaluación",
+        url: "https://drive.google.com/drive/folders/107QTfGMtMSNoE7ZDyAwNm6EktQXhGVaV?usp=sharing",
+        icon: "ClipboardCheck",
+        color: "text-indigo-600 bg-indigo-50 border-indigo-200 dark:text-indigo-300 dark:bg-indigo-500/20 dark:border-indigo-500/30"
+      },
+      {
         id: "registro-actividades",
         title: "Registro de Actividades",
         subtitle: "Hoja de registro y seguimiento",
