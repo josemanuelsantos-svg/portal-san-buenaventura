@@ -142,13 +142,74 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-28sep-2oct-2026",
+    weekTitle: "Semana del 28 de Septiembre al 2 de Octubre: Juntas de Evaluación, Horario de Octubre y San Francisco",
+    academicYear: "2026/2027",
+    summary: "Juntas de Evaluación Inicial el martes, nuevo horario ordinario y comienzo de extraescolares el jueves, celebración colegial de San Francisco el viernes y paellada el domingo.",
+    publishedAt: "2026-09-27",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1790553600000,
+    days: [
+      {
+        day: "Lunes",
+        date: "28 Sep",
+        items: [
+          "🤝 11:30h a 11:45h - Encuentro de cursos hermanados: breve visita para conocerse antes del viernes (5.º EP visita a 1.º EP; resto de cursos en sus aulas reciben a sus hermanados).",
+          "🍽️ Previsión de comedor de octubre: Infantil facilita a Elena y Primaria a Julia la estimación de comensales. Mantener actualizada la app de comedor.",
+          "⏰ Horarios de octubre: Último día para comunicar a Jefatura cualquier propuesta de reajuste en las asignaturas dentro de la jornada lectiva."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "29 Sep",
+        items: [
+          "📊 Juntas de Evaluación Inicial: 13:00h Educación Infantil (sala de profesores) | 13:10h Educación Primaria (aula 3.º B).",
+          "📝 Acta de Evaluación Inicial: Rellenada exclusivamente por el tutor de cada grupo mediante el [formulario oficial de recogida](https://forms.gle/sk4Uxxas8hKUd5UN6) con la información de los especialistas.",
+          "🧠 Diagnósticos y apoyos PT: Cotejo y seguimiento del [listado de alumnos diagnosticados y con PT](https://docs.google.com/document/d/1W6b808OHKokLL6X9d1pg1pdUxY77G0rKSRr4nOgmHXQ/edit?usp=sharing)."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "30 Sep",
+        items: [
+          "🕊️ Semana de San Francisco: Realización de la tutoría específica de San Francisco y preparación de actividades colegiales.",
+          "👥 Encuentros Franciscanos: Acompaña al grupo el profesor que tenga clase en ese momento (sin intercambios).",
+          "🔄 Atención al calendario de sustituciones ante los movimientos de profesorado por los encuentros.",
+          "☀️ Último día de jornada intensiva de septiembre (mañana jueves entra el horario completo de octubre)."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "1 Oct",
+        items: [
+          "🔔 Entrada en vigor del Horario Ordinario de Octubre: Jornada completa lectiva de mañana y tarde (clases hasta las 16:15h).",
+          "⚽ Comienzo de Actividades Extraescolares: A las 16:05h bajada organizada de Primaria a los puntos de extraescolares. Consultar la app [Alumnos Extraescolares](https://alumnos-extraescolares-csb.vercel.app/).",
+          "☕ Sin reunión de claustro por la tarde: Compensada por la asistencia a las Juntas de Evaluación del martes a mediodía (el horario habitual 16:00/16:15h arrancará el próximo jueves 8)."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "2 Oct",
+        items: [
+          "🎉 Celebración de San Francisco (Día Grande del Colegio): Sin especialidades; tutores con sus grupos toda la jornada.",
+          "🏃‍♂️ Todo el alumnado asiste con el chándal del colegio (aviso previo enviado a las familias de Primaria).",
+          "📸 Recordar fotos para la repesca y 3 años (sesión para alumnos pendientes de foto escolar y clases de 3 años de Infantil).",
+          "⛪ Solemnidad del domingo 4 de octubre: 10:30h Eucaristía en la Iglesia de Santa Clara (preside D. José Cobo), talleres y paellada en el colegio."
+        ]
+      }
+    ],
+    generalNotes: "Juntas de Evaluación Inicial el martes (Infantil 13:00h, Primaria 13:10h) y acta rellenada por tutores. El jueves 1 entra el horario ordinario de octubre (hasta las 16:15h) y comienzan las extraescolares (bajada a las 16:05h; sin reunión de claustro por la tarde). Viernes 2: Gran Celebración de San Francisco en chándal (sin especialistas) y recordar fotos para la repesca y 3 años. Domingo 4: Eucaristía a las 10:30h en Santa Clara y paellada colegial.",
+    fullEmailText: "Hola a todos, os dejo, como cada semana, un pequeño resumen con las cuestiones más importantes que tenemos por delante. Esta semana viene cargadita, especialmente con las juntas de evaluación, el comienzo del horario de octubre y, por supuesto, nuestra celebración de San Francisco.\n\nJuntas de Evaluación Inicial – martes 29\nEste martes tendremos las Juntas de Evaluación Inicial de Infantil y Primaria.\nNos organizaremos de la siguiente manera:\nInfantil → 13:00 h en la sala de profesores.\nPrimaria → 13:10 h en 3.º B.\nComo siempre, no necesitamos preparar grandes informes. Lo más importante en esta primera evaluación es tener una fotografía general de los grupos y, especialmente, detectar aquellos alumnos que consideramos que pueden necesitar apoyo curricular y confirmar los alumnos que están trabajando con PT.\nOs dejo también el [listado de alumnos](https://docs.google.com/document/d/1W6b808OHKokLL6X9d1pg1pdUxY77G0rKSRr4nOgmHXQ/edit?usp=sharing) que estaban diagnosticados y previstos para trabajar con PT. Desde la semana pasada, Dani y María ya están pasando para ir trabajando y organizando estos apoyos.\nPara recoger la información de la Evaluación Inicial tendremos un [acta muy sencilla](https://forms.gle/sk4Uxxas8hKUd5UN6), que se cumplimentará mediante el formulario que os dejaré enlazado en el portal.\nEl formulario lo rellena únicamente el tutor de cada grupo.\nEsto no significa que el tutor tenga que conocer por sí solo la situación de todas las asignaturas. Por ejemplo, en mi caso, como tutor de 6.º B, hablaré con Paula para recoger la información correspondiente a Lengua y seré yo quien la incorpore al acta de 6.º B.\nPor tanto, antes de rellenarla, cada tutor deberá recoger de los profesores que imparten clase en su grupo aquella información que considere necesaria, pero tendremos una única respuesta por clase, cumplimentada por el tutor.\nEn Primaria, para preparar posteriormente el envío de los informes de Evaluación Inicial a las familias, nos emplazaremos a la reunión del jueves 8 de octubre. En Infantil no se envían estos informes.\n\nReuniones de los jueves\nEsta semana nos pilla justo en ese punto intermedio entre el funcionamiento de septiembre y el comienzo del horario ordinario de octubre.\nEn principio tendríamos reunión el martes a mediodía y el jueves por la tarde. Sin embargo, como el martes ya nos quedaremos para realizar las Juntas de Evaluación Inicial, este jueves no tendremos reunión por la tarde.\nComenzaremos con las reuniones de los jueves por la tarde a partir de la próxima semana, con el siguiente horario:\nInfantil → 16:00 a 17:45 h.\nPrimaria → 16:15 a 18:00 h.\nA partir de entonces, este será nuestro horario habitual de reunión de los jueves.\n\nSemana de San Francisco\nEsta semana celebramos nuestra Semana de San Francisco.\nLa semana pasada Pastoral ya nos explicó la organización general y recibiremos toda la información necesaria para ir desarrollando las diferentes actividades.\nDurante estos días debemos centrarnos especialmente en realizar la tutoría de San Francisco, participar en los Encuentros Franciscanos y preparar el viernes, que será nuestro día grande de celebración en el colegio.\nUna cuestión importante respecto a los Encuentros Franciscanos: acompañará al grupo el profesor que tenga clase con ellos en ese momento. No haremos intercambios para que necesariamente acuda el tutor.\nPrecisamente por todo el movimiento de profesores que van a generar los encuentros, os pido que esta semana estemos especialmente atentos al calendario de sustituciones. Seguramente tendremos bastantes movimientos durante las jornadas, así que echadle un vistazo con frecuencia para que todo pueda funcionar con normalidad.\n\nEncuentro de cursos hermanados – mañana\nHay una pequeña actividad que no comentamos en la reunión de la semana pasada.\nMañana, de 11:30 a 11:45 h, los cursos hermanados harán una pequeña visita para conocerse antes de la celebración del viernes 2 a todos los cursos de EP y 4 y 5 años de EI.\nEn Primaria al igual que Infantil, prácticamente todos los grupos seremos receptores, así que simplemente tendremos que esperar en nuestra clase a que vengan nuestros hermanados.\nLa excepción será 5.º de Primaria, que será quien se desplace para visitar a 1.º de Primaria.\nSerá simplemente un encuentro breve para conocernos y ponernos cara antes de compartir la celebración del viernes.\n\nViernes 2 – Celebración de San Francisco\nEl viernes celebraremos en el colegio nuestro día grande de San Francisco.\nEse día no habrá especialidades. Los tutores permaneceremos con nuestros grupos y seguiremos la organización prevista para las diferentes actividades de la jornada.\nAdemás, todos los alumnos vendrán al colegio con chándal, independientemente de lo que indique su horario habitual. En el caso de Primaria enviaré yo un aviso a las familias para recordárselo y evitar despistes.\nRecordad también que el viernes se realizarán las fotos para la repesca y las aulas de 3 años de Infantil.\n\nSolemnidad de San Francisco – domingo 4\nY la celebración no termina el viernes. Como ya habéis podido ver, el domingo 4 a las 10:30 h celebraremos la Eucaristía de la Solemnidad de San Francisco en la iglesia de Santa Clara, presidida por D. José Cobo.\nEstamos todos invitados a participar tanto en la Eucaristía como en los talleres que se celebrarán posteriormente y, por supuesto, en la paellada que tendremos después para comer en el colegio.\nSerá una buena oportunidad para compartir también la celebración fuera de la dinámica habitual de las clases.\n\nNuevo horario – octubre\nA partir del jueves 1 de octubre entra en vigor el horario ordinario de octubre.\nDesde ese día tendremos ya clase también por la tarde, con total normalidad, hasta las 16:15 h, siguiendo el horario establecido.\nRespecto a los horarios, mañana lunes es el último día para comunicarme cualquier cambio que queráis realizar dentro de vuestra jornada lectiva.\nSi el horario que tenéis os encaja tal y como está, no tenéis que hacer nada. Si, por el contrario, alguien considera que puede ordenar sus asignaturas de una forma más coherente o funcional dentro de las posibilidades que tenemos, que me lo diga como máximo mañana para poder dejar todo cerrado.\n\nComienzo de las actividades extraescolares – jueves 1\nA partir del próximo jueves 1 comienzan también las actividades extraescolares.\nPara consultar en cualquier momento qué actividad tiene cada alumno, dónde se realiza o quiénes están inscritos, tenemos disponible la aplicación que os pasé la semana pasada y que preparó Óscar. La tenéis también vinculada en el portal general ([Alumnos Extraescolares](https://alumnos-extraescolares-csb.vercel.app/)), para que todos podamos consultarla rápidamente y asegurarnos de dejar a cada niño en la actividad que le corresponde.\nEspecialmente este primer jueves, hasta que todos cojamos un poco de soltura y sepamos dónde va cada alumno, os pido que estemos especialmente pendientes de la salida.\nEn torno a las 16:05 h iremos bajando los grupos de Primaria para ir colocando a los alumnos en los lugares correspondientes a sus extraescolares.\nLos primeros días seguramente tendremos algún «¿este dónde iba?» 😅, así que intentaremos estar todos un poco más pendientes y ayudarnos para que la salida sea lo más ordenada posible. En cuanto llevemos unos días, seguro que funciona de manera mucho más automática.\n\nPrevisión de comedor para octubre\nNecesitamos también hacer una primera previsión del alumnado que utilizará el comedor durante octubre.\nPor favor, mañana lunes:\nInfantil: cada tutora facilitará a Elena una estimación del número de alumnos de su clase que se quedarán a comedor.\nPrimaria: cada tutor facilitará a Julia esa misma estimación.\nAdemás, debemos ir manteniendo actualizada la información correspondiente a través de la aplicación, para que los datos que manejemos sean lo más reales posible.\n\nY terminamos, como estas últimas semanas, con una pequeña reflexión.\nEl Evangelio de hoy nos habla de un padre que pide a sus dos hijos que vayan a trabajar a la viña. Uno dice que sí, pero finalmente no va, el otro inicialmente se niega, pero después recapacita y termina haciendo lo que su padre le había pedido.\nCreo que en educación nos recuerda algo bastante sencillo: al final, lo importante no es tanto lo que decimos que vamos a hacer, sino lo que hacemos cada día.\nPodemos tener muchos proyectos, buenas intenciones y grandes palabras sobre cómo queremos educar. Pero nuestra verdadera labor está en las cosas pequeñas: entrar cada mañana en clase con ganas, tener paciencia cuando toca, volver a explicar algo una vez más, preocuparnos por el niño que está más callado o echar una mano al compañero cuando la necesita.\nY también nos recuerda algo importante sobre nuestros chicos: no quedarnos con su primera respuesta. A veces el niño que hoy nos dice que no, que no quiere o que no puede, mañana puede sorprendernos. Nuestra tarea es seguir acompañándole y darle la oportunidad de cambiar ese “no” por un “sí”.\n\nQue tengamos una estupenda semana y disfrutemos especialmente de estos días de San Francisco."
+  },
+  {
     id: "plan-semana-21-25-sep-2026",
     weekTitle: "Semana del 21 al 25 de Septiembre: Convivencias, Jornada de San Francisco y Cierre de PGA",
     academicYear: "2026/2027",
     summary: "Convivencias de 5 años, 1º y 2º de Primaria, organización de San Francisco y Robótica, circular de Recogida Infantil, finalización de PGA y 2ª sesión de Educación Vial.",
     publishedAt: "2026-09-20",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1789948800000,
     days: [
       {
