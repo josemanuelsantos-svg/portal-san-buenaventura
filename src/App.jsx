@@ -768,17 +768,44 @@ export function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Clave de versión de avisos para forzar purga de avisos antiguos (como el de picnics) en todos los navegadores
+  const NOTICES_SCHEMA_VERSION = "2026-09-30-v3";
+  const NOTICES_PURGE_BEFORE = 1790800000000; // 30 de Septiembre de 2026
+
+  const isNoticeObsolete = (n) => {
+    if (!n) return true;
+    const text = `${n.title || ''} ${n.content || ''} ${n.id || ''}`.toLowerCase();
+    // Purgar explícitamente cualquier aviso de picnic antiguo o avisos anteriores a la fecha de purga
+    if (text.includes("picnic")) return true;
+    if (n.createdAt && n.createdAt < NOTICES_PURGE_BEFORE) return true;
+    if (!n.createdAt) return true; // Avisos antiguos sin timestamp de creación
+    return false;
+  };
+
   const getInitialNotices = () => {
     try {
+      // Si la versión local es anterior a la actual, limpiar automáticamente el almacenamiento local
+      const savedVersion = localStorage.getItem("sb_notices_version");
+      if (savedVersion !== NOTICES_SCHEMA_VERSION) {
+        localStorage.removeItem("sb_school_notices");
+        localStorage.removeItem("sb_deleted_notice_ids");
+        localStorage.setItem("sb_notices_version", NOTICES_SCHEMA_VERSION);
+        return INITIAL_NOTICES.filter(n => !isNoticeObsolete(n));
+      }
+
       const deletedIds = JSON.parse(localStorage.getItem("sb_deleted_notice_ids") || "[]");
       const saved = localStorage.getItem("sb_school_notices");
       if (saved !== null) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          return parsed.filter(n => !deletedIds.includes(n.id));
+          const valid = parsed.filter(n => !deletedIds.includes(n.id) && !isNoticeObsolete(n));
+          if (valid.length !== parsed.length) {
+            localStorage.setItem("sb_school_notices", JSON.stringify(valid));
+          }
+          return valid;
         }
       }
-      return INITIAL_NOTICES.filter(n => !deletedIds.includes(n.id));
+      return INITIAL_NOTICES.filter(n => !deletedIds.includes(n.id) && !isNoticeObsolete(n));
     } catch (e) {
       return [];
     }
@@ -1029,7 +1056,7 @@ export function App() {
         const list = (Array.isArray(data)
           ? data.filter(Boolean)
           : Object.entries(data).map(([key, val]) => ({ ...val, id: key })))
-          .filter(n => !deletedIds.includes(n.id));
+          .filter(n => !deletedIds.includes(n.id) && !isNoticeObsolete(n));
         list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         setNotices(list);
         localStorage.setItem("sb_school_notices", JSON.stringify(list));
@@ -1265,7 +1292,7 @@ export function App() {
   };
 
   const nowTs = Date.now();
-  const activeNotices = notices.filter(n => !n.expiresAt || n.expiresAt > nowTs);
+  const activeNotices = notices.filter(n => !isNoticeObsolete(n) && (!n.expiresAt || n.expiresAt > nowTs));
   const urgentNotice = activeNotices.find(n => n.priority === "urgent" && n.id !== dismissedUrgentId);
 
   const [isRiddleOpen, setIsRiddleOpen] = useState(false);
@@ -1425,6 +1452,19 @@ export function App() {
     } catch (err) {
       setToastMessage("Aviso eliminado");
     }
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const handleClearAllNotices = async () => {
+    setNotices([]);
+    localStorage.removeItem("sb_school_notices");
+    localStorage.setItem("sb_notices_version", Date.now().toString());
+    try {
+      await fetch(`${FIREBASE_DB_URL}.json`, {
+        method: "DELETE"
+      });
+    } catch (err) {}
+    setToastMessage("🗑️ Todos los avisos han sido eliminados");
     setTimeout(() => setToastMessage(null), 2500);
   };
 
@@ -1675,6 +1715,8 @@ export function App() {
                       onClick={() => {
                         localStorage.removeItem("sb_weekly_plans");
                         localStorage.removeItem("sb_school_notices");
+                        localStorage.removeItem("sb_deleted_notice_ids");
+                        localStorage.setItem("sb_notices_version", "2026-09-30-v3");
                         if ('caches' in window) {
                           caches.keys().then((names) => {
                             names.forEach((name) => caches.delete(name));
@@ -1692,7 +1734,7 @@ export function App() {
                         <IconRenderer name="RefreshCw" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         <span>Recargar última versión</span>
                       </span>
-                      <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-white">v2</span>
+                      <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-white">v3</span>
                     </button>
                   </div>
                 </div>
@@ -2851,7 +2893,18 @@ export function App() {
                 </form>
 
                 <div>
-                  <h4 className="font-bold text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Avisos Publicados Actualmente ({notices.length})</h4>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-bold text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Avisos Publicados Actualmente ({notices.length})</h4>
+                    {notices.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleClearAllNotices}
+                        className="text-[11px] text-rose-600 hover:text-rose-800 dark:text-rose-400 font-bold hover:underline"
+                      >
+                        🗑️ Limpiar todos
+                      </button>
+                    )}
+                  </div>
                   <div className="space-y-2">
                     {notices.map(n => (
                       <div key={n.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
