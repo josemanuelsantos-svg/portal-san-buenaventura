@@ -142,13 +142,69 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-5-9-oct-2026",
+    weekTitle: "Semana del 5 al 9 de Octubre: Reuniones del Jueves, Autocrat y Museo Naval",
+    academicYear: "2026/2027",
+    summary: "Reuniones habituales del jueves (PGA, envío de informes de Evaluación Inicial con Autocrat y horario en Raíces), salida al Museo Naval para 5.º A el martes y repesca de fotos escolares el lunes.",
+    publishedAt: "2026-10-04",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1791158400000,
+    days: [
+      {
+        day: "Lunes",
+        date: "5 Oct",
+        items: [
+          "📸 Repesca de fotografías escolares a 1.ª hora: comienza en 3 años (EI) y después alumnos pendientes.",
+          "📋 Cotejar el listado adjunto de alumnos para asegurar que nadie quede sin fotografiar."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "6 Oct",
+        items: [
+          "⚓ Salida Museo Naval (5.º A): de 9:00h a mediodía (salida a Batán y regreso a rotonda Dante). Acompañan Juan y Daniel Asenjo.",
+          "🔄 Cobertura de clases: quien tenga clase con 5.º A asume el grupo que le correspondiera a Juan.",
+          "🔔 Tarde lectiva con total normalidad para todo el centro."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "7 Oct",
+        items: [
+          "📝 Preparar plantillas de Evaluación Inicial antes de la sesión práctica de Autocrat del jueves.",
+          "📂 Redacción y revisión final de la PGA de cada curso."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "8 Oct",
+        items: [
+          "👥 Reuniones de Claustro: EI (16:15 a 17:45h en sala profesores) | EP (16:30 a 18:00h).",
+          "💻 Taller Autocrat (16:30h en 3.º B): ayuda para generar y enviar informes de Evaluación Inicial a familias.",
+          "🎯 Cierre de 3 tareas clave: 1) PGA terminada, 2) Informes enviados por tutores, 3) Horario en Raíces verificado."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "9 Oct",
+        items: [
+          "📁 Cierre definitivo de expedientes y tareas pendientes de inicio de curso.",
+          "✨ Jornada lectiva ordinaria de mañana y tarde con normalidad."
+        ]
+      }
+    ],
+    generalNotes: "Reuniones de claustro el jueves (Infantil 16:15h en sala de profesores; Primaria 16:30h con taller de Autocrat en 3.º B para enviar informes de Evaluación Inicial a las familias; cierre de PGA y horario en Raíces). Martes 6: Salida al Museo Naval para 5.º A (9:00h; quien tenga clase con 5.º A cubre a Juan). Lunes 5: Repesca de fotos para 3 años y pendientes. Horarios definitivos del curso colgados en el enlace del portal.",
+    fullEmailText: "Buenos días a todos:\nAunque ya estamos en octubre y parece que ahora debería venir el grueso del trabajo, os traigo una buena noticia: el correo de esta semana es sorprendentemente corto . Así que vamos con las pocas cosas que tenemos que tener en cuenta estos días, para cualquier duda todos tenemos los horarios definitivos del curso colgados [aquí](https://drive.google.com/drive/folders/1AMKiIwEadrnxzZQlRUVdBaz_i-D15bYY?usp=sharing).\n\nReuniones del jueves\nEsta semana tendremos ya nuestras reuniones habituales del jueves.\nEn Infantil, la reunión será de 16:15 a 17:45 h. Os encontraréis directamente en la sala de profesores para organizar todo el material y terminar de poner en marcha el trimestre.\nEn Primaria, nos reuniremos de 16:30 a 18:00 h.\nA las 16:30 h en 3.º B estaré con todos aquellos que necesitéis ayuda para generar los informes de Evaluación Inicial mediante Autocrat. Lo veremos juntos para que todo el mundo sepa cómo generarlos y enviarlos.\nPara poder hacerlo necesitaremos tener previamente preparada la plantilla correspondiente. Os mandaré otro correo aparte explicando qué plantilla tiene que cumplimentar cada uno y qué necesitamos tener preparado antes de llegar a la reunión del jueves.\nPara quienes ya sabéis utilizar Autocrat, no es necesario estar en esta explicación. El trabajo de la reunión se centrará fundamentalmente en dos objetivos:\n1. PGA: el jueves debe quedar completamente terminada la PGA de cada curso.\n2. Informes de Evaluación Inicial: consideramos el jueves como fecha límite para su envío. Quien necesite aprender a generarlos con Autocrat podrá hacerlo durante la reunión y, al finalizar el jueves, los informes deberán haber sido enviados por cada tutor a las familias de su tutoría.\nAdemás, una última comprobación para todos, seamos tutores o no: cada profesor debe asegurarse de que tiene completado correctamente su horario en Raíces.\nLa idea es que el jueves podamos cerrar estos tres frentes y empezar a quitarnos definitivamente tareas de inicio de curso.\n\nMuseo Naval – 5.º A\nEl martes 6, los alumnos de 5.º A tienen concedida la actividad del Museo Naval, que se desarrollará entre las 9:00 h y mediodía.\nAcompañarán a la clase Juan y Daniel Asenjo.\nPara el resto de profesores que impartís clase en 5.º A, la organización será muy sencilla: en lugar de acudir a 5.º A, iréis al grupo que le correspondiera a Juan en ese momento, asumiendo su clase para que todo funcione con normalidad.\nPor la tarde, como es habitual, habrá clase ordinaria para todos.\nLa salida será igualmente a las 9:00 h en dirección a Batán para coger el autobús y la vuelta se realizará también en la rotonda de la calle Dante.\n\nRepesca de fotografías escolares\nComo el viernes pasado no se pudieron terminar todas las fotos, mañana lunes se realizará la repesca a primera hora.\nComenzarán con las aulas de 3 años de Infantil y, a continuación, se irán llamando a los alumnos de los distintos cursos que quedaron pendientes de fotografiar.\nOs adjunto el listado de alumnos que deben hacerse la foto para que podáis comprobarlo en vuestras clases.\n\nY cerramos, como siempre, con una pequeña reflexión para la semana.\nEl Evangelio de hoy nos habla de la piedra que desecharon los arquitectos y que termina convirtiéndose en la piedra angular.\nA veces en el colegio nos pasa un poco lo mismo: tendemos a fijarnos más en el alumno que destaca, en el que responde rápido, en el que todo lo hace fácil… y corremos el riesgo de pasar por alto a aquellos que avanzan más despacio, a los que les cuesta encontrar su sitio o a los que parecen pasar desapercibidos.\nSin embargo, nuestra tarea más bonita como educadores suele estar precisamente ahí: en descubrir el valor que hay en cada niño, especialmente en aquellos a los que otros descartan o no terminan de entender, y ayudarles a descubrir que ellos también son fundamentales en nuestro colegio.\nQuizá para esta semana podamos poner un poquito más la mirada en esos alumnos que necesitan que alguien vuelva a confiar en ellos.\n\nQue tengamos una estupenda semana."
+  },
+  {
     id: "plan-semana-28sep-2oct-2026",
     weekTitle: "Semana del 28 de Septiembre al 2 de Octubre: Juntas de Evaluación, Horario de Octubre y San Francisco",
     academicYear: "2026/2027",
     summary: "Juntas de Evaluación Inicial el martes, nuevo horario ordinario y comienzo de extraescolares el jueves, celebración colegial de San Francisco el viernes y paellada el domingo.",
     publishedAt: "2026-09-27",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1790553600000,
     days: [
       {
@@ -2138,39 +2194,41 @@ export function App() {
                         </div>
                       </div>
 
-                      {/* BANNER DESTACADO JORNADA DE SAN FRANCISCO */}
-                      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 text-white shadow-md border border-amber-300/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 relative overflow-hidden">
-                        <div className="flex items-start gap-3 relative z-10">
-                          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl shrink-0 border border-white/30 shadow-inner">
-                            🕊️
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full text-white">
-                                Jornada de San Francisco
-                              </span>
-                              <span className="text-[10px] bg-amber-950/40 px-2 py-0.5 rounded-full text-amber-100 font-bold">
-                                VIII Centenario
-                              </span>
+                      {/* BANNER DESTACADO JORNADA DE SAN FRANCISCO (Visible en la semana de San Francisco) */}
+                      {currentSelectedPlan.id === "plan-semana-28sep-2oct-2026" && (
+                        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 text-white shadow-md border border-amber-300/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 relative overflow-hidden">
+                          <div className="flex items-start gap-3 relative z-10">
+                            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl shrink-0 border border-white/30 shadow-inner">
+                              🕊️
                             </div>
-                            <h4 className="font-extrabold text-sm sm:text-base text-white mt-1">
-                              Toda la Información, Presentación y Enlaces Oficiales
-                            </h4>
-                            <p className="text-xs text-amber-100 mt-0.5 max-w-xl leading-snug">
-                              Tutorías, horarios de encuentros, organización del viernes, banderines, triduo, misa en TVE2 y paellada.
-                            </p>
+                            <div>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full text-white">
+                                  Jornada de San Francisco
+                                </span>
+                                <span className="text-[10px] bg-amber-950/40 px-2 py-0.5 rounded-full text-amber-100 font-bold">
+                                  VIII Centenario
+                                </span>
+                              </div>
+                              <h4 className="font-extrabold text-sm sm:text-base text-white mt-1">
+                                Toda la Información, Presentación y Enlaces Oficiales
+                              </h4>
+                              <p className="text-xs text-amber-100 mt-0.5 max-w-xl leading-snug">
+                                Tutorías, horarios de encuentros, organización del viernes, banderines, triduo, misa en TVE2 y paellada.
+                              </p>
+                            </div>
+                          </div>
+                          <div className="relative z-10 shrink-0">
+                            <button
+                              onClick={() => setIsSanFranciscoModalOpen(true)}
+                              className="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-amber-50 text-amber-950 font-black text-xs rounded-xl shadow transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                            >
+                              <span>🕊️ Ver Toda la Información</span>
+                              <IconRenderer name="ArrowRight" className="w-3.5 h-3.5 text-amber-700" />
+                            </button>
                           </div>
                         </div>
-                        <div className="relative z-10 shrink-0">
-                          <button
-                            onClick={() => setIsSanFranciscoModalOpen(true)}
-                            className="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-amber-50 text-amber-950 font-black text-xs rounded-xl shadow transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
-                          >
-                            <span>🕊️ Ver Toda la Información</span>
-                            <IconRenderer name="ArrowRight" className="w-3.5 h-3.5 text-amber-700" />
-                          </button>
-                        </div>
-                      </div>
+                      )}
 
                       {/* Selector de Días Móvil (Solo visible en pantallas < md) */}
                       <div className="md:hidden flex items-center justify-between gap-1 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200 dark:border-slate-700/80">
