@@ -142,13 +142,64 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-13-16-oct-2026",
+    weekTitle: "Semana del 13 al 16 de Octubre: Inicio de Catequesis, Tejiendo Redes y Trabajo por Niveles",
+    academicYear: "2026/2027",
+    summary: "Inicio de catequesis (martes 1.ª etapa, miércoles 2.ª etapa; control de comensales), nuevo enfoque por ciclos en Tejiendo Redes de Primaria, reuniones del jueves para trabajo por niveles y consulta en la app de Orientación.",
+    publishedAt: "2026-10-12",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1791763200000,
+    days: [
+      {
+        day: "Lunes",
+        date: "12 Oct",
+        items: [
+          "🇪🇸 Festivo escolar nacional (Fiesta Nacional de España / Día del Pilar)."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "13 Oct",
+        items: [
+          "✝️ Comienzo de Catequesis: 1.ª etapa.",
+          "🍽️ Tutores: comunicar a comedor el recuento de alumnos de catequesis con servicio."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "14 Oct",
+        items: [
+          "✝️ Comienzo de Catequesis: 2.ª etapa.",
+          "🍽️ Tutores: comunicar a comedor el recuento de alumnos de catequesis con servicio."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "15 Oct",
+        items: [
+          "👥 Reuniones de Claustro (EI y EP): dedicadas a trabajo de nivel (programación, secuenciación y proyectos)."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "16 Oct",
+        items: [
+          "📚 Jornada lectiva ordinaria de mañana y tarde."
+        ]
+      }
+    ],
+    generalNotes: "Comienzo de Catequesis el martes (1.ª etapa) y miércoles (2.ª etapa); tutores debéis comunicar el número de alumnos de catequesis con servicio de comedor. En Primaria, Tejiendo Redes se organizará por ciclos. Jueves: reuniones de claustro dedicadas a trabajo de nivel. Recordad consultar las medidas en la app de Orientación y la Guía de IA del INTEF enlazada en el correo.",
+    fullEmailText: "Hola a todos, espero que hayáis aprovechado el puente para cargar pilas, vamos con las cosillas de la semana:\n\nCOMIENZA LA CATEQUESIS\nEsta semana comienza también la catequesis. El martes comienza la primera etapa y el miércoles la segunda etapa.\nPor favor, recordad los tutores comunicar cuántos alumnos de catequesis que utilizan el servicio de comedor tenemos cada día.\n\nTEJIENDO REDES DE COMPROMISO SOCIAL\nEste curso vamos a introducir un pequeño cambio en la organización del proyecto Tejiendo Redes de Compromiso Social. Hasta ahora, en Primaria, el proyecto se desarrollaba fundamentalmente en los cursos pares, mientras que en Infantil se realizaba en 5 años.\nEn Infantil continuaremos exactamente igual, pero en Primaria vamos a comenzar a trabajarlo por ciclos. La idea es que los proyectos se planteen, organicen y desarrollen entre los dos niveles del ciclo.\nCon esto conseguimos dos cosas importantes: por un lado, avanzar en uno de los objetivos de nuestro Plan Estratégico para este curso, fomentando un trabajo cada vez más coordinado dentro de los ciclos; y, por otro, compartir responsabilidades, ideas y carga de trabajo.\n\nREUNIONES DEL JUEVES\nLas reuniones de este jueves, tanto en Infantil como en Primaria, estarán destinadas a trabajo por niveles.\nTodos tenemos trabajo pendiente que ir adelantando: programación, secuenciación del trimestre, organización de contenidos, preparación de actividades, proyectos...\nPor tanto, el objetivo es sencillo: tiempo de trabajo de nivel para avanzar todo lo posible y dejar organizado lo que tenemos por delante.\n\nGUÍAS Y MATERIALES QUE TODAVÍA NO HAN LLEGADO\nSé que todavía faltan guías del profesorado y algunos materiales, especialmente de Edelvives.\nEn algunos casos la propia editorial ni siquiera ha terminado todavía de imprimir determinados libros de texto de los alumnos, así que difícilmente podemos tener nosotros antes todo el material del profesorado.\nPor tanto, aquí poco podemos hacer salvo tener un poco de paciencia.\n\nAPLICACIÓN DE ORIENTACIÓN\nYa habéis podido ver todos en el portal la nueva aplicación relacionada con Orientación.\nComo ya hemos comentado, desde ahí tenemos preparado el formulario para poder derivar a un alumno para su valoración por parte del Gabinete Psicopedagógico cuando consideremos que es necesario.\nPero la aplicación no sirve únicamente para realizar derivaciones.\nTodos los profesores podemos entrar también para consultar los alumnos que ya han sido derivados, las necesidades detectadas y las medidas que tienen aplicadas.\nLa idea es que termine funcionando como una pequeña base de datos centralizada de nuestros alumnos con necesidades educativas, de manera que tengamos la información importante organizada, actualizada y disponible cuando realmente la necesitamos.\nEsto debería ayudarnos especialmente cuando cambiamos de tutor, recibimos un alumno de otro curso o simplemente necesitamos comprobar rápidamente qué medidas se están llevando a cabo con un alumno determinado.\nPortal de Infantil y Primaria:\nhttps://portal-san-buenaventura.vercel.app/\n\nGUÍA SOBRE INTELIGENCIA ARTIFICIAL EN EL AULA\nOs dejo también [adjunta una guía sobre el uso de la Inteligencia Artificial en las aulas elaborada por el INTEF](https://code.intef.es/wp-content/uploads/2026/09/ACTUALIZACI%C3%93N-GU%C3%8DA-DE-LA-IA-DEF-1-SEPT-2026-Publicable-v5.pdf).\nA estas alturas, quien más y quien menos, todos estamos empezando a utilizar estas herramientas para preparar actividades, generar materiales, adaptar contenidos, buscar ideas o directamente intentar sobrevivir a determinados momentos del trimestre.\nLa guía puede ayudarnos a poner un poco de orden y, sobre todo, a entender qué usos educativos podemos dar a la IA, qué precauciones debemos tener y cómo podemos incorporarla con sentido pedagógico.\nAviso antes de que alguien la abra y me escriba indignado: son más de cien páginas.\nPero, afortunadamente, estamos en 2026 y todos sabemos ya meter un documento en NotebookLM y pedirle que nos haga un resumen, un esquema, un podcast o prácticamente que nos lo lea mientras hacemos otra cosa.\nY si todo esto falla, siempre nos quedará Pedro Vega, que seguro que estará encantado de prepararnos una infografía resumen..\n\nEn el Evangelio de ayer, Jesús cuenta la historia de un rey que había preparado un gran banquete para la boda de su hijo. Todo estaba listo, pero aquellos que habían sido invitados tenían cosas aparentemente más importantes que hacer: sus tierras, sus negocios, sus preocupaciones... y sencillamente no acudieron. Entonces el rey manda salir a los caminos e invitar a todos los que encuentren.\nCada septiembre nos encontramos delante a niños muy diferentes. Algunos vienen preparados para aprender, otros no tanto. Algunos nos lo ponen facilísimo y otros probablemente nos obliguen a buscar veinte maneras diferentes de llegar hasta ellos. Pero nuestra tarea no consiste solamente en abrir la puerta para aquellos que ya saben entrar.\nQuizá una de las cosas más bonitas de ser profesor sea precisamente salir un poco al camino a buscar al que todavía no ha entrado.\nAl que parece desconectado. Al que aprende de otra manera. Al que necesita más tiempo. Al que molesta porque probablemente no sabe todavía cómo pedir ayuda. Al que necesita que alguien le recuerde que también hay un sitio preparado para él en la mesa. Que todos se sientan invitados por igual\n\nQue tengamos una muy buena semana.\nY, por supuesto, siendo hoy 12 de octubre, muchísimas felicidades a todas nuestras Pilares. ¡Que disfrutéis mucho de vuestro día!\n\nUn abrazo."
+  },
+  {
     id: "plan-semana-5-9-oct-2026",
     weekTitle: "Semana del 5 al 9 de Octubre: Reuniones del Jueves, Autocrat y Museo Naval",
     academicYear: "2026/2027",
     summary: "Reuniones habituales del jueves (PGA, envío de informes de Evaluación Inicial con Autocrat y horario en Raíces), salida al Museo Naval para 5.º A el martes y repesca de fotos escolares el lunes.",
     publishedAt: "2026-10-04",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1791158400000,
     days: [
       {
