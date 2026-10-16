@@ -12,28 +12,199 @@ function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
 }
 
 const SCHOOL_PERIODS = [
-  { name: "1ª Hora Lectiva", start: "08:00", end: "08:55", type: "class", nextEvent: "2ª Hora" },
-  { name: "2ª Hora Lectiva", start: "08:55", end: "09:50", type: "class", nextEvent: "3ª Hora" },
-  { name: "3ª Hora Lectiva", start: "09:50", end: "10:45", type: "class", nextEvent: "☕ Recreo" },
-  { name: "☕ Recreo / Descanso", start: "10:45", end: "11:15", type: "break", nextEvent: "4ª Hora" },
-  { name: "4ª Hora Lectiva", start: "11:15", end: "12:10", type: "class", nextEvent: "5ª Hora" },
-  { name: "5ª Hora Lectiva", start: "12:10", end: "13:05", type: "class", nextEvent: "6ª Hora" },
-  { name: "6ª Hora Lectiva", start: "13:05", end: "14:00", type: "class", nextEvent: "🍽️ Comedor" },
-  { name: "🍽️ Almuerzo / Comedor", start: "14:00", end: "15:15", type: "lunch", nextEvent: "7ª Hora" },
-  { name: "7ª Hora Lectiva", start: "15:15", end: "16:10", type: "class", nextEvent: "8ª Hora" },
-  { name: "8ª Hora Lectiva", start: "16:10", end: "17:05", type: "class", nextEvent: "Fin de Clases" }
+  { name: "1.ª Sesión Mañana", start: "09:00", end: "10:00", type: "class", nextEvent: "2.ª Sesión" },
+  { name: "2.ª Sesión Mañana", start: "10:00", end: "11:00", type: "class", nextEvent: "☕ Recreo" },
+  { name: "☕ Recreo / Patio", start: "11:00", end: "11:30", type: "break", nextEvent: "3.ª Sesión" },
+  { name: "3.ª Sesión Mañana", start: "11:30", end: "12:15", type: "class", nextEvent: "4.ª Sesión" },
+  { name: "4.ª Sesión Mañana", start: "12:15", end: "13:00", type: "class", nextEvent: "5.ª / Comedor EI" },
+  { name: "5.ª Sesión / Mediodía", start: "13:00", end: "14:00", type: "class", nextEvent: "🍽️ Comedor" },
+  { name: "🍽️ Comedor & Recreo", start: "14:00", end: "15:00", type: "lunch", nextEvent: "Sesión Tarde" },
+  { name: "📚 Sesión de Tarde", start: "15:00", end: "16:15", type: "class", nextEvent: "Claustro / Salida" },
+  { name: "👥 Claustro / Extraescolares", start: "16:15", end: "18:00", type: "meeting", nextEvent: "Fin de Jornada" }
 ];
 
-const PeriodBellTracker = React.memo(function PeriodBellTracker() {
+function playTimerChime() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // Do5, Mi5, Sol5, Do6
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.16);
+      gain.gain.setValueAtTime(0.001, ctx.currentTime + idx * 0.16);
+      gain.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + idx * 0.16 + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.16 + 0.65);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + idx * 0.16);
+      osc.stop(ctx.currentTime + idx * 0.16 + 0.7);
+    });
+  } catch (e) {}
+}
+
+function renderFormattedText(text) {
+  if (!text || typeof text !== "string") return text;
+  const tokenRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s)]+)/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = tokenRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    if (match[1] && match[2]) {
+      const label = match[1];
+      const url = match[2];
+      parts.push(
+        <a
+          key={`md-${match.index}`}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-500/30 border border-indigo-200/80 dark:border-indigo-500/30 font-bold text-[11px] transition shadow-2xs align-baseline underline-offset-2 hover:underline"
+        >
+          <span>{label}</span>
+          <IconRenderer name="ArrowUpRight" className="w-3 h-3 shrink-0" />
+        </a>
+      );
+    } else if (match[3]) {
+      const url = match[3].replace(/[.,;]+$/, "");
+      const trailing = match[3].slice(url.length);
+      let shortLabel = "Abrir enlace";
+      try {
+        const parsed = new URL(url);
+        shortLabel = parsed.hostname.replace(/^www\./, "");
+      } catch (e) {}
+      parts.push(
+        <a
+          key={`url-${match.index}`}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-500/30 border border-indigo-200/80 dark:border-indigo-500/30 font-bold text-[11px] transition shadow-2xs align-baseline"
+        >
+          <span>🔗 {shortLabel}</span>
+          <IconRenderer name="ArrowUpRight" className="w-3 h-3 shrink-0" />
+        </a>
+      );
+      if (trailing) parts.push(trailing);
+    }
+    lastIndex = tokenRegex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
+function renderEditorialEmail(fullText) {
+  if (!fullText || typeof fullText !== "string") return null;
+  const blocks = fullText.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+
+  return (
+    <div className="space-y-4">
+      {blocks.map((block, bIdx) => {
+        const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
+        const firstLine = lines[0] || "";
+        const isAllCapsHeading =
+          lines.length > 1 &&
+          firstLine.length >= 4 &&
+          firstLine.length <= 75 &&
+          firstLine === firstLine.toUpperCase() &&
+          /[A-ZÁÉÍÓÚÑ]/.test(firstLine);
+        const isDashHeading =
+          lines.length > 1 &&
+          firstLine.length <= 70 &&
+          !firstLine.endsWith(".") &&
+          !firstLine.endsWith(":") &&
+          (firstLine.includes(" – ") || firstLine.includes(" - ") || /^(Reuniones|Juntas|Semana|Nuevo horario|Comienzo|Previsión|Educación Vial|Hoja de pagos|Personas autorizadas|Museo Naval|Repesca)/i.test(firstLine));
+
+        const isGospelReflection = /Evangelio|mirada franciscana|viña|banquete|piedra angular/i.test(block);
+
+        if (isGospelReflection) {
+          return (
+            <div
+              key={bIdx}
+              className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-amber-50/90 via-orange-50/50 to-amber-50/80 dark:from-amber-950/30 dark:via-slate-900 dark:to-amber-950/20 border border-amber-200/90 dark:border-amber-500/30 shadow-xs space-y-2"
+            >
+              <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
+                <span>🕊️</span>
+                <span>Reflexión Pedagógica & Franciscana</span>
+              </div>
+              <div className="space-y-2 text-xs sm:text-[13px] text-amber-950/90 dark:text-amber-100/90 leading-relaxed italic">
+                {lines.map((line, lIdx) => (
+                  <p key={lIdx}>{renderFormattedText(line)}</p>
+                ))}
+              </div>
+            </div>
+          );
+        }
+
+        if (isAllCapsHeading || isDashHeading) {
+          const bodyLines = lines.slice(1);
+          return (
+            <div
+              key={bIdx}
+              className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-2"
+            >
+              <h4 className="font-extrabold text-xs sm:text-sm text-indigo-950 dark:text-indigo-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800/80 pb-1.5">
+                <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0"></span>
+                <span>{firstLine}</span>
+              </h4>
+              <div className="space-y-1.5 text-xs sm:text-[13px] text-slate-700 dark:text-slate-300 leading-relaxed">
+                {bodyLines.map((line, lIdx) => (
+                  <p key={lIdx}>{renderFormattedText(line)}</p>
+                ))}
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div key={bIdx} className="space-y-1.5 text-xs sm:text-[13px] text-slate-700 dark:text-slate-300 leading-relaxed px-1">
+            {lines.map((line, lIdx) => (
+              <p key={lIdx}>{renderFormattedText(line)}</p>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+const PeriodBellTracker = React.memo(function PeriodBellTracker({ onOpenClassroomKit }) {
   const [timeInfo, setTimeInfo] = useState(null);
 
   useEffect(() => {
     const updatePeriod = () => {
       const now = new Date();
+      const dayOfWeek = now.getDay(); // 0 Sun, 6 Sat
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
       const currentMinOfDay = hours * 60 + minutes;
+      const clockStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        setTimeInfo({
+          clockStr,
+          current: { name: "🌿 Fin de Semana", start: "Descanso", end: "", type: "weekend" },
+          next: null,
+          minsLeft: 0,
+          secsLeft: 0,
+          progressPercent: 100,
+          isOutside: true
+        });
+        return;
+      }
 
       for (let i = 0; i < SCHOOL_PERIODS.length; i++) {
         const p = SCHOOL_PERIODS[i];
@@ -52,6 +223,7 @@ const PeriodBellTracker = React.memo(function PeriodBellTracker() {
           const progressPercent = Math.min(100, Math.max(0, ((currentSec - startMin * 60) / totalDurationSec) * 100));
 
           setTimeInfo({
+            clockStr,
             current: p,
             next: SCHOOL_PERIODS[i + 1] || null,
             minsLeft,
@@ -63,14 +235,15 @@ const PeriodBellTracker = React.memo(function PeriodBellTracker() {
         }
       }
 
-      if (currentMinOfDay < 8 * 60) {
-        const startSec = 8 * 60 * 60;
+      if (currentMinOfDay < 9 * 60) {
+        const startSec = 9 * 60 * 60;
         const currentSec = currentMinOfDay * 60 + seconds;
         const secondsRemaining = startSec - currentSec;
         const minsLeft = Math.floor(secondsRemaining / 60);
         const secsLeft = secondsRemaining % 60;
         setTimeInfo({
-          current: { name: "🌅 Previas a Clases", start: "00:00", end: "08:00", type: "idle" },
+          clockStr,
+          current: { name: "🌅 Acogida Matinal", start: "08:00", end: "09:00", type: "idle" },
           next: SCHOOL_PERIODS[0],
           minsLeft,
           secsLeft,
@@ -79,7 +252,8 @@ const PeriodBellTracker = React.memo(function PeriodBellTracker() {
         });
       } else {
         setTimeInfo({
-          current: { name: "🌙 Jornada Finalizada", start: "17:05", end: "23:59", type: "idle" },
+          clockStr,
+          current: { name: "🌙 Jornada Finalizada", start: "18:00", end: "", type: "idle" },
           next: null,
           minsLeft: 0,
           secsLeft: 0,
@@ -96,42 +270,50 @@ const PeriodBellTracker = React.memo(function PeriodBellTracker() {
 
   if (!timeInfo) return null;
 
-  const { current, next, minsLeft, secsLeft, progressPercent, isOutside } = timeInfo;
+  const { clockStr, current, next, minsLeft, secsLeft, progressPercent, isOutside } = timeInfo;
 
   let badgeColor = "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-500/10 dark:text-indigo-300 dark:border-indigo-500/20";
   if (current.type === "break") badgeColor = "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/20";
   if (current.type === "lunch") badgeColor = "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/20";
-  if (isOutside) badgeColor = "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700";
+  if (current.type === "meeting") badgeColor = "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-500/10 dark:text-purple-300 dark:border-purple-500/20";
+  if (isOutside) badgeColor = "bg-slate-100 text-slate-700 border-slate-300/80 dark:bg-slate-800/90 dark:text-slate-300 dark:border-slate-700";
 
   return (
-    <div className={`flex items-center gap-2.5 px-3 py-1.5 rounded-2xl border text-xs font-bold shadow-sm transition-all ${badgeColor}`}>
+    <button
+      type="button"
+      onClick={onOpenClassroomKit}
+      title="Abrir Kit de Aula (Temporizador, Semáforo y Herramientas)"
+      className={`flex items-center gap-2.5 px-3 py-1.5 rounded-2xl border text-xs font-bold shadow-2xs hover:scale-[1.01] active:scale-95 transition-all cursor-pointer ${badgeColor}`}
+    >
       <div className="flex items-center gap-1.5">
-        <span className="relative flex h-2.5 w-2.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
+        <span className="relative flex h-2 w-2">
+          {!isOutside && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>}
+          <span className={`relative inline-flex rounded-full h-2 w-2 ${isOutside ? "bg-slate-400" : "bg-emerald-500"}`}></span>
         </span>
+        <span className="font-mono font-extrabold text-[11px]">{clockStr}</span>
+        <span className="opacity-40">·</span>
         <span>{current.name}</span>
-        <span className="text-[10px] opacity-75 font-mono">({current.start} - {current.end})</span>
       </div>
 
       {!isOutside && (
-        <div className="flex items-center gap-2 border-l border-slate-300 dark:border-slate-700 pl-2">
+        <div className="flex items-center gap-2 border-l border-current/20 pl-2">
           <span className="font-mono text-[11px] font-extrabold">
             ⏳ {minsLeft}m {secsLeft < 10 ? `0${secsLeft}` : secsLeft}s
           </span>
-          <div className="w-12 bg-black/10 dark:bg-white/20 h-1.5 rounded-full overflow-hidden hidden xl:block">
+          <div className="w-12 bg-black/10 dark:bg-white/20 h-1.5 rounded-full overflow-hidden hidden sm:block">
             <div className="bg-current h-full transition-all duration-1000" style={{ width: `${progressPercent}%` }}></div>
           </div>
           {next && (
-            <span className="text-[9px] opacity-80 hidden lg:inline bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded">
-              Siguiente: {next.nextEvent || next.name}
+            <span className="text-[10px] opacity-80 hidden lg:inline bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded-md">
+               Luego: {next.nextEvent || next.name}
             </span>
           )}
         </div>
       )}
-    </div>
+    </button>
   );
 });
+
 
 const INITIAL_NOTICES = [];
 
@@ -998,11 +1180,145 @@ export function App() {
   const [isWeeklyPlanModalOpen, setIsWeeklyPlanModalOpen] = useState(false);
   const [editingPlanId, setEditingPlanId] = useState(null);
   const [isEmailViewExpanded, setIsEmailViewExpanded] = useState(false);
+  const [isEmailEditorialMode, setIsEmailEditorialMode] = useState(true);
   const [isPreferencesDropdownOpen, setIsPreferencesDropdownOpen] = useState(false);
   const [mobileDayTab, setMobileDayTab] = useState(() => {
     const d = new Date().getDay(); // 0 Sun, 1 Mon ... 5 Fri
     return (d >= 1 && d <= 5) ? d - 1 : 0;
   });
+
+  // ACCESOS RÁPIDOS BENTO & FAVORITOS
+  const DEFAULT_FAVORITES = ["comedor", "educamos", "orientacion-sb", "reserva-dispositivos", "incidencias", "recogida-infantil"];
+  const [favoriteAppIds, setFavoriteAppIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem("sb_favorite_apps");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return DEFAULT_FAVORITES;
+  });
+  const [isQuickLaunchOpen, setIsQuickLaunchOpen] = useState(() => {
+    return localStorage.getItem("sb_quick_launch_closed") !== "true";
+  });
+
+  const toggleFavoriteApp = (appId, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setFavoriteAppIds(prev => {
+      const exists = prev.includes(appId);
+      const next = exists ? prev.filter(id => id !== appId) : [...prev, appId];
+      localStorage.setItem("sb_favorite_apps", JSON.stringify(next));
+      setToastMessage(exists ? "⭐ Eliminado de Accesos Rápidos" : "⭐ Añadido a Accesos Rápidos");
+      setTimeout(() => setToastMessage(null), 2000);
+      return next;
+    });
+  };
+
+  // KIT DE AULA INTERACTIVO (TEMPORIZADOR, SEMÁFORO, SORTEO, NOTAS DOCENTES)
+  const [isClassroomKitOpen, setIsClassroomKitOpen] = useState(false);
+  const [activeKitTab, setActiveKitTab] = useState("timer"); // "timer" | "traffic" | "random" | "notes"
+
+  // 1. Temporizador de Aula
+  const [timerTotalSeconds, setTimerTotalSeconds] = useState(300); // 5 min default
+  const [timerSecondsLeft, setTimerSecondsLeft] = useState(300);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [timerSoundEnabled, setTimerSoundEnabled] = useState(true);
+
+  useEffect(() => {
+    if (!isTimerRunning) return;
+    const interval = setInterval(() => {
+      setTimerSecondsLeft(prev => {
+        if (prev <= 1) {
+          setIsTimerRunning(false);
+          if (timerSoundEnabled) playTimerChime();
+          setToastMessage("⏰ ¡Tiempo de aula completado!");
+          setTimeout(() => setToastMessage(null), 4000);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isTimerRunning, timerSoundEnabled]);
+
+  const startTimerPreset = (minutes) => {
+    const secs = minutes * 60;
+    setTimerTotalSeconds(secs);
+    setTimerSecondsLeft(secs);
+    setIsTimerRunning(true);
+  };
+
+  // 2. Semáforo de Ambiente / Ruido en Aula
+  const [trafficMode, setTrafficMode] = useState("work"); // "silence" | "whisper" | "work" | "tidy"
+
+  // 3. Sorteo Aleatorio de Alumnos
+  const [studentCount, setStudentCount] = useState(() => {
+    return Number(localStorage.getItem("sb_class_student_count")) || 25;
+  });
+  const [pickedStudent, setPickedStudent] = useState(null);
+  const [pickedHistory, setPickedHistory] = useState([]);
+  const [isRollingStudent, setIsRollingStudent] = useState(false);
+
+  const handlePickRandomStudent = () => {
+    const max = Math.max(2, Math.min(60, Number(studentCount) || 25));
+    localStorage.setItem("sb_class_student_count", String(max));
+    const allNums = Array.from({ length: max }, (_, i) => i + 1);
+    let available = allNums.filter(n => !pickedHistory.includes(n));
+    if (available.length === 0) {
+      available = allNums;
+      setPickedHistory([]);
+    }
+    setIsRollingStudent(true);
+    let ticks = 0;
+    const rollInterval = setInterval(() => {
+      ticks++;
+      const temp = allNums[Math.floor(Math.random() * allNums.length)];
+      setPickedStudent(temp);
+      if (ticks >= 10) {
+        clearInterval(rollInterval);
+        const winner = available[Math.floor(Math.random() * available.length)];
+        setPickedStudent(winner);
+        setPickedHistory(prev => [...prev.filter(n => n <= max), winner]);
+        setIsRollingStudent(false);
+      }
+    }, 55);
+  };
+
+  // 4. Bloc de Notas Rápidas y Tareas del Profesor
+  const [teacherQuickNote, setTeacherQuickNote] = useState(() => {
+    return localStorage.getItem("sb_teacher_quick_note") || "";
+  });
+  const [teacherTodos, setTeacherTodos] = useState(() => {
+    try {
+      const saved = localStorage.getItem("sb_teacher_todos");
+      return saved ? JSON.parse(saved) : [
+        { id: 1, text: "Revisar comunicados de familias en Educamos", done: false },
+        { id: 2, text: "Pasar lista de comedor antes de las 09:30h", done: false }
+      ];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [newTodoInput, setNewTodoInput] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("sb_teacher_quick_note", teacherQuickNote);
+  }, [teacherQuickNote]);
+
+  useEffect(() => {
+    localStorage.setItem("sb_teacher_todos", JSON.stringify(teacherTodos));
+  }, [teacherTodos]);
+
+  const handleAddTeacherTodo = (e) => {
+    e.preventDefault();
+    if (!newTodoInput.trim()) return;
+    setTeacherTodos(prev => [{ id: Date.now(), text: newTodoInput.trim(), done: false }, ...prev]);
+    setNewTodoInput("");
+  };
 
   // Formulario Programación Semanal
   const [planWeekTitle, setPlanWeekTitle] = useState("");
@@ -1072,9 +1388,13 @@ export function App() {
         setIsPwaModalOpen(false);
         setIsAddBookmarkOpen(false);
         setIsRiddleOpen(false);
+        setIsClassroomKitOpen(false);
       } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setIsCommandPaletteOpen(prev => !prev);
+      } else if (e.altKey && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsClassroomKitOpen(prev => !prev);
       } else if (e.altKey && e.key.toLowerCase() === 'c') {
         window.open("https://comedor-san-buenaventura.vercel.app/", "_blank");
       } else if (e.altKey && e.key.toLowerCase() === 'e') {
@@ -1572,15 +1892,103 @@ export function App() {
   };
 
   const allAppItems = SIDEBAR_SECTIONS.flatMap(s => s.items);
+  const favoriteApps = favoriteAppIds
+    .map(id => allAppItems.find(a => a.id === id))
+    .filter(Boolean);
+
+  const handleShareWhatsApp = (plan) => {
+    if (!plan) return;
+    let text = `🏫 *COLEGIO SAN BUENAVENTURA*\n📅 *${plan.weekTitle}*\n\n`;
+    if (plan.summary) text += `📌 _${plan.summary}_\n\n`;
+    (plan.days || []).forEach(d => {
+      if (d.items && d.items.length > 0) {
+        text += `*${d.day} (${d.date || ""}):*\n`;
+        d.items.forEach(it => {
+          const cleanItem = it.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, "$1 ($2)");
+          text += `• ${cleanItem}\n`;
+        });
+        text += `\n`;
+      }
+    });
+    if (plan.generalNotes) text += `⚠️ *Recordatorios:* ${plan.generalNotes}\n\n`;
+    text += `🔗 Portal Docente: https://portal-san-buenaventura.vercel.app/`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+  };
+
+  const handlePrintWeeklyPlan = () => {
+    window.print();
+  };
+
+  const qLower = searchQuery.trim().toLowerCase();
   const filteredSearchApps = allAppItems.filter(item => 
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.subtitle.toLowerCase().includes(searchQuery.toLowerCase())
+    item.title.toLowerCase().includes(qLower) ||
+    item.subtitle.toLowerCase().includes(qLower)
   );
   const filteredSearchBookmarks = customBookmarks.filter(bm => 
-    bm.title.toLowerCase().includes(searchQuery.toLowerCase())
+    bm.title.toLowerCase().includes(qLower)
   );
+  const filteredSearchPlans = qLower.length >= 2
+    ? weeklyPlans.filter(wp => {
+        const hay = `${wp.weekTitle || ""} ${wp.summary || ""} ${wp.generalNotes || ""} ${wp.fullEmailText || ""} ${(wp.days || []).map(d => (d.items || []).join(" ")).join(" ")}`.toLowerCase();
+        return hay.includes(qLower);
+      })
+    : [];
+
+  const quickActionsList = [
+    {
+      id: "qa-timer",
+      title: "⏱️ Temporizador y Cronómetro de Aula",
+      subtitle: "Cuenta atrás visual con aviso acústico para actividades",
+      action: () => { setActiveKitTab("timer"); setIsClassroomKitOpen(true); }
+    },
+    {
+      id: "qa-traffic",
+      title: "🚦 Semáforo de Ambiente y Ruido",
+      subtitle: "Modo visual proyectable (Silencio, Susurro, Equipo, Recogida)",
+      action: () => { setActiveKitTab("traffic"); setIsClassroomKitOpen(true); }
+    },
+    {
+      id: "qa-random",
+      title: "🎲 Sorteo Aleatorio de Alumnos",
+      subtitle: "Elegir número de lista al azar sin repeticiones",
+      action: () => { setActiveKitTab("random"); setIsClassroomKitOpen(true); }
+    },
+    {
+      id: "qa-notes",
+      title: "📝 Mi Bloc de Notas y Tareas Rápidas",
+      subtitle: "Post-it personal del profesor guardado en este navegador",
+      action: () => { setActiveKitTab("notes"); setIsClassroomKitOpen(true); }
+    },
+    {
+      id: "qa-theme",
+      title: themeMode === "dark" ? "☀️ Cambiar a Modo Claro" : "🌙 Cambiar a Modo Oscuro",
+      subtitle: "Alternar apariencia visual del portal",
+      action: () => setThemeMode(themeMode === "dark" ? "light" : "dark")
+    },
+    {
+      id: "qa-projector",
+      title: "👁️ Alternar Modo Proyector (Alto Contraste)",
+      subtitle: "Optimizar lectura para pizarras digitales en el aula",
+      action: () => setIsHighContrast(prev => !prev)
+    }
+  ].filter(qa => !qLower || qa.title.toLowerCase().includes(qLower) || qa.subtitle.toLowerCase().includes(qLower));
 
   const isDark = themeMode === "dark";
+
+  // Fecha y saludo dinámico
+  const nowDateObj = new Date();
+  const currentHour = nowDateObj.getHours();
+  const greetingText = currentHour < 14
+    ? "☀️ Buenos días, Claustro"
+    : currentHour < 20
+    ? "🌤️ Buenas tardes, Claustro"
+    : "🌙 Buenas noches, Claustro";
+  const formattedTodayDate = nowDateObj.toLocaleDateString('es-ES', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long'
+  });
+  const currentWeekdayIdx = nowDateObj.getDay() - 1; // 0 = Lunes ... 4 = Viernes
 
   let activeCalendarSrc = "";
   if (activeCalTab === "unificados") {
@@ -1663,23 +2071,23 @@ export function App() {
                   </span>
                 </div>
                 <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 hidden sm:block truncate">
-                  Acceso Central & Agenda Escolar
+                  Infantil y Primaria · Curso 2026/2027
                 </p>
               </div>
             </div>
           </div>
 
-          {/* ZONA CENTRAL: BARRA DE BÚSQUEDA OMNIBAR EN ESCRITORIO (NOTION / LINEAR STYLE) */}
+          {/* ZONA CENTRAL: BARRA DE BÚSQUEDA OMNIBAR EN ESCRITORIO */}
           <div className="hidden md:flex items-center justify-center flex-1 max-w-md lg:max-w-xl min-w-0 px-2">
             <button
               onClick={() => setIsCommandPaletteOpen(true)}
               className="w-full flex items-center justify-between gap-3 px-3.5 py-2 bg-slate-100/90 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 hover:border-indigo-400/50 dark:hover:border-indigo-500/40 text-xs transition-all shadow-xs group"
-              title="Buscar aplicaciones, sitios, avisos o marcadores (Ctrl + K / ⌘K)"
+              title="Buscar aplicaciones, correos semanales, herramientas o marcadores (Ctrl + K / ⌘K)"
             >
               <div className="flex items-center gap-2.5 min-w-0 truncate">
                 <IconRenderer name="Search" className="w-4 h-4 text-indigo-500 dark:text-indigo-400 group-hover:scale-110 transition-transform shrink-0" />
                 <span className="truncate text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200">
-                  Buscar aplicaciones, sitios, avisos o marcadores...
+                  Buscar apps, correos semanales, herramientas o marcadores...
                 </span>
               </div>
               <kbd className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700/90 shadow-xs shrink-0">
@@ -1690,6 +2098,35 @@ export function App() {
 
           {/* ACCIONES RÁPIDAS & ACCESIBILIDAD CONSOLIDADA */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+
+            {/* PÍLDORA ACTIVA SI EL TEMPORIZADOR DE AULA ESTÁ EN MARCHA */}
+            {isTimerRunning && (
+              <button
+                onClick={() => { setActiveKitTab("timer"); setIsClassroomKitOpen(true); }}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-rose-600 text-white font-mono text-xs font-extrabold shadow-md animate-pulse"
+                title="Ver temporizador de aula en curso"
+              >
+                <IconRenderer name="Timer" className="w-3.5 h-3.5" />
+                <span>
+                  {Math.floor(timerSecondsLeft / 60)}:{String(timerSecondsLeft % 60).padStart(2, "0")}
+                </span>
+              </button>
+            )}
+
+            {/* BOTÓN KIT DE AULA INTERACTIVO */}
+            <button
+              onClick={() => setIsClassroomKitOpen(true)}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-extrabold transition shadow-sm active:scale-95"
+              title="Abrir Kit de Aula: Temporizador, Semáforo de Ruido, Sorteo de Alumnos y Notas (Alt+K)"
+            >
+              <IconRenderer name="Zap" className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+              <span className="hidden sm:inline">Kit de Aula</span>
+              {teacherTodos.filter(t => !t.done).length > 0 && (
+                <span className="hidden lg:inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] rounded-full bg-white/20 text-white font-black">
+                  {teacherTodos.filter(t => !t.done).length}
+                </span>
+              )}
+            </button>
 
             {/* BOTÓN BUSCADOR COMPACTO (SOLO MÓVIL) */}
             <button
@@ -1825,7 +2262,7 @@ export function App() {
                         <IconRenderer name="RefreshCw" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         <span>Recargar última versión</span>
                       </span>
-                      <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-white">v3</span>
+                      <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-white">v4</span>
                     </button>
                   </div>
                 </div>
@@ -1882,7 +2319,7 @@ export function App() {
           {/* CONTROLES DE COLAPSO EN PC */}
           <div className="hidden md:flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800">
             {!isSidebarCollapsed && (
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300">Navegación</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300">Navegación & Apps</span>
             )}
             <button
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
@@ -1958,50 +2395,65 @@ export function App() {
                   </h3>
                 )}
                 <div className="space-y-1">
-                  {sec.items.map(item => (
-                    <a
-                      key={item.id}
-                      href={item.url}
-                      target={item.pendingUrl ? "_self" : "_blank"}
-                      rel="noreferrer"
-                      onClick={(e) => handleAppClick(item, e)}
-                      title={isSidebarCollapsed ? item.title : (item.pendingUrl ? "Enlace en preparación" : "")}
-                      className={`flex items-center justify-between p-2.5 rounded-xl border border-transparent transition hover:translate-x-1 ${
-                        item.isHero 
-                          ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-bold' 
-                          : (item.pendingUrl ? 'bg-slate-100 dark:bg-slate-900/60 text-slate-600 dark:text-slate-300 border-dashed border-slate-300 dark:border-slate-700/80 hover:border-slate-400' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80')
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 overflow-hidden">
-                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center border text-xs shrink-0 ${item.color}`}>
-                          <IconRenderer name={item.icon} className="w-3.5 h-3.5" />
-                        </div>
-                        {!isSidebarCollapsed && (
-                          <div className="overflow-hidden">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-xs font-semibold block truncate leading-snug">{item.title}</span>
-                              {item.pendingUrl && (
-                                <span className="text-[9px] bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300 font-bold px-1.5 py-0.2 rounded border border-indigo-200 dark:border-indigo-500/30 shrink-0">
-                                  NUEVA
+                  {sec.items.map(item => {
+                    const isFav = favoriteAppIds.includes(item.id);
+                    return (
+                      <div key={item.id} className="group relative flex items-center">
+                        <a
+                          href={item.url}
+                          target={item.pendingUrl ? "_self" : "_blank"}
+                          rel="noreferrer"
+                          onClick={(e) => handleAppClick(item, e)}
+                          title={isSidebarCollapsed ? item.title : (item.pendingUrl ? "Enlace en preparación" : "")}
+                          className={`flex-1 flex items-center justify-between p-2.5 rounded-xl border border-transparent transition hover:translate-x-0.5 min-w-0 ${
+                            item.isHero 
+                              ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-bold' 
+                              : (item.pendingUrl ? 'bg-slate-100 dark:bg-slate-900/60 text-slate-600 dark:text-slate-300 border-dashed border-slate-300 dark:border-slate-700/80 hover:border-slate-400' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80')
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 overflow-hidden">
+                            <div className={`w-7 h-7 rounded-lg flex items-center justify-center border text-xs shrink-0 ${item.color}`}>
+                              <IconRenderer name={item.icon} className="w-3.5 h-3.5" />
+                            </div>
+                            {!isSidebarCollapsed && (
+                              <div className="overflow-hidden">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-xs font-semibold block truncate leading-snug">{item.title}</span>
+                                  {item.pendingUrl && (
+                                    <span className="text-[9px] bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300 font-bold px-1.5 py-0.2 rounded border border-indigo-200 dark:border-indigo-500/30 shrink-0">
+                                      NUEVA
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">{item.subtitle}</span>
+                              </div>
+                            )}
+                          </div>
+                          {!isSidebarCollapsed && (
+                            <div className="flex items-center gap-1 shrink-0">
+                              {item.shortcut && (
+                                <span className="text-[9px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1.5 py-0.5 rounded font-mono font-bold border border-slate-300 dark:border-slate-700 hidden sm:inline">
+                                  {item.shortcut}
                                 </span>
                               )}
+                              <button
+                                type="button"
+                                onClick={(e) => toggleFavoriteApp(item.id, e)}
+                                className={`p-1 rounded-lg transition ${
+                                  isFav
+                                    ? "text-amber-500 opacity-100"
+                                    : "text-slate-300 dark:text-slate-600 opacity-0 group-hover:opacity-100 hover:text-amber-500"
+                                }`}
+                                title={isFav ? "Quitar de Accesos Rápidos" : "Fijar en Accesos Rápidos"}
+                              >
+                                <IconRenderer name="Star" className="w-3.5 h-3.5" fill={isFav ? "currentColor" : "none"} />
+                              </button>
                             </div>
-                            <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">{item.subtitle}</span>
-                          </div>
-                        )}
-                      </div>
-                      {!isSidebarCollapsed && (
-                        <div className="flex items-center gap-1">
-                          {item.shortcut && (
-                            <span className="text-[9px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1.5 py-0.5 rounded font-mono font-bold border border-slate-300 dark:border-slate-700 hidden sm:inline">
-                              {item.shortcut}
-                            </span>
                           )}
-                          <IconRenderer name={item.pendingUrl ? "Clock" : "ExternalLink"} className={`w-3.5 h-3.5 shrink-0 ${item.pendingUrl ? 'text-indigo-500' : 'text-slate-400'}`} />
-                        </div>
-                      )}
-                    </a>
-                  ))}
+                        </a>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ))}
@@ -2009,28 +2461,118 @@ export function App() {
         </aside>
 
         {/* MAIN CONTENT AREA */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 pb-28 sm:pb-8 space-y-6 overflow-y-auto">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 pb-28 sm:pb-8 space-y-5 overflow-y-auto">
           
-          {/* TABLÓN DE AVISOS DEL DÍA */}
-          <section className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 sm:p-2 rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30 shrink-0">
-                  <IconRenderer name="Bell" className="w-4 h-4" />
-                </div>
-                <div>
-                  <h2 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <span>Avisos del Día</span>
-                    <span className="text-[10px] bg-amber-100 text-amber-800 dark:bg-slate-800 dark:text-amber-300 font-bold px-1.5 py-0.2 rounded-full border border-amber-200 dark:border-slate-700">
-                      {activeNotices.length}
-                    </span>
+          {/* 1. CABECERA COCKPIT DIARIO + ACCESOS RÁPIDOS BENTO */}
+          <section className="bg-gradient-to-br from-white via-white to-indigo-50/40 dark:from-slate-900 dark:via-slate-900/95 dark:to-indigo-950/20 rounded-3xl p-4 sm:p-5 border border-slate-200/90 dark:border-slate-800 shadow-xs transition-all space-y-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight">
+                    {greetingText}
                   </h2>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block">Información publicada por Dirección y Jefatura</p>
+                  <span className="text-[11px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/15 border border-indigo-200/70 dark:border-indigo-500/30 px-2.5 py-0.5 rounded-full capitalize">
+                    📅 {formattedTodayDate}
+                  </span>
                 </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Panel central de Infantil y Primaria · Pulsa <kbd className="px-1.5 py-0.2 bg-slate-100 dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-700 font-mono text-[10px]">⭐</kbd> en el menú para personalizar tus accesos directos
+                </p>
               </div>
 
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                {activeNotices.length > 0 && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <PeriodBellTracker onOpenClassroomKit={() => setIsClassroomKitOpen(true)} />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = !isQuickLaunchOpen;
+                    setIsQuickLaunchOpen(next);
+                    localStorage.setItem("sb_quick_launch_closed", next ? "false" : "true");
+                  }}
+                  className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-xs font-bold flex items-center gap-1.5 transition"
+                  title={isQuickLaunchOpen ? "Ocultar tarjetas de acceso rápido" : "Mostrar tarjetas de acceso rápido"}
+                >
+                  <IconRenderer name="LayoutGrid" className="w-3.5 h-3.5 text-indigo-500" />
+                  <span className="hidden sm:inline">{isQuickLaunchOpen ? "Ocultar Accesos" : "Accesos Rápidos"}</span>
+                  <IconRenderer name={isQuickLaunchOpen ? "ChevronUp" : "ChevronDown"} className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* BENTO GRID DE APLICACIONES FAVORITAS */}
+            {isQuickLaunchOpen && favoriteApps.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
+                {favoriteApps.map(app => (
+                  <a
+                    key={app.id}
+                    href={app.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group relative p-3 rounded-2xl bg-white dark:bg-slate-900/90 hover:bg-indigo-50/40 dark:hover:bg-slate-800/90 border border-slate-200/90 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/40 shadow-2xs hover:shadow-md transition-all hover:-translate-y-0.5 flex flex-col justify-between gap-2 overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between gap-1">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center border shadow-2xs transition-transform group-hover:scale-110 ${app.color}`}>
+                        <IconRenderer name={app.icon} className="w-4 h-4" />
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {app.shortcut && (
+                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hidden xl:inline">
+                            {app.shortcut}
+                          </span>
+                        )}
+                        <IconRenderer name="ArrowUpRight" className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 group-hover:text-indigo-500 transition-colors" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-extrabold text-xs text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 truncate leading-snug">
+                        {app.title}
+                      </h3>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                        {app.subtitle}
+                      </p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* 2. TABLÓN DE AVISOS DEL DÍA (ULTRALIMPIO SI ESTÁ VACÍO) */}
+          {activeNotices.length === 0 ? (
+            <section className="bg-white/90 dark:bg-slate-900/80 rounded-2xl px-4 py-2.5 border border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 shadow-2xs">
+              <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">Tablón de Avisos al día</span>
+                <span className="hidden sm:inline text-slate-400">·</span>
+                <span className="hidden sm:inline text-[11px]">No hay alertas puntuales activas en este momento</span>
+              </div>
+              <button
+                onClick={() => { setIsAdminOpen(true); setFormError(""); }}
+                className="flex items-center gap-1 text-[11px] text-amber-800 dark:text-amber-300 bg-amber-50 hover:bg-amber-100 dark:bg-amber-500/15 dark:hover:bg-amber-500/25 px-2.5 py-1 rounded-xl border border-amber-200 dark:border-amber-500/30 font-bold transition"
+              >
+                <IconRenderer name="PlusCircle" className="w-3.5 h-3.5 shrink-0" />
+                <span>+ Publicar Aviso</span>
+              </button>
+            </section>
+          ) : (
+            <section className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 sm:p-2 rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30 shrink-0">
+                    <IconRenderer name="Bell" className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-1.5">
+                      <span>Avisos del Día</span>
+                      <span className="text-[10px] bg-amber-100 text-amber-800 dark:bg-slate-800 dark:text-amber-300 font-bold px-1.5 py-0.2 rounded-full border border-amber-200 dark:border-slate-700">
+                        {activeNotices.length}
+                      </span>
+                    </h2>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block">Información publicada por Dirección y Jefatura</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 sm:gap-2">
                   <button
                     onClick={() => setIsNoticesCollapsed(!isNoticesCollapsed)}
                     className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 font-semibold bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg transition"
@@ -2038,31 +2580,19 @@ export function App() {
                     <span>{isNoticesCollapsed ? "Mostrar" : "Plegar"}</span>
                     <IconRenderer name={isNoticesCollapsed ? "ChevronDown" : "ChevronUp"} className="w-3.5 h-3.5" />
                   </button>
-                )}
 
-                <button
-                  onClick={() => { setIsAdminOpen(true); setFormError(""); }}
-                  className="flex items-center gap-1 text-xs text-amber-800 dark:text-amber-200 bg-amber-100 hover:bg-amber-200 dark:bg-amber-500/20 dark:hover:bg-amber-500/30 px-2.5 py-1 rounded-lg border border-amber-300 dark:border-amber-500/40 font-bold transition shadow-sm whitespace-nowrap"
-                >
-                  <IconRenderer name="PlusCircle" className="w-3.5 h-3.5 shrink-0" />
-                  <span className="hidden sm:inline">+ Publicar Aviso</span>
-                  <span className="sm:hidden font-bold">+ Aviso</span>
-                </button>
+                  <button
+                    onClick={() => { setIsAdminOpen(true); setFormError(""); }}
+                    className="flex items-center gap-1 text-xs text-amber-800 dark:text-amber-200 bg-amber-100 hover:bg-amber-200 dark:bg-amber-500/20 dark:hover:bg-amber-500/30 px-2.5 py-1 rounded-lg border border-amber-300 dark:border-amber-500/40 font-bold transition shadow-sm whitespace-nowrap"
+                  >
+                    <IconRenderer name="PlusCircle" className="w-3.5 h-3.5 shrink-0" />
+                    <span className="hidden sm:inline">+ Publicar Aviso</span>
+                    <span className="sm:hidden font-bold">+ Aviso</span>
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {activeNotices.length === 0 ? (
-              <div className="text-center py-6 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-slate-950/50 my-2">
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">No hay avisos publicados en este momento.</p>
-                <button
-                  onClick={() => { setIsAdminOpen(true); setFormError(""); }}
-                  className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl shadow transition"
-                >
-                  + Publicar Primer Aviso
-                </button>
-              </div>
-            ) : (
-              !isNoticesCollapsed && (
+              {!isNoticesCollapsed && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                   {activeNotices.slice(0, 4).map(n => (
                     <div
@@ -2081,7 +2611,7 @@ export function App() {
                         </div>
                       </div>
                       <h3 className="font-bold text-xs text-slate-900 dark:text-white mb-0.5">{n.title}</h3>
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{n.content}</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{renderFormattedText(n.content)}</p>
                       {n.linkUrl && (
                         <div className="mt-2.5 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center">
                           <a
@@ -2099,14 +2629,19 @@ export function App() {
                     </div>
                   ))}
                 </div>
-              )
-            )}
-          </section>
+              )}
+            </section>
+          )}
 
-          {/* SECCIÓN PROGRAMACIÓN SEMANAL DEL CLAUSTRO */}
+          {/* 3. SECCIÓN PROGRAMACIÓN SEMANAL DEL CLAUSTRO */}
           <section id="programacion-semanal" className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
             {(() => {
               const currentSelectedPlan = weeklyPlans.find(p => p.id === selectedWeekId) || weeklyPlans[0];
+              const weekdaysList = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+              const todayDayName = (currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4) ? weekdaysList[currentWeekdayIdx] : null;
+              const todayPlanData = (currentSelectedPlan?.isCurrent && todayDayName)
+                ? currentSelectedPlan.days?.find(d => d.day.toLowerCase().includes(todayDayName.toLowerCase()))
+                : null;
 
               return (
                 <div>
@@ -2116,7 +2651,7 @@ export function App() {
                         <IconRenderer name="ClipboardList" className="w-5 h-5" />
                       </div>
                       <div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <h2 className="font-display font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">
                             Programación Semanal del Claustro
                           </h2>
@@ -2126,18 +2661,18 @@ export function App() {
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Planificación, reuniones y avisos enviados por Dirección</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Planificación, reuniones y correo enviados por Dirección</p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                    <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                       {/* Selector de Semanas Guardadas (Historial) */}
-                      <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
-                        <IconRenderer name="History" className="w-3.5 h-3.5 text-slate-500" />
+                      <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 max-w-[220px] sm:max-w-xs">
+                        <IconRenderer name="History" className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                         <select
                           value={selectedWeekId}
                           onChange={(e) => setSelectedWeekId(e.target.value)}
-                          className="bg-transparent text-xs font-bold text-slate-800 dark:text-slate-200 outline-none cursor-pointer"
+                          className="bg-transparent text-xs font-bold text-slate-800 dark:text-slate-200 outline-none cursor-pointer truncate w-full"
                           title="Seleccionar semana del historial"
                         >
                           {weeklyPlans.map(wp => (
@@ -2147,6 +2682,27 @@ export function App() {
                           ))}
                         </select>
                       </div>
+
+                      {/* Botón Compartir por WhatsApp */}
+                      {currentSelectedPlan && (
+                        <button
+                          onClick={() => handleShareWhatsApp(currentSelectedPlan)}
+                          className="flex items-center gap-1.5 text-xs text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 hover:bg-emerald-100 dark:hover:bg-emerald-500/25 border border-emerald-200 dark:border-emerald-500/30 px-2.5 py-1.5 rounded-xl font-bold transition shadow-2xs"
+                          title="Compartir resumen de la semana por WhatsApp"
+                        >
+                          <IconRenderer name="Share2" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                          <span className="hidden lg:inline">WhatsApp</span>
+                        </button>
+                      )}
+
+                      {/* Botón Imprimir */}
+                      <button
+                        onClick={handlePrintWeeklyPlan}
+                        className="hidden sm:flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-2.5 py-1.5 rounded-xl font-bold transition shadow-2xs"
+                        title="Imprimir o guardar en PDF la programación semanal"
+                      >
+                        <IconRenderer name="Printer" className="w-3.5 h-3.5 text-slate-500" />
+                      </button>
 
                       {/* Botón Copiar Mail */}
                       <button
@@ -2158,7 +2714,7 @@ export function App() {
                         <span className="hidden sm:inline">Copiar Mail</span>
                       </button>
 
-                      {/* Botón Editar Esta Semana (Accesible) */}
+                      {/* Botón Editar Esta Semana */}
                       {currentSelectedPlan && (
                         <button
                           onClick={() => handleEditPlan(currentSelectedPlan)}
@@ -2166,7 +2722,7 @@ export function App() {
                           title="Editar el contenido y el mail de esta semana"
                         >
                           <IconRenderer name="Edit3" className="w-3.5 h-3.5" />
-                          <span>Editar Semana</span>
+                          <span className="hidden sm:inline">Editar</span>
                         </button>
                       )}
 
@@ -2177,7 +2733,7 @@ export function App() {
                         title="Publicar una nueva programación semanal"
                       >
                         <IconRenderer name="PlusCircle" className="w-3.5 h-3.5" />
-                        <span>+ Nueva Semana</span>
+                        <span>+ Semana</span>
                       </button>
 
                       {isPinAuthenticated && currentSelectedPlan && (
@@ -2203,8 +2759,8 @@ export function App() {
                             </h3>
                           </div>
                           {currentSelectedPlan.summary && (
-                            <p className="text-xs text-indigo-900 dark:text-indigo-200 mt-1 font-medium">
-                              {currentSelectedPlan.summary}
+                            <p className="text-xs text-indigo-900 dark:text-indigo-200 mt-1 font-medium leading-relaxed">
+                              {renderFormattedText(currentSelectedPlan.summary)}
                             </p>
                           )}
                         </div>
@@ -2216,19 +2772,40 @@ export function App() {
                         </div>
                       </div>
 
+                      {/* BANNER DESTACADO "FOCO DE HOY" (Solo si estamos viendo la semana en curso en Lunes-Viernes) */}
+                      {todayPlanData && todayPlanData.items && todayPlanData.items.length > 0 && (
+                        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 dark:from-emerald-500/15 dark:via-teal-500/10 dark:to-indigo-500/15 border border-emerald-300/80 dark:border-emerald-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="flex items-start sm:items-center gap-2.5">
+                            <span className="px-2.5 py-1 rounded-xl bg-emerald-600 text-white font-black text-[10px] uppercase tracking-wider shrink-0 shadow-xs">
+                              🎯 Hoy {todayPlanData.day} {todayPlanData.date}
+                            </span>
+                            <div className="text-xs font-semibold text-slate-800 dark:text-slate-100 flex flex-wrap items-center gap-x-3 gap-y-1">
+                              {todayPlanData.items.map((it, idx) => (
+                                <span key={idx} className="inline-flex items-center gap-1">
+                                  <span>{renderFormattedText(it)}</span>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Selector de Días Móvil (Solo visible en pantallas < md) */}
                       <div className="md:hidden flex items-center justify-between gap-1 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200 dark:border-slate-700/80">
                         {["Lun", "Mar", "Mié", "Jue", "Vie"].map((dShort, idx) => (
                           <button
                             key={dShort}
                             onClick={() => setMobileDayTab(idx)}
-                            className={`flex-1 py-1.5 text-center text-xs font-black rounded-xl transition ${
+                            className={`flex-1 py-1.5 text-center text-xs font-black rounded-xl transition relative ${
                               mobileDayTab === idx
                                 ? "bg-indigo-600 text-white shadow-sm"
                                 : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                             }`}
                           >
                             {dShort}
+                            {currentSelectedPlan.isCurrent && currentWeekdayIdx === idx && (
+                              <span className="absolute -top-1 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900"></span>
+                            )}
                           </button>
                         ))}
                         <button
@@ -2246,8 +2823,9 @@ export function App() {
 
                       {/* Desglose por Días (Lunes a Viernes) */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-                        {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dayName, idx) => {
+                        {weekdaysList.map((dayName, idx) => {
                           const isVisibleOnMobile = mobileDayTab === "all" || mobileDayTab === idx;
+                          const isTodayCard = Boolean(currentSelectedPlan.isCurrent && currentWeekdayIdx === idx);
                           const dayData = currentSelectedPlan.days?.find(d => d.day.toLowerCase().includes(dayName.toLowerCase())) || { day: dayName, date: "", items: [] };
                           const dayColors = [
                             "border-blue-200 dark:border-blue-900/40 bg-blue-50/30 dark:bg-slate-900",
@@ -2268,12 +2846,21 @@ export function App() {
                             <div 
                               key={dayName} 
                               className={`rounded-2xl border p-3.5 flex flex-col justify-between transition min-w-0 break-words ${dayColors[idx]} ${
+                                isTodayCard ? "ring-2 ring-indigo-500 dark:ring-indigo-400 shadow-md" : ""
+                              } ${
                                 !isVisibleOnMobile ? "hidden md:flex" : "flex"
                               }`}
                             >
                               <div>
                                 <div className={`px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center justify-between mb-2.5 ${headerColors[idx]}`}>
-                                  <span>{dayName}</span>
+                                  <div className="flex items-center gap-1.5">
+                                    <span>{dayName}</span>
+                                    {isTodayCard && (
+                                      <span className="text-[9px] bg-indigo-600 text-white px-1.5 py-0.2 rounded-full uppercase tracking-wider font-black">
+                                        HOY
+                                      </span>
+                                    )}
+                                  </div>
                                   {dayData.date && <span className="text-[10px] opacity-80">{dayData.date}</span>}
                                 </div>
 
@@ -2282,7 +2869,7 @@ export function App() {
                                     {dayData.items.map((item, iIdx) => (
                                       <li key={iIdx} className="flex items-start gap-1.5 leading-snug min-w-0 break-words">
                                         <span className="text-indigo-500 shrink-0 font-bold">•</span>
-                                        <span>{item}</span>
+                                        <span>{renderFormattedText(item)}</span>
                                       </li>
                                     ))}
                                   </ul>
@@ -2301,28 +2888,55 @@ export function App() {
                       {currentSelectedPlan.generalNotes && (
                         <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
                           <IconRenderer name="AlertCircle" className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                          <div>
+                          <div className="leading-relaxed">
                             <strong className="font-bold block mb-0.5">Notas y Recordatorios de la Semana:</strong>
-                            <span>{currentSelectedPlan.generalNotes}</span>
+                            <span>{renderFormattedText(currentSelectedPlan.generalNotes)}</span>
                           </div>
                         </div>
                       )}
 
-                      {/* Desplegable de Correo Original */}
+                      {/* Desplegable de Correo Original con Vista Editorial */}
                       {currentSelectedPlan.fullEmailText && (
                         <div className="border-t border-slate-100 dark:border-slate-800 pt-3">
-                          <button
-                            onClick={() => setIsEmailViewExpanded(!isEmailViewExpanded)}
-                            className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition"
-                          >
-                            <IconRenderer name="Mail" className="w-3.5 h-3.5" />
-                            <span>{isEmailViewExpanded ? "Ocultar correo completo" : "Ver texto completo del correo semanal"}</span>
-                            <IconRenderer name={isEmailViewExpanded ? "ChevronUp" : "ChevronDown"} className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <button
+                              onClick={() => setIsEmailViewExpanded(!isEmailViewExpanded)}
+                              className="flex items-center gap-2 text-xs font-extrabold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 bg-indigo-50/70 dark:bg-indigo-500/10 px-3 py-1.5 rounded-xl border border-indigo-200/70 dark:border-indigo-500/25 transition"
+                            >
+                              <IconRenderer name="Mail" className="w-3.5 h-3.5" />
+                              <span>{isEmailViewExpanded ? "Ocultar carta semanal del claustro" : "📖 Leer correo completo de la semana"}</span>
+                              <IconRenderer name={isEmailViewExpanded ? "ChevronUp" : "ChevronDown"} className="w-3.5 h-3.5" />
+                            </button>
+
+                            {isEmailViewExpanded && (
+                              <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200 dark:border-slate-700 text-[11px] font-bold">
+                                <button
+                                  type="button"
+                                  onClick={() => setIsEmailEditorialMode(true)}
+                                  className={`px-2.5 py-1 rounded-lg transition ${isEmailEditorialMode ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-2xs" : "text-slate-500"}`}
+                                >
+                                  ✨ Lectura Editorial
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setIsEmailEditorialMode(false)}
+                                  className={`px-2.5 py-1 rounded-lg transition ${!isEmailEditorialMode ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-2xs" : "text-slate-500"}`}
+                                >
+                                  📄 Texto Original
+                                </button>
+                              </div>
+                            )}
+                          </div>
 
                           {isEmailViewExpanded && (
-                            <div className="mt-2.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 font-mono whitespace-pre-wrap leading-relaxed">
-                              {currentSelectedPlan.fullEmailText}
+                            <div className="mt-3 p-4 sm:p-5 rounded-2xl bg-slate-50/80 dark:bg-slate-950/90 border border-slate-200 dark:border-slate-800">
+                              {isEmailEditorialMode ? (
+                                renderEditorialEmail(currentSelectedPlan.fullEmailText)
+                              ) : (
+                                <div className="text-xs text-slate-700 dark:text-slate-300 font-mono whitespace-pre-wrap leading-relaxed">
+                                  {renderFormattedText(currentSelectedPlan.fullEmailText)}
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
@@ -2330,7 +2944,7 @@ export function App() {
                     </div>
                   ) : (
                     <div className="text-center py-8 text-slate-500 dark:text-slate-400 text-xs">
-                      No hay programaciones semanales registradas. Haz clic en <strong>+ Nueva Semana</strong> para publicar la primera.
+                      No hay programaciones semanales registradas. Haz clic en <strong>+ Semana</strong> para publicar la primera.
                     </div>
                   )}
                 </div>
@@ -2338,7 +2952,7 @@ export function App() {
             })()}
           </section>
 
-          {/* CALENDARIO DE GOOGLE CON VISTA MENSUAL POR DEFECTO */}
+          {/* 4. CALENDARIO DE GOOGLE CON VISTA MENSUAL POR DEFECTO */}
           <section id="calendario-escolar" className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80 mb-3">
               <div className="flex items-center gap-2.5">
@@ -2367,7 +2981,7 @@ export function App() {
                       <span>Abrir</span>
                     </a>
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Infantil y Primaria · Mes por defecto</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Infantil y Primaria · Actividades y Sustituciones</p>
                 </div>
               </div>
 
@@ -2458,7 +3072,19 @@ export function App() {
           <span>Menú</span>
         </button>
 
-        {/* 2. Reservar Dispositivos */}
+        {/* 2. Comedor */}
+        <a
+          href="https://comedor-san-buenaventura.vercel.app/"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          title="Pase de lista Comedor"
+        >
+          <IconRenderer name="Utensils" className="w-4 h-4" />
+          <span>Comedor</span>
+        </a>
+
+        {/* 3. Dispositivos */}
         <a
           href="https://gestion-dispositivos-three.vercel.app/#view-calendar"
           target="_blank"
@@ -2467,19 +3093,7 @@ export function App() {
           title="Reserva de Chromebooks e iPads"
         >
           <IconRenderer name="Laptop2" className="w-4 h-4" />
-          <span>Dispositivos</span>
-        </a>
-
-        {/* 3. Incidencias */}
-        <a
-          href="https://incidencias-colegio-1wx3.vercel.app/"
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 text-cyan-600 dark:text-cyan-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
-          title="Partes de Incidencias & TIC"
-        >
-          <IconRenderer name="Wrench" className="w-4 h-4" />
-          <span>Incidencias</span>
+          <span>Equipos</span>
         </a>
 
         {/* 4. Orientación Escolar */}
@@ -2487,24 +3101,22 @@ export function App() {
           href="https://orientacion.vercel.app/"
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          className="flex flex-col items-center gap-0.5 text-teal-600 dark:text-teal-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
           title="Orientación Escolar & DUA"
         >
           <IconRenderer name="Brain" className="w-4 h-4" />
           <span>Orientación</span>
         </a>
 
-        {/* 5. Comedor */}
-        <a
-          href="https://comedor-san-buenaventura.vercel.app/"
-          target="_blank"
-          rel="noreferrer"
+        {/* 5. Kit de Aula */}
+        <button
+          onClick={() => setIsClassroomKitOpen(true)}
           className="flex flex-col items-center gap-0.5 text-amber-600 dark:text-amber-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
-          title="Pase de lista Comedor"
+          title="Kit de Aula: Temporizador, Semáforo y Notas"
         >
-          <IconRenderer name="Utensils" className="w-4 h-4" />
-          <span>Comedor</span>
-        </a>
+          <IconRenderer name="Zap" className="w-4 h-4" />
+          <span>Kit Aula</span>
+        </button>
 
         {/* 6. Semana */}
         <button
@@ -2520,15 +3132,344 @@ export function App() {
 
       </div>
 
-      {/* MODAL PALETA DE COMANDOS / BUSCADOR CTRL+K */}
-      {isCommandPaletteOpen && (
-        <div 
-          className="fixed inset-0 z-50 flex items-start justify-center pt-16 p-4 bg-slate-950/70 backdrop-blur-md"
+      {/* MODAL KIT DE AULA INTERACTIVO (TEMPORIZADOR, SEMÁFORO, SORTEO Y NOTAS) */}
+      {isClassroomKitOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md"
           role="dialog"
           aria-modal="true"
-          aria-label="Buscador de aplicaciones y accesos directos"
+          aria-label="Kit de Aula Interactivo"
         >
-          <div className="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-indigo-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            {/* Cabecera del Kit */}
+            <div className="px-5 py-4 bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700 text-white flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+                  <IconRenderer name="Zap" className="w-5 h-5 text-amber-300" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-sm sm:text-base leading-tight">Kit de Aula & Pizarra Digital</h3>
+                  <p className="text-[11px] text-indigo-100">Herramientas rápidas para proyectar en clase o gestionar tu día (Alt+K)</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsClassroomKitOpen(false)}
+                className="p-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-xs transition"
+              >
+                ✕ Cerrar
+              </button>
+            </div>
+
+            {/* Pestañas del Kit */}
+            <div className="grid grid-cols-4 gap-1 p-2 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-xs font-extrabold">
+              <button
+                type="button"
+                onClick={() => setActiveKitTab("timer")}
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                  activeKitTab === "timer"
+                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <IconRenderer name="Timer" className="w-4 h-4" />
+                <span>Temporizador</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveKitTab("traffic")}
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                  activeKitTab === "traffic"
+                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <IconRenderer name="Activity" className="w-4 h-4" />
+                <span>Semáforo</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveKitTab("random")}
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                  activeKitTab === "random"
+                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <IconRenderer name="Dices" className="w-4 h-4" />
+                <span>Sorteo Aula</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveKitTab("notes")}
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                  activeKitTab === "notes"
+                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <IconRenderer name="StickyNote" className="w-4 h-4" />
+                <span>Mis Notas</span>
+              </button>
+            </div>
+
+            {/* Contenido de cada herramienta */}
+            <div className="p-5 overflow-y-auto space-y-5">
+              {/* TAB 1: TEMPORIZADOR DE AULA */}
+              {activeKitTab === "timer" && (
+                <div className="text-center space-y-5">
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    {[1, 3, 5, 10, 15, 20, 30].map(m => (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => startTimerPreset(m)}
+                        className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-300 border border-slate-200 dark:border-slate-700 font-extrabold text-xs transition"
+                      >
+                        {m} min
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="p-6 sm:p-8 rounded-3xl bg-slate-950 text-white border border-slate-800 shadow-inner relative overflow-hidden">
+                    <div className="text-5xl sm:text-7xl font-mono font-black tracking-wider text-amber-400">
+                      {String(Math.floor(timerSecondsLeft / 60)).padStart(2, "0")}:
+                      {String(timerSecondsLeft % 60).padStart(2, "0")}
+                    </div>
+                    <p className="text-xs text-slate-400 mt-2">
+                      {isTimerRunning ? "⏳ Cuenta atrás en curso (puedes cerrar esta ventana y seguirá en la barra superior)" : "Listo para iniciar"}
+                    </p>
+                    <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden mt-5">
+                      <div
+                        className="bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500 h-full transition-all duration-1000"
+                        style={{ width: `${timerTotalSeconds > 0 ? (timerSecondsLeft / timerTotalSeconds) * 100 : 0}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setIsTimerRunning(!isTimerRunning)}
+                      className={`px-6 py-2.5 rounded-2xl font-extrabold text-xs text-white flex items-center gap-2 shadow transition ${
+                        isTimerRunning ? "bg-amber-600 hover:bg-amber-500" : "bg-emerald-600 hover:bg-emerald-500"
+                      }`}
+                    >
+                      <IconRenderer name={isTimerRunning ? "Pause" : "Play"} className="w-4 h-4" />
+                      <span>{isTimerRunning ? "Pausar" : "Iniciar"}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsTimerRunning(false);
+                        setTimerSecondsLeft(timerTotalSeconds);
+                      }}
+                      className="px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center gap-1.5 transition"
+                    >
+                      <IconRenderer name="RotateCcw" className="w-4 h-4" />
+                      <span>Reiniciar</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setTimerSoundEnabled(!timerSoundEnabled)}
+                      className="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
+                      title={timerSoundEnabled ? "Sonido final activado" : "Sonido silenciado"}
+                    >
+                      <IconRenderer name={timerSoundEnabled ? "Volume2" : "VolumeX"} className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: SEMÁFORO DE AMBIENTE DE AULA */}
+              {activeKitTab === "traffic" && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    {[
+                      { id: "silence", label: "🔴 Silencio", desc: "Trabajo individual / Examen", color: "from-rose-600 to-red-700", ring: "ring-rose-500", emoji: "🤫" },
+                      { id: "whisper", label: "🟡 Susurro", desc: "Hablamos bajito en parejas", color: "from-amber-500 to-orange-600", ring: "ring-amber-500", emoji: "🗣️" },
+                      { id: "work", label: "🟢 Equipo", desc: "Trabajo cooperativo de grupo", color: "from-emerald-500 to-teal-600", ring: "ring-emerald-500", emoji: "🤝" },
+                      { id: "tidy", label: "🔵 Recogida", desc: "Recogemos y miramos al frente", color: "from-blue-600 to-indigo-700", ring: "ring-blue-500", emoji: "✨" }
+                    ].map(mode => (
+                      <button
+                        key={mode.id}
+                        type="button"
+                        onClick={() => setTrafficMode(mode.id)}
+                        className={`p-3 rounded-2xl border text-left transition ${
+                          trafficMode === mode.id
+                            ? `bg-slate-900 text-white border-transparent ring-2 ${mode.ring} shadow-md`
+                            : "bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"
+                        }`}
+                      >
+                        <div className="font-extrabold text-xs">{mode.label}</div>
+                        <div className="text-[10px] opacity-80 mt-0.5">{mode.desc}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {(() => {
+                    const activeInfo = {
+                      silence: { title: "SILENCIO ABSOLUTO", subtitle: "Trabajamos de forma individual y concentrada", bg: "from-rose-600 via-red-600 to-rose-700", emoji: "🤫" },
+                      whisper: { title: "MODO SUSURRO / PAREJAS", subtitle: "Hablamos en voz muy suave solo con nuestro compañero", bg: "from-amber-500 via-orange-500 to-amber-600", emoji: "🗣️" },
+                      work: { title: "TRABAJO EN EQUIPO", subtitle: "Compartimos ideas respetando el turno de palabra", bg: "from-emerald-600 via-teal-600 to-emerald-700", emoji: "🤝" },
+                      tidy: { title: "ATENCIÓN Y RECOGIDA", subtitle: "Guardamos el material, ordenamos la mesa y escuchamos", bg: "from-blue-600 via-indigo-600 to-blue-700", emoji: "✨" }
+                    }[trafficMode];
+
+                    return (
+                      <div className={`p-8 sm:p-10 rounded-3xl bg-gradient-to-br ${activeInfo.bg} text-white text-center shadow-xl space-y-2`}>
+                        <div className="text-5xl sm:text-6xl mb-2">{activeInfo.emoji}</div>
+                        <h4 className="font-black text-xl sm:text-3xl tracking-wide uppercase">{activeInfo.title}</h4>
+                        <p className="text-xs sm:text-sm text-white/90 font-medium">{activeInfo.subtitle}</p>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+
+              {/* TAB 3: SORTEO ALEATORIO DE ALUMNOS */}
+              {activeKitTab === "random" && (
+                <div className="text-center space-y-4">
+                  <div className="flex items-center justify-center gap-3">
+                    <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                      Número total de alumnos en clase:
+                    </label>
+                    <input
+                      type="number"
+                      min={2}
+                      max={60}
+                      value={studentCount}
+                      onChange={(e) => setStudentCount(e.target.value)}
+                      className="w-20 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-center font-extrabold text-sm text-slate-900 dark:text-white"
+                    />
+                  </div>
+
+                  <div className="p-8 rounded-3xl bg-slate-950 text-white border border-slate-800 shadow-inner">
+                    <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold block mb-1">
+                      Número de Lista Seleccionado
+                    </span>
+                    <div className={`text-6xl sm:text-7xl font-black font-mono ${isRollingStudent ? "text-slate-400 scale-95" : "text-emerald-400 scale-100"} transition-transform`}>
+                      {pickedStudent !== null ? `#${pickedStudent}` : "🎲"}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handlePickRandomStudent}
+                      disabled={isRollingStudent}
+                      className="px-6 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow flex items-center gap-2 transition"
+                    >
+                      <IconRenderer name="Dices" className="w-4 h-4" />
+                      <span>Sacar Alumno al Azar</span>
+                    </button>
+                    {pickedHistory.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => { setPickedHistory([]); setPickedStudent(null); }}
+                        className="px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold"
+                      >
+                        Reiniciar ronda ({pickedHistory.length}/{studentCount})
+                      </button>
+                    )}
+                  </div>
+
+                  {pickedHistory.length > 0 && (
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                      Ya han salido en esta ronda: <span className="font-mono font-bold text-slate-700 dark:text-slate-200">{pickedHistory.join(", ")}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* TAB 4: BLOC DE NOTAS Y TAREAS RÁPIDAS DEL PROFESOR */}
+              {activeKitTab === "notes" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200 flex items-center justify-between">
+                      <span>📝 Post-it Rápido Docente</span>
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Autoguardado local</span>
+                    </label>
+                    <textarea
+                      rows={6}
+                      value={teacherQuickNote}
+                      onChange={(e) => setTeacherQuickNote(e.target.value)}
+                      placeholder="Escribe aquí cualquier nota rápida del día (tutorías, recados, incidencias, ideas...)"
+                      className="w-full p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 text-xs text-slate-800 dark:text-slate-200 outline-none focus:border-amber-500 leading-relaxed resize-none"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200 block">
+                      ✅ Mis Tareas Pendientes ({teacherTodos.filter(t => !t.done).length})
+                    </label>
+                    <form onSubmit={handleAddTeacherTodo} className="flex gap-1.5">
+                      <input
+                        type="text"
+                        value={newTodoInput}
+                        onChange={(e) => setNewTodoInput(e.target.value)}
+                        placeholder="Añadir tarea rápida..."
+                        className="flex-1 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-xs outline-none focus:border-indigo-500"
+                      />
+                      <button
+                        type="submit"
+                        className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs"
+                      >
+                        +
+                      </button>
+                    </form>
+                    <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                      {teacherTodos.map(todo => (
+                        <div
+                          key={todo.id}
+                          className="flex items-center justify-between gap-2 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 text-xs"
+                        >
+                          <label className="flex items-center gap-2 cursor-pointer flex-1 min-w-0">
+                            <input
+                              type="checkbox"
+                              checked={todo.done}
+                              onChange={() =>
+                                setTeacherTodos(prev =>
+                                  prev.map(t => (t.id === todo.id ? { ...t, done: !t.done } : t))
+                                )
+                              }
+                              className="rounded text-indigo-600"
+                            />
+                            <span className={`truncate ${todo.done ? "line-through text-slate-400" : "text-slate-800 dark:text-slate-200 font-medium"}`}>
+                              {todo.text}
+                            </span>
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setTeacherTodos(prev => prev.filter(t => t.id !== todo.id))}
+                            className="text-slate-400 hover:text-rose-500 text-xs px-1"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL PALETA DE COMANDOS / SUPER BUSCADOR CTRL+K */}
+      {isCommandPaletteOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-start justify-center pt-14 p-4 bg-slate-950/70 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Buscador de aplicaciones, semanas y herramientas"
+          onClick={() => { setIsCommandPaletteOpen(false); setSearchQuery(""); }}
+        >
+          <div
+            className="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-indigo-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
             
             <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
               <IconRenderer name="Search" className="w-5 h-5 text-indigo-500 dark:text-indigo-400 shrink-0" />
@@ -2536,23 +3477,57 @@ export function App() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Escribe para buscar apps, sitios o marcadores..."
+                placeholder="Busca apps, eventos en correos semanales, herramientas o marcadores..."
                 className="w-full bg-transparent text-sm text-slate-900 dark:text-white outline-none placeholder-slate-400"
                 autoFocus
               />
               <button
                 onClick={() => { setIsCommandPaletteOpen(false); setSearchQuery(""); }}
-                className="text-xs bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white px-2 py-1 rounded-lg"
+                className="text-xs bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white px-2 py-1 rounded-lg font-bold"
               >
                 ESC
               </button>
             </div>
 
-            <div className="p-4 max-h-[60vh] overflow-y-auto space-y-4">
+            <div className="p-4 max-h-[65vh] overflow-y-auto space-y-4">
+              {/* RESULTADOS EN PROGRAMACIONES SEMANALES */}
+              {filteredSearchPlans.length > 0 && (
+                <div>
+                  <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2 px-2">
+                    📅 En Programaciones y Correos del Claustro ({filteredSearchPlans.length})
+                  </h4>
+                  <div className="space-y-1.5">
+                    {filteredSearchPlans.map(wp => (
+                      <button
+                        key={wp.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedWeekId(wp.id);
+                          setIsEmailViewExpanded(true);
+                          setIsCommandPaletteOpen(false);
+                          setSearchQuery("");
+                          setTimeout(() => {
+                            document.getElementById('programacion-semanal')?.scrollIntoView({ behavior: 'smooth' });
+                          }, 100);
+                        }}
+                        className="w-full text-left p-3 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 hover:bg-emerald-100/70 dark:hover:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-500/30 transition flex items-center justify-between gap-3"
+                      >
+                        <div className="min-w-0">
+                          <span className="font-extrabold text-xs text-slate-900 dark:text-white block truncate">{wp.weekTitle}</span>
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400 block truncate">{wp.summary}</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 shrink-0">Ver semana →</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* APLICACIONES ESCOLARES */}
               {filteredSearchApps.length > 0 && (
                 <div>
                   <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 mb-2 px-2">
-                    Aplicaciones Escolares
+                    Aplicaciones & Documentación
                   </h4>
                   <div className="space-y-1">
                     {filteredSearchApps.map(app => (
@@ -2587,6 +3562,36 @@ export function App() {
                 </div>
               )}
 
+              {/* ACCIONES Y HERRAMIENTAS RÁPIDAS */}
+              {quickActionsList.length > 0 && (
+                <div>
+                  <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-2 px-2">
+                    ⚡ Herramientas de Aula y Acciones Rápidas
+                  </h4>
+                  <div className="space-y-1">
+                    {quickActionsList.map(qa => (
+                      <button
+                        key={qa.id}
+                        type="button"
+                        onClick={() => {
+                          setIsCommandPaletteOpen(false);
+                          setSearchQuery("");
+                          qa.action();
+                        }}
+                        className="w-full text-left flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-950 hover:bg-violet-50 dark:hover:bg-violet-500/15 border border-slate-200 dark:border-slate-800 transition"
+                      >
+                        <div>
+                          <span className="font-bold text-xs text-slate-900 dark:text-white block">{qa.title}</span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 block">{qa.subtitle}</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-violet-600 dark:text-violet-400">Ejecutar →</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* MARCADORES PERSONALES */}
               {filteredSearchBookmarks.length > 0 && (
                 <div>
                   <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-2 px-2">
