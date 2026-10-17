@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import IconRenderer from './components/IconHelper';
+import {
+  SCHOOL_TEACHERS,
+  SCHOOL_CLASSROOMS,
+  SCHEDULE_PERIOD_COLUMNS,
+  TEACHER_SCHEDULES
+} from './data/schoolSchedules';
 
 function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
   return (
@@ -12,16 +18,28 @@ function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
 }
 
 const SCHOOL_PERIODS = [
-  { name: "1.ª Sesión Mañana", start: "09:00", end: "10:00", type: "class", nextEvent: "2.ª Sesión" },
-  { name: "2.ª Sesión Mañana", start: "10:00", end: "11:00", type: "class", nextEvent: "☕ Recreo" },
-  { name: "☕ Recreo / Patio", start: "11:00", end: "11:30", type: "break", nextEvent: "3.ª Sesión" },
-  { name: "3.ª Sesión Mañana", start: "11:30", end: "12:15", type: "class", nextEvent: "4.ª Sesión" },
-  { name: "4.ª Sesión Mañana", start: "12:15", end: "13:00", type: "class", nextEvent: "5.ª / Comedor EI" },
-  { name: "5.ª Sesión / Mediodía", start: "13:00", end: "14:00", type: "class", nextEvent: "🍽️ Comedor" },
-  { name: "🍽️ Comedor & Recreo", start: "14:00", end: "15:00", type: "lunch", nextEvent: "Sesión Tarde" },
-  { name: "📚 Sesión de Tarde", start: "15:00", end: "16:15", type: "class", nextEvent: "Claustro / Salida" },
-  { name: "👥 Claustro / Extraescolares", start: "16:15", end: "18:00", type: "meeting", nextEvent: "Fin de Jornada" }
+  { id: "1H", name: "1.ª Hora Mañana", start: "09:00", end: "09:45", type: "class", nextEvent: "2.ª Hora" },
+  { id: "2H", name: "2.ª Hora Mañana", start: "09:45", end: "10:30", type: "class", nextEvent: "☕ Recreo" },
+  { id: "REC", name: "☕ Recreo / Patio", start: "10:30", end: "11:00", type: "break", nextEvent: "3.ª Hora" },
+  { id: "3H", name: "3.ª Hora Mañana", start: "11:00", end: "11:45", type: "class", nextEvent: "4.ª Hora" },
+  { id: "4H", name: "4.ª Hora Mañana", start: "11:45", end: "12:30", type: "class", nextEvent: "🍽️ Comedor / Mediodía" },
+  { id: "COM", name: "🍽️ Comedor & Mediodía", start: "12:30", end: "14:15", type: "lunch", nextEvent: "5.ª Hora (Tarde)" },
+  { id: "5H", name: "5.ª Hora (Tarde)", start: "14:15", end: "15:15", type: "class", nextEvent: "6.ª Hora (Tarde)" },
+  { id: "6H", name: "6.ª Hora (Tarde)", start: "15:15", end: "16:15", type: "class", nextEvent: "Claustro / Salida" },
+  { id: "CLAU", name: "👥 Reuniones / Extraescolares", start: "16:15", end: "18:00", type: "meeting", nextEvent: "Fin de Jornada" }
 ];
+
+function getLivePeriodId(now = new Date()) {
+  const mins = now.getHours() * 60 + now.getMinutes();
+  if (mins >= 9 * 60 && mins < 9 * 60 + 45) return "1H";
+  if (mins >= 9 * 60 + 45 && mins < 10 * 60 + 30) return "2H";
+  if (mins >= 10 * 60 + 30 && mins < 11 * 60 + 45) return "3H";
+  if (mins >= 11 * 60 + 45 && mins < 12 * 60 + 30) return "4H";
+  if (mins >= 12 * 60 + 30 && mins < 15 * 60 + 15) return "5H";
+  if (mins >= 15 * 60 + 15 && mins < 16 * 60 + 30) return "6H";
+  return "1H";
+}
+
 
 function playTimerChime() {
   try {
@@ -1320,6 +1338,37 @@ export function App() {
     setNewTodoInput("");
   };
 
+  // CENTRO DE HORARIOS & RADAR DEL CENTRO EN TIEMPO REAL
+  const [myTeacherId, setMyTeacherId] = useState(() => {
+    return localStorage.getItem("sb_my_teacher_id") || "";
+  });
+  const [isScheduleCenterOpen, setIsScheduleCenterOpen] = useState(false);
+  const [scheduleCenterTab, setScheduleCenterTab] = useState("radar"); // "radar" | "teacher" | "classroom"
+  const [selectedRadarDay, setSelectedRadarDay] = useState(() => {
+    const d = new Date().getDay();
+    return d >= 1 && d <= 5 ? d - 1 : 0;
+  });
+  const [selectedRadarPeriod, setSelectedRadarPeriod] = useState(() => getLivePeriodId(new Date()));
+  const [selectedViewTeacherId, setSelectedViewTeacherId] = useState(() => {
+    return localStorage.getItem("sb_my_teacher_id") || "jos7";
+  });
+  const [selectedViewClassroom, setSelectedViewClassroom] = useState("6ºEP-B");
+  const [scheduleTeacherFilter, setScheduleTeacherFilter] = useState("");
+
+  const handleSelectMyTeacherProfile = (teacherId) => {
+    setMyTeacherId(teacherId);
+    if (teacherId) {
+      localStorage.setItem("sb_my_teacher_id", teacherId);
+      setSelectedViewTeacherId(teacherId);
+      const tObj = SCHOOL_TEACHERS.find(t => t.id === teacherId);
+      setToastMessage(`👨‍🏫 Perfil fijado: ${tObj ? tObj.name : teacherId}`);
+    } else {
+      localStorage.removeItem("sb_my_teacher_id");
+      setToastMessage("Perfil docente desvinculado");
+    }
+    setTimeout(() => setToastMessage(null), 2800);
+  };
+
   // Formulario Programación Semanal
   const [planWeekTitle, setPlanWeekTitle] = useState("");
   const [planSummary, setPlanSummary] = useState("");
@@ -1389,12 +1438,16 @@ export function App() {
         setIsAddBookmarkOpen(false);
         setIsRiddleOpen(false);
         setIsClassroomKitOpen(false);
+        setIsScheduleCenterOpen(false);
       } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setIsCommandPaletteOpen(prev => !prev);
       } else if (e.altKey && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setIsClassroomKitOpen(prev => !prev);
+      } else if (e.altKey && e.key.toLowerCase() === 'h') {
+        e.preventDefault();
+        setIsScheduleCenterOpen(prev => !prev);
       } else if (e.altKey && e.key.toLowerCase() === 'c') {
         window.open("https://comedor-san-buenaventura.vercel.app/", "_blank");
       } else if (e.altKey && e.key.toLowerCase() === 'e') {
@@ -1589,18 +1642,110 @@ export function App() {
     setPlanFullEmail(text);
   };
 
+  const handleSmartParseEmail = () => {
+    if (!planFullEmail || !planFullEmail.trim()) {
+      setToastMessage("⚠️ Primero pega el texto del correo semanal abajo para extraer los días");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    const blocks = planFullEmail.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+    const buckets = {
+      lunes: [],
+      martes: [],
+      miercoles: [],
+      jueves: [],
+      viernes: [],
+      notes: []
+    };
+
+    const summarizeBlock = (block) => {
+      const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
+      if (lines.length === 0) return "";
+      const first = lines[0];
+      const isHeading = first.length <= 75 && (first === first.toUpperCase() || first.includes("–") || first.includes("-") || !first.endsWith("."));
+      if (isHeading && lines.length > 1) {
+        const rest = lines.slice(1).join(" ");
+        const firstSentence = rest.split(/(?<=[.!?])\s+/)[0] || rest;
+        return `📌 ${first}: ${firstSentence.slice(0, 180)}`;
+      }
+      const firstSentence = block.replace(/\n+/g, " ").split(/(?<=[.!?])\s+/)[0];
+      return firstSentence.slice(0, 180);
+    };
+
+    blocks.forEach(block => {
+      const lower = block.toLowerCase();
+      // Ignorar saludos iniciales cortos o reflexión final del Evangelio
+      if (/^(hola a todos|buenos d[ií]as|estimados compa|un abrazo|feliz semana)/i.test(block) && block.length < 180) {
+        return;
+      }
+      if (/evangelio|mirada franciscana|jes[uú]s de nazaret/i.test(block)) {
+        return;
+      }
+
+      const summaryLine = summarizeBlock(block);
+      if (!summaryLine) return;
+
+      let matchedDay = false;
+      if (/\blunes\b/i.test(lower)) { buckets.lunes.push(summaryLine); matchedDay = true; }
+      if (/\bmartes\b/i.test(lower)) { buckets.martes.push(summaryLine); matchedDay = true; }
+      if (/\bmi[eé]rcoles\b/i.test(lower)) { buckets.miercoles.push(summaryLine); matchedDay = true; }
+      if (/\bjueves\b/i.test(lower)) { buckets.jueves.push(summaryLine); matchedDay = true; }
+      if (/\bviernes\b/i.test(lower)) { buckets.viernes.push(summaryLine); matchedDay = true; }
+
+      if (!matchedDay && block.length > 35) {
+        buckets.notes.push(summaryLine.replace(/^📌\s*/, ""));
+      }
+    });
+
+    if (buckets.lunes.length > 0) setPlanLunes(buckets.lunes.join("\n"));
+    if (buckets.martes.length > 0) setPlanMartes(buckets.martes.join("\n"));
+    if (buckets.miercoles.length > 0) setPlanMiercoles(buckets.miercoles.join("\n"));
+    if (buckets.jueves.length > 0) setPlanJueves(buckets.jueves.join("\n"));
+    if (buckets.viernes.length > 0) setPlanViernes(buckets.viernes.join("\n"));
+
+    if (buckets.notes.length > 0 && !planGeneralNotes.trim()) {
+      setPlanGeneralNotes(buckets.notes.slice(0, 3).join(" · "));
+    }
+    if (!planSummary.trim()) {
+      const allExtracted = [
+        ...buckets.lunes,
+        ...buckets.martes,
+        ...buckets.miercoles,
+        ...buckets.jueves,
+        ...buckets.viernes,
+        ...buckets.notes
+      ].map(s => s.replace(/^📌\s*/, "").split(":")[0]);
+      if (allExtracted.length > 0) {
+        setPlanSummary(allExtracted.slice(0, 4).join(", ") + ".");
+      }
+    }
+
+    setToastMessage("🪄 Días, notas y resumen extraídos automáticamente del correo");
+    setTimeout(() => setToastMessage(null), 3200);
+  };
+
   const handleSaveWeeklyPlan = (e) => {
     e.preventDefault();
     if (!planWeekTitle.trim()) return;
 
     const parseLines = (text) => text.split("\n").map(l => l.trim()).filter(Boolean);
 
+    // Extraer números de día si el título dice "del X al Y de Mes"
+    let dayDates = ["Lun", "Mar", "Mié", "Jue", "Vie"];
+    const rangeMatch = planWeekTitle.match(/del\s+(\d{1,2})\s+al\s+(\d{1,2})\s+de\s+([a-záéíóú]+)/i);
+    if (rangeMatch) {
+      const startDay = parseInt(rangeMatch[1], 10);
+      const monthShort = rangeMatch[3].slice(0, 3).replace(/^./, c => c.toUpperCase());
+      dayDates = [0, 1, 2, 3, 4].map(offset => `${startDay + offset} ${monthShort}`);
+    }
+
     const days = [
-      { day: "Lunes", date: "Lun", items: parseLines(planLunes) },
-      { day: "Martes", date: "Mar", items: parseLines(planMartes) },
-      { day: "Miércoles", date: "Mié", items: parseLines(planMiercoles) },
-      { day: "Jueves", date: "Jue", items: parseLines(planJueves) },
-      { day: "Viernes", date: "Vie", items: parseLines(planViernes) }
+      { day: "Lunes", date: dayDates[0], items: parseLines(planLunes) },
+      { day: "Martes", date: dayDates[1], items: parseLines(planMartes) },
+      { day: "Miércoles", date: dayDates[2], items: parseLines(planMiercoles) },
+      { day: "Jueves", date: dayDates[3], items: parseLines(planJueves) },
+      { day: "Viernes", date: dayDates[4], items: parseLines(planViernes) }
     ];
 
     const planId = editingPlanId || `plan_${Date.now()}`;
@@ -1628,14 +1773,20 @@ export function App() {
     setSelectedWeekId(planId);
     localStorage.setItem("sb_weekly_plans", JSON.stringify(updatedList));
 
-    fetch(`${FIREBASE_PLANS_URL}/${planId}.json`, {
+    // Sincronizar mapa completo en Firebase para que las semanas antiguas desmarquen isCurrent en todos los dispositivos
+    const plansMap = {};
+    updatedList.forEach(p => {
+      if (p && p.id) plansMap[p.id] = p;
+    });
+
+    fetch(`${FIREBASE_PLANS_URL}.json`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newPlan)
+      body: JSON.stringify(plansMap)
     }).catch(() => {});
 
     setIsWeeklyPlanModalOpen(false);
-    setToastMessage("📋 Programación semanal guardada y publicada");
+    setToastMessage("📋 Programación semanal guardada y sincronizada");
     setTimeout(() => setToastMessage(null), 3000);
   };
 
@@ -1933,8 +2084,29 @@ export function App() {
         return hay.includes(qLower);
       })
     : [];
+  const filteredSearchTeachers = qLower.length >= 2
+    ? SCHOOL_TEACHERS.filter(t =>
+        t.name.toLowerCase().includes(qLower) ||
+        t.dept.toLowerCase().includes(qLower)
+      )
+    : [];
+  const filteredSearchClassrooms = qLower.length >= 1
+    ? SCHOOL_CLASSROOMS.filter(c => c.toLowerCase().includes(qLower))
+    : [];
 
   const quickActionsList = [
+    {
+      id: "qa-radar",
+      title: "📡 Radar de Horarios y Aulas en Vivo (Alt+H)",
+      subtitle: "Ver quién está libre (Apoyo) o qué asignatura hay en cada aula ahora mismo",
+      action: () => { setScheduleCenterTab("radar"); setIsScheduleCenterOpen(true); }
+    },
+    {
+      id: "qa-teacher-sched",
+      title: "👨‍🏫 Cuadrantes Horarios de Profesores y Cursos",
+      subtitle: "Consultar horario semanal de los 26 docentes y las 18 clases de Primaria",
+      action: () => { setScheduleCenterTab("teacher"); setIsScheduleCenterOpen(true); }
+    },
     {
       id: "qa-timer",
       title: "⏱️ Temporizador y Cronómetro de Aula",
@@ -1975,20 +2147,24 @@ export function App() {
 
   const isDark = themeMode === "dark";
 
-  // Fecha y saludo dinámico
+  // Fecha y saludo dinámico personalizado
   const nowDateObj = new Date();
   const currentHour = nowDateObj.getHours();
+  const myTeacherObj = SCHOOL_TEACHERS.find(t => t.id === myTeacherId) || null;
+  const myShortFirstName = myTeacherObj ? myTeacherObj.name.split(" ")[0] : "Claustro";
   const greetingText = currentHour < 14
-    ? "☀️ Buenos días, Claustro"
+    ? `☀️ Buenos días, ${myShortFirstName}`
     : currentHour < 20
-    ? "🌤️ Buenas tardes, Claustro"
-    : "🌙 Buenas noches, Claustro";
+    ? `🌤️ Buenas tardes, ${myShortFirstName}`
+    : `🌙 Buenas noches, ${myShortFirstName}`;
   const formattedTodayDate = nowDateObj.toLocaleDateString('es-ES', {
     weekday: 'long',
     day: 'numeric',
     month: 'long'
   });
   const currentWeekdayIdx = nowDateObj.getDay() - 1; // 0 = Lunes ... 4 = Viernes
+  const activeDayForSchedule = (currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4) ? currentWeekdayIdx : 0;
+  const livePeriodIdNow = getLivePeriodId(nowDateObj);
 
   let activeCalendarSrc = "";
   if (activeCalTab === "unificados") {
@@ -2082,12 +2258,12 @@ export function App() {
             <button
               onClick={() => setIsCommandPaletteOpen(true)}
               className="w-full flex items-center justify-between gap-3 px-3.5 py-2 bg-slate-100/90 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 hover:border-indigo-400/50 dark:hover:border-indigo-500/40 text-xs transition-all shadow-xs group"
-              title="Buscar aplicaciones, correos semanales, herramientas o marcadores (Ctrl + K / ⌘K)"
+              title="Buscar profesores, aulas, aplicaciones, correos semanales o marcadores (Ctrl + K / ⌘K)"
             >
               <div className="flex items-center gap-2.5 min-w-0 truncate">
                 <IconRenderer name="Search" className="w-4 h-4 text-indigo-500 dark:text-indigo-400 group-hover:scale-110 transition-transform shrink-0" />
                 <span className="truncate text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200">
-                  Buscar apps, correos semanales, herramientas o marcadores...
+                  Buscar horarios de profes, cursos (ej. 6ºEP-B), apps o correos...
                 </span>
               </div>
               <kbd className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700/90 shadow-xs shrink-0">
@@ -2113,6 +2289,20 @@ export function App() {
               </button>
             )}
 
+            {/* BOTÓN HORARIOS & RADAR EN VIVO */}
+            <button
+              onClick={() => {
+                setSelectedRadarDay(activeDayForSchedule);
+                setSelectedRadarPeriod(livePeriodIdNow);
+                setIsScheduleCenterOpen(true);
+              }}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition shadow-sm active:scale-95"
+              title="Abrir Centro de Horarios Reales y Radar de Aulas/Apoyos en Vivo (Alt+H)"
+            >
+              <IconRenderer name="Compass" className="w-3.5 h-3.5 text-emerald-100 shrink-0" />
+              <span className="hidden sm:inline">Horarios & Radar</span>
+            </button>
+
             {/* BOTÓN KIT DE AULA INTERACTIVO */}
             <button
               onClick={() => setIsClassroomKitOpen(true)}
@@ -2120,9 +2310,9 @@ export function App() {
               title="Abrir Kit de Aula: Temporizador, Semáforo de Ruido, Sorteo de Alumnos y Notas (Alt+K)"
             >
               <IconRenderer name="Zap" className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-              <span className="hidden sm:inline">Kit de Aula</span>
+              <span className="hidden lg:inline">Kit Aula</span>
               {teacherTodos.filter(t => !t.done).length > 0 && (
-                <span className="hidden lg:inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] rounded-full bg-white/20 text-white font-black">
+                <span className="hidden xl:inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] rounded-full bg-white/20 text-white font-black">
                   {teacherTodos.filter(t => !t.done).length}
                 </span>
               )}
@@ -2262,7 +2452,7 @@ export function App() {
                         <IconRenderer name="RefreshCw" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         <span>Recargar última versión</span>
                       </span>
-                      <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-white">v4</span>
+                      <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-white">v5</span>
                     </button>
                   </div>
                 </div>
@@ -2463,7 +2653,7 @@ export function App() {
         {/* MAIN CONTENT AREA */}
         <main className="flex-1 min-w-0 p-4 sm:p-6 pb-28 sm:pb-8 space-y-5 overflow-y-auto">
           
-          {/* 1. CABECERA COCKPIT DIARIO + ACCESOS RÁPIDOS BENTO */}
+          {/* 1. CABECERA COCKPIT DIARIO + HORARIO EN VIVO + ACCESOS RÁPIDOS BENTO */}
           <section className="bg-gradient-to-br from-white via-white to-indigo-50/40 dark:from-slate-900 dark:via-slate-900/95 dark:to-indigo-950/20 rounded-3xl p-4 sm:p-5 border border-slate-200/90 dark:border-slate-800 shadow-xs transition-all space-y-4">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
               <div>
@@ -2474,6 +2664,24 @@ export function App() {
                   <span className="text-[11px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/15 border border-indigo-200/70 dark:border-indigo-500/30 px-2.5 py-0.5 rounded-full capitalize">
                     📅 {formattedTodayDate}
                   </span>
+
+                  {/* Selector Rápido de Perfil Docente */}
+                  <div className="inline-flex items-center gap-1.5 bg-emerald-50/90 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 px-2.5 py-0.5 rounded-full text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                    <span>👨‍🏫</span>
+                    <select
+                      value={myTeacherId}
+                      onChange={(e) => handleSelectMyTeacherProfile(e.target.value)}
+                      className="bg-transparent outline-none cursor-pointer font-bold max-w-[180px] sm:max-w-[210px] truncate"
+                      title="Elige tu nombre para ver tu horario de hoy en directo"
+                    >
+                      <option value="" className="dark:bg-slate-900">Elegir mi horario docente...</option>
+                      {SCHOOL_TEACHERS.map(t => (
+                        <option key={t.id} value={t.id} className="dark:bg-slate-900">
+                          {t.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   Panel central de Infantil y Primaria · Pulsa <kbd className="px-1.5 py-0.2 bg-slate-100 dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-700 font-mono text-[10px]">⭐</kbd> en el menú para personalizar tus accesos directos
@@ -2481,7 +2689,13 @@ export function App() {
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
-                <PeriodBellTracker onOpenClassroomKit={() => setIsClassroomKitOpen(true)} />
+                <PeriodBellTracker
+                  onOpenClassroomKit={() => {
+                    setSelectedRadarDay(activeDayForSchedule);
+                    setSelectedRadarPeriod(livePeriodIdNow);
+                    setIsScheduleCenterOpen(true);
+                  }}
+                />
                 <button
                   type="button"
                   onClick={() => {
@@ -2498,6 +2712,89 @@ export function App() {
                 </button>
               </div>
             </div>
+
+            {/* TIRA EN VIVO DEL HORARIO DE HOY SI EL DOCENTE HA ELEGIDO SU PERFIL */}
+            {myTeacherObj && (
+              <div className="p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-950/70 border border-slate-200/90 dark:border-slate-800 flex flex-col xl:flex-row xl:items-center justify-between gap-2.5">
+                <div className="flex items-center justify-between xl:justify-start gap-2 shrink-0">
+                  <span className="text-[11px] font-extrabold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                    <IconRenderer name="Clock" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    <span>Tu jornada ({["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"][activeDayForSchedule]}):</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedViewTeacherId(myTeacherObj.id);
+                      setScheduleCenterTab("teacher");
+                      setIsScheduleCenterOpen(true);
+                    }}
+                    className="xl:hidden text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+                  >
+                    Ver semana completa →
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 flex-1">
+                  {["1H", "2H", "3H", "4H", "5H", "6H"].map((pId, idx) => {
+                    const slot = TEACHER_SCHEDULES[myTeacherObj.id]?.[String(activeDayForSchedule)]?.[pId];
+                    const isNow = currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4 && livePeriodIdNow === pId;
+                    const type = slot ? slot[0] : "N";
+                    const aula = slot ? slot[1] : "";
+                    const materia = slot ? slot[2] : "Libre / Comp.";
+
+                    return (
+                      <button
+                        key={pId}
+                        type="button"
+                        onClick={() => {
+                          setSelectedViewTeacherId(myTeacherObj.id);
+                          setScheduleCenterTab("teacher");
+                          setIsScheduleCenterOpen(true);
+                        }}
+                        className={`p-2 rounded-xl border text-left transition flex flex-col justify-between ${
+                          isNow
+                            ? "ring-2 ring-emerald-500 bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/50 shadow-xs"
+                            : type === "L"
+                            ? "bg-white dark:bg-slate-900 border-indigo-200/80 dark:border-indigo-500/30"
+                            : type === "D"
+                            ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-500/30"
+                            : "bg-slate-100/70 dark:bg-slate-900/40 border-slate-200/60 dark:border-slate-800 opacity-75"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-1 text-[10px] font-bold">
+                          <span className="text-slate-500 dark:text-slate-400">{idx + 1}.ª Hora</span>
+                          {aula ? (
+                            <span className="px-1.5 py-0.2 rounded bg-indigo-600 text-white font-extrabold text-[9px]">
+                              {aula}
+                            </span>
+                          ) : type === "D" ? (
+                            <span className="px-1.5 py-0.2 rounded bg-emerald-600 text-white font-extrabold text-[9px]">
+                              APOYO
+                            </span>
+                          ) : null}
+                        </div>
+                        <div className="text-[11px] font-extrabold text-slate-900 dark:text-white truncate mt-0.5" title={materia}>
+                          {type === "L" ? materia : type === "D" ? "Disponible / Guardia" : "Sin clase lectiva"}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedViewTeacherId(myTeacherObj.id);
+                    setScheduleCenterTab("teacher");
+                    setIsScheduleCenterOpen(true);
+                  }}
+                  className="hidden xl:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-500/15 hover:bg-indigo-100 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 text-[11px] font-extrabold shrink-0 transition"
+                >
+                  <span>Mi Cuadrante</span>
+                  <IconRenderer name="ArrowUpRight" className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
 
             {/* BENTO GRID DE APLICACIONES FAVORITAS */}
             {isQuickLaunchOpen && favoriteApps.length > 0 && (
@@ -3132,6 +3429,572 @@ export function App() {
 
       </div>
 
+      {/* MODAL INTERACTIVO: RADAR EN TIEMPO REAL & VISOR DE HORARIOS DEL CENTRO */}
+      {isScheduleCenterOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Centro de Horarios y Radar en Tiempo Real"
+          onClick={() => setIsScheduleCenterOpen(false)}
+        >
+          <div
+            className="w-full max-w-6xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Cabecera del Centro de Horarios */}
+            <div className="px-5 py-4 bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-700 text-white flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center shadow-inner">
+                  <IconRenderer name="Calendar" className="w-5 h-5 text-amber-300" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-extrabold text-base sm:text-lg leading-tight">
+                      Horarios Oficiales & Radar en Vivo · Primaria
+                    </h3>
+                    <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-400/20 text-emerald-200 border border-emerald-300/30">
+                      ● 26 Docentes · 18 Aulas
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-indigo-100">
+                    Consulta quién está en cada aula ahora mismo, qué docentes están en apoyo/disponibles o explora cualquier horario (Alt+H)
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://drive.google.com/drive/folders/1d2feN-ffN6C0-m0-2312141q1a4a24D1"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold border border-white/20 transition"
+                  title="Abrir carpeta oficial de Google Drive con los cuadrantes originales"
+                >
+                  <IconRenderer name="ExternalLink" className="w-3.5 h-3.5" />
+                  <span>Drive Oficial</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setIsScheduleCenterOpen(false)}
+                  className="px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-xs transition"
+                >
+                  ✕ Cerrar
+                </button>
+              </div>
+            </div>
+
+            {/* Selector de Pestañas */}
+            <div className="grid grid-cols-3 gap-1.5 p-2 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-xs font-extrabold">
+              <button
+                type="button"
+                onClick={() => setScheduleCenterTab("radar")}
+                className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition ${
+                  scheduleCenterTab === "radar"
+                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs border border-indigo-200/60 dark:border-indigo-500/30"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>📡 Radar del Centro Ahora</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setScheduleCenterTab("teacher")}
+                className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition ${
+                  scheduleCenterTab === "teacher"
+                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs border border-indigo-200/60 dark:border-indigo-500/30"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>👨‍🏫 Horario por Profesor (26)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setScheduleCenterTab("classroom")}
+                className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition ${
+                  scheduleCenterTab === "classroom"
+                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs border border-indigo-200/60 dark:border-indigo-500/30"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>🎓 Horario por Curso / Aula (18)</span>
+              </button>
+            </div>
+
+            {/* Contenido de las Pestañas */}
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1">
+              {/* TAB 1: RADAR EN VIVO */}
+              {scheduleCenterTab === "radar" && (() => {
+                const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+                const availableTeachers = [];
+                const classroomOccupation = {};
+
+                SCHOOL_TEACHERS.forEach((t) => {
+                  const slot = TEACHER_SCHEDULES[t.id]?.[String(selectedRadarDay)]?.[selectedRadarPeriod];
+                  if (!slot) return;
+                  const [typeCode, aula, materia] = slot;
+                  if (typeCode === "D") {
+                    availableTeachers.push({ ...t, aula, materia });
+                  } else if (typeCode === "L") {
+                    const cleanAula = aula && aula !== "Sin Aula" ? aula : "Otros / Desdoble";
+                    if (!classroomOccupation[cleanAula]) classroomOccupation[cleanAula] = [];
+                    classroomOccupation[cleanAula].push({ teacher: t, materia, aula });
+                  }
+                });
+
+                const currentPeriodInfo = SCHEDULE_PERIOD_COLUMNS.find(p => p.id === selectedRadarPeriod) || SCHEDULE_PERIOD_COLUMNS[0];
+
+                return (
+                  <div className="space-y-5">
+                    {/* Barra de control de Día y Hora del Radar */}
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-slate-50 dark:bg-slate-950/90 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mr-1">
+                          Día:
+                        </span>
+                        {dayNames.map((dName, idx) => (
+                          <button
+                            key={dName}
+                            type="button"
+                            onClick={() => setSelectedRadarDay(idx)}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${
+                              selectedRadarDay === idx
+                                ? "bg-indigo-600 text-white shadow-xs"
+                                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-400"
+                            }`}
+                          >
+                            {dName}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mr-1">
+                          Tramo:
+                        </span>
+                        {SCHEDULE_PERIOD_COLUMNS.map((col) => (
+                          <button
+                            key={col.id}
+                            type="button"
+                            onClick={() => setSelectedRadarPeriod(col.id)}
+                            className={`px-2.5 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1 ${
+                              selectedRadarPeriod === col.id
+                                ? "bg-amber-500 text-slate-950 shadow-xs"
+                                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-amber-400"
+                            }`}
+                          >
+                            <span>{col.short}</span>
+                            <span className="text-[10px] opacity-75 hidden sm:inline">({col.time.split(" - ")[0]})</span>
+                          </button>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const d = currentTime.getDay();
+                            setSelectedRadarDay(d >= 1 && d <= 5 ? d - 1 : 0);
+                            setSelectedRadarPeriod(getLivePeriodId(currentTime));
+                          }}
+                          className="px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 hover:bg-emerald-200 transition"
+                          title="Volver al día y hora actual en vivo"
+                        >
+                          ⚡ Ahora mismo
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Bloque 1: Profesores Disponibles / Apoyo en este tramo */}
+                    <div className="bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/30 rounded-2xl p-4">
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                          <h4 className="font-extrabold text-xs sm:text-sm uppercase tracking-wider text-emerald-900 dark:text-emerald-300">
+                            🟢 Docentes Disponibles / Apoyo ({dayNames[selectedRadarDay]} · {currentPeriodInfo.label} {currentPeriodInfo.time})
+                          </h4>
+                        </div>
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-200/80 dark:bg-emerald-500/30 text-emerald-950 dark:text-emerald-200">
+                          {availableTeachers.length} disponibles
+                        </span>
+                      </div>
+
+                      {availableTeachers.length === 0 ? (
+                        <p className="text-xs text-slate-600 dark:text-slate-400 italic">
+                          No figuran docentes en tramo de Disponibilidad/Apoyo en esta hora concreta.
+                        </p>
+                      ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
+                          {availableTeachers.map((t) => (
+                            <button
+                              key={t.id}
+                              type="button"
+                              onClick={() => {
+                                setSelectedViewTeacherId(t.id);
+                                setScheduleCenterTab("teacher");
+                              }}
+                              className="text-left p-3 rounded-xl bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-500/30 hover:border-emerald-500 transition shadow-2xs flex items-center justify-between gap-2 group"
+                            >
+                              <div className="min-w-0">
+                                <p className="font-extrabold text-xs text-slate-900 dark:text-white truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                                  {t.name}
+                                </p>
+                                <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold truncate">
+                                  🟢 {t.materia || "Disponible / Apoyo"}
+                                </p>
+                              </div>
+                              <span className="text-[10px] font-bold text-slate-400 group-hover:text-emerald-600 shrink-0">
+                                Ver →
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Bloque 2: Mapa en vivo de las 18 Aulas de Primaria */}
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-extrabold text-xs sm:text-sm uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <span>🏫 Mapa en Vivo de las 18 Aulas de Primaria</span>
+                          <span className="text-[11px] font-normal text-slate-500 dark:text-slate-400">
+                            (Haz clic en cualquier aula para abrir el horario completo del grupo)
+                          </span>
+                        </h4>
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+                        {SCHOOL_CLASSROOMS.map((aula) => {
+                          const entries = classroomOccupation[aula] || [];
+                          return (
+                            <button
+                              key={aula}
+                              type="button"
+                              onClick={() => {
+                                setSelectedViewClassroom(aula);
+                                setScheduleCenterTab("classroom");
+                              }}
+                              className="text-left p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/80 hover:bg-indigo-50/70 dark:hover:bg-indigo-950/30 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 transition flex flex-col justify-between min-h-[92px] group"
+                            >
+                              <div className="flex items-center justify-between gap-1 mb-1.5">
+                                <span className="px-2 py-0.5 rounded-lg text-[11px] font-black bg-indigo-600 text-white">
+                                  {aula}
+                                </span>
+                                <span className="text-[10px] font-bold text-slate-400 group-hover:text-indigo-500">
+                                  Horario →
+                                </span>
+                              </div>
+                              {entries.length === 0 ? (
+                                <p className="text-[11px] text-slate-400 dark:text-slate-500 italic">
+                                  Especialidad externa / Sin registro
+                                </p>
+                              ) : (
+                                <div className="space-y-1">
+                                  {entries.map((item, i) => (
+                                    <div key={i} className="border-l-2 border-indigo-500 pl-1.5">
+                                      <p className="text-[11px] font-extrabold text-slate-900 dark:text-white leading-tight truncate">
+                                        {item.materia}
+                                      </p>
+                                      <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                        {item.teacher.name}
+                                      </p>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* TAB 2: HORARIO POR PROFESOR */}
+              {scheduleCenterTab === "teacher" && (() => {
+                const currentTeacher = SCHOOL_TEACHERS.find(t => t.id === selectedViewTeacherId) || SCHOOL_TEACHERS[0];
+                const teacherSched = TEACHER_SCHEDULES[currentTeacher.id] || {};
+                const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+
+                // Calcular resumen de horas del profesor
+                let totalLectivas = 0;
+                let totalApoyos = 0;
+                const aulasImpartidas = new Set();
+                for (let d = 0; d < 5; d++) {
+                  SCHEDULE_PERIOD_COLUMNS.forEach(col => {
+                    const slot = teacherSched[String(d)]?.[col.id];
+                    if (slot) {
+                      if (slot[0] === "L") {
+                        totalLectivas++;
+                        if (slot[1] && slot[1] !== "Sin Aula") aulasImpartidas.add(slot[1]);
+                      } else if (slot[0] === "D") {
+                        totalApoyos++;
+                      }
+                    }
+                  });
+                }
+
+                return (
+                  <div className="space-y-4">
+                    {/* Selector de docente + Botón para fijar como Mi Perfil */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
+                      <div className="flex flex-wrap items-center gap-3 flex-1">
+                        <label className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                          Docente:
+                        </label>
+                        <select
+                          value={currentTeacher.id}
+                          onChange={(e) => setSelectedViewTeacherId(e.target.value)}
+                          className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white outline-none focus:border-indigo-500 min-w-[250px]"
+                        >
+                          {SCHOOL_TEACHERS.map(t => (
+                            <option key={t.id} value={t.id}>
+                              {t.name} ({t.dept})
+                            </option>
+                          ))}
+                        </select>
+
+                        <button
+                          type="button"
+                          onClick={() => handleSelectMyTeacherProfile(currentTeacher.id)}
+                          className={`px-3 py-2 rounded-xl text-xs font-extrabold border transition flex items-center gap-1.5 ${
+                            myTeacherId === currentTeacher.id
+                              ? "bg-emerald-600 text-white border-emerald-500 shadow-xs"
+                              : "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/30 hover:bg-indigo-100"
+                          }`}
+                        >
+                          <span>{myTeacherId === currentTeacher.id ? "✓ Es mi horario fijado en portada" : "📌 Fijar como Mi Horario en Portada"}</span>
+                        </button>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
+                        <span className="px-2.5 py-1 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300">
+                          📚 {totalLectivas} sesiones lectivas
+                        </span>
+                        <span className="px-2.5 py-1 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                          🟢 {totalApoyos} apoyos/disp.
+                        </span>
+                        {aulasImpartidas.size > 0 && (
+                          <span className="px-2.5 py-1 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-900 dark:text-amber-300">
+                            🏫 Grupos: {Array.from(aulasImpartidas).join(", ")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Tabla de Horario Semanal del Profesor */}
+                    <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                      <table className="w-full text-left border-collapse min-w-[720px]">
+                        <thead>
+                          <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                            <th className="p-3 w-36">Hora / Tramo</th>
+                            {dayNames.map((dName, idx) => (
+                              <th key={dName} className={`p-3 ${currentTime.getDay() - 1 === idx ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/30" : ""}`}>
+                                {dName} {currentTime.getDay() - 1 === idx && " (Hoy)"}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                          {SCHEDULE_PERIOD_COLUMNS.map((col, rowIdx) => (
+                            <React.Fragment key={col.id}>
+                              {/* Fila separadora de Recreo o Comedor */}
+                              {rowIdx === 2 && (
+                                <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
+                                  <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                    ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
+                                  </td>
+                                </tr>
+                              )}
+                              {rowIdx === 4 && (
+                                <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
+                                  <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                    🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía
+                                  </td>
+                                </tr>
+                              )}
+                              <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                                <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                                  <span className="block text-xs text-indigo-600 dark:text-indigo-400">{col.label}</span>
+                                  <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
+                                </td>
+                                {[0, 1, 2, 3, 4].map((dIdx) => {
+                                  const slot = teacherSched[String(dIdx)]?.[col.id];
+                                  if (!slot) {
+                                    return <td key={dIdx} className="p-2.5 text-slate-400 italic">—</td>;
+                                  }
+                                  const [typeCode, aula, materia] = slot;
+                                  const isLectiva = typeCode === "L";
+                                  const isDisp = typeCode === "D";
+                                  return (
+                                    <td key={dIdx} className="p-2 align-top">
+                                      <div
+                                        className={`p-2.5 rounded-xl border h-full transition ${
+                                          isLectiva
+                                            ? "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-200/80 dark:border-indigo-500/30"
+                                            : isDisp
+                                            ? "bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-500/30"
+                                            : "bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800 opacity-60"
+                                        }`}
+                                      >
+                                        <div className="flex items-center justify-between gap-1 mb-1">
+                                          <span
+                                            className={`px-1.5 py-0.5 rounded text-[10px] font-black ${
+                                              isLectiva
+                                                ? "bg-indigo-600 text-white cursor-pointer hover:bg-indigo-500"
+                                                : isDisp
+                                                ? "bg-emerald-600 text-white"
+                                                : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                                            }`}
+                                            onClick={() => {
+                                              if (isLectiva && SCHOOL_CLASSROOMS.includes(aula)) {
+                                                setSelectedViewClassroom(aula);
+                                                setScheduleCenterTab("classroom");
+                                              }
+                                            }}
+                                            title={isLectiva && SCHOOL_CLASSROOMS.includes(aula) ? `Ver horario de ${aula}` : ""}
+                                          >
+                                            {isLectiva ? (aula !== "Sin Aula" ? aula : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
+                                          </span>
+                                        </div>
+                                        <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
+                                          {isLectiva ? materia : isDisp ? "Disponibilidad / Sustitución" : "Sin sesión lectiva"}
+                                        </p>
+                                      </div>
+                                    </td>
+                                  );
+                                })}
+                              </tr>
+                            </React.Fragment>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* TAB 3: HORARIO POR CURSO / AULA */}
+              {scheduleCenterTab === "classroom" && (() => {
+                const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+
+                return (
+                  <div className="space-y-4">
+                    {/* Selector rápido de las 18 Aulas */}
+                    <div className="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                          Selecciona Curso y Grupo de Educación Primaria:
+                        </span>
+                        <span className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400">
+                          Aula activa: {selectedViewClassroom}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {SCHOOL_CLASSROOMS.map((aula) => (
+                          <button
+                            key={aula}
+                            type="button"
+                            onClick={() => setSelectedViewClassroom(aula)}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
+                              selectedViewClassroom === aula
+                                ? "bg-indigo-600 text-white shadow-xs scale-105"
+                                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-400"
+                            }`}
+                          >
+                            {aula}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Tabla del Horario del Grupo */}
+                    <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                      <table className="w-full text-left border-collapse min-w-[720px]">
+                        <thead>
+                          <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                            <th className="p-3 w-36">Hora / Tramo</th>
+                            {dayNames.map((dName, idx) => (
+                              <th key={dName} className={`p-3 ${currentTime.getDay() - 1 === idx ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/30" : ""}`}>
+                                {dName} {currentTime.getDay() - 1 === idx && " (Hoy)"}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                          {SCHEDULE_PERIOD_COLUMNS.map((col, rowIdx) => (
+                            <React.Fragment key={col.id}>
+                              {rowIdx === 2 && (
+                                <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
+                                  <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                    ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
+                                  </td>
+                                </tr>
+                              )}
+                              {rowIdx === 4 && (
+                                <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
+                                  <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                    🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía
+                                  </td>
+                                </tr>
+                              )}
+                              <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                                <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                                  <span className="block text-xs text-indigo-600 dark:text-indigo-400">{col.label}</span>
+                                  <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
+                                </td>
+                                {[0, 1, 2, 3, 4].map((dIdx) => {
+                                  const matches = [];
+                                  SCHOOL_TEACHERS.forEach((t) => {
+                                    const slot = TEACHER_SCHEDULES[t.id]?.[String(dIdx)]?.[col.id];
+                                    if (slot && slot[0] === "L" && slot[1] === selectedViewClassroom) {
+                                      matches.push({ teacher: t, materia: slot[2] });
+                                    }
+                                  });
+
+                                  return (
+                                    <td key={dIdx} className="p-2 align-top">
+                                      {matches.length === 0 ? (
+                                        <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 text-slate-400 italic text-[11px]">
+                                          Especialidad / Otro docente
+                                        </div>
+                                      ) : (
+                                        <div className="space-y-1.5">
+                                          {matches.map((m, i) => (
+                                            <button
+                                              key={i}
+                                              type="button"
+                                              onClick={() => {
+                                                setSelectedViewTeacherId(m.teacher.id);
+                                                setScheduleCenterTab("teacher");
+                                              }}
+                                              className="w-full text-left p-2.5 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-500/30 hover:border-indigo-500 transition group"
+                                            >
+                                              <p className="font-extrabold text-xs text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                                                {m.materia}
+                                              </p>
+                                              <p className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 truncate mt-0.5">
+                                                👨‍🏫 {m.teacher.name}
+                                              </p>
+                                            </button>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </td>
+                                  );
+                                })}
+                              </tr>
+                            </React.Fragment>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* MODAL KIT DE AULA INTERACTIVO (TEMPORIZADOR, SEMÁFORO, SORTEO Y NOTAS) */}
       {isClassroomKitOpen && (
         <div
@@ -3477,7 +4340,7 @@ export function App() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Busca apps, eventos en correos semanales, herramientas o marcadores..."
+                placeholder="Busca profesores, cursos (ej. 5ºEP-A), apps, correos semanales o herramientas..."
                 className="w-full bg-transparent text-sm text-slate-900 dark:text-white outline-none placeholder-slate-400"
                 autoFocus
               />
@@ -3490,6 +4353,69 @@ export function App() {
             </div>
 
             <div className="p-4 max-h-[65vh] overflow-y-auto space-y-4">
+              {/* RESULTADOS EN HORARIOS DE PROFESORES Y AULAS */}
+              {(filteredSearchTeachers.length > 0 || filteredSearchClassrooms.length > 0) && (
+                <div>
+                  <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 mb-2 px-2">
+                    🕒 Horarios Oficiales de Profesores y Cursos
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                    {filteredSearchTeachers.map((t) => (
+                      <button
+                        key={`t-${t.id}`}
+                        type="button"
+                        onClick={() => {
+                          setSelectedViewTeacherId(t.id);
+                          setScheduleCenterTab("teacher");
+                          setIsScheduleCenterOpen(true);
+                          setIsCommandPaletteOpen(false);
+                          setSearchQuery("");
+                        }}
+                        className="text-left p-2.5 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 border border-indigo-200 dark:border-indigo-500/30 transition flex items-center justify-between gap-2"
+                      >
+                        <div className="min-w-0">
+                          <span className="font-extrabold text-xs text-slate-900 dark:text-white block truncate">
+                            👨‍🏫 {t.name}
+                          </span>
+                          <span className="text-[10px] text-indigo-600 dark:text-indigo-400 block truncate">
+                            {t.dept} · Ver horario semanal
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 shrink-0">
+                          Horario →
+                        </span>
+                      </button>
+                    ))}
+                    {filteredSearchClassrooms.map((aula) => (
+                      <button
+                        key={`c-${aula}`}
+                        type="button"
+                        onClick={() => {
+                          setSelectedViewClassroom(aula);
+                          setScheduleCenterTab("classroom");
+                          setIsScheduleCenterOpen(true);
+                          setIsCommandPaletteOpen(false);
+                          setSearchQuery("");
+                        }}
+                        className="text-left p-2.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/25 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-200 dark:border-amber-500/30 transition flex items-center justify-between gap-2"
+                      >
+                        <div>
+                          <span className="font-extrabold text-xs text-slate-900 dark:text-white block">
+                            🏫 Curso / Aula {aula}
+                          </span>
+                          <span className="text-[10px] text-amber-700 dark:text-amber-400 block">
+                            Ver cuadrante de asignaturas y profesores
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold text-amber-800 dark:text-amber-300 shrink-0">
+                          Aula →
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* RESULTADOS EN PROGRAMACIONES SEMANALES */}
               {filteredSearchPlans.length > 0 && (
                 <div>
@@ -4331,29 +5257,40 @@ export function App() {
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                     <label className="text-slate-700 dark:text-slate-300 font-bold block">
                       ✉️ Texto Completo del Correo Semanal para el Claustro
                     </label>
-                    <button
-                      type="button"
-                      onClick={handleAutoGenerateEmail}
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 px-2.5 py-1 rounded-lg border border-indigo-200 dark:border-indigo-500/30 transition"
-                      title="Generar automáticamente el texto del correo con la información de los días"
-                    >
-                      <IconRenderer name="Sparkles" className="w-3 h-3 text-amber-500" />
-                      <span>✨ Auto-generar Borrador de Mail</span>
-                    </button>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={handleSmartParseEmail}
+                        className="inline-flex items-center gap-1 text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 dark:hover:text-emerald-200 bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 px-2.5 py-1 rounded-lg border border-emerald-300 dark:border-emerald-500/40 transition shadow-2xs"
+                        title="Pega el correo semanal abajo y pulsa aquí para rellenar automáticamente Lunes a Viernes y Notas"
+                      >
+                        <IconRenderer name="Zap" className="w-3 h-3 text-emerald-500" />
+                        <span>🪄 Extraer Días desde este Correo</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleAutoGenerateEmail}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 px-2.5 py-1 rounded-lg border border-indigo-200 dark:border-indigo-500/30 transition"
+                        title="Generar automáticamente el texto del correo con la información de los días"
+                      >
+                        <IconRenderer name="Sparkles" className="w-3 h-3 text-amber-500" />
+                        <span>✨ Auto-generar Borrador de Mail</span>
+                      </button>
+                    </div>
                   </div>
                   <textarea
                     rows={6}
                     value={planFullEmail}
                     onChange={(e) => setPlanFullEmail(e.target.value)}
-                    placeholder="Escribe o edita aquí el texto completo del correo del claustro..."
+                    placeholder="Pega aquí el correo semanal del claustro y pulsa '🪄 Extraer Días desde este Correo', o escribe los días arriba y pulsa '✨ Auto-generar Borrador'..."
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white font-mono leading-relaxed outline-none focus:border-indigo-500"
                   />
                   <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
-                    💡 Puedes escribir o editar libremente el texto de este correo. Es el que se copiará al pulsar "Copiar Mail".
+                    💡 Truco: Pega el texto de tu correo semanal aquí y pulsa <strong>"🪄 Extraer Días desde este Correo"</strong> para repartir automáticamente los eventos de Lunes a Viernes sin saturar el calendario.
                   </p>
                 </div>
 
