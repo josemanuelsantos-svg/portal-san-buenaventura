@@ -1259,10 +1259,23 @@ export function App() {
     return (d >= 1 && d <= 5) ? d - 1 : 0;
   });
 
-  // ACCESOS RÁPIDOS BENTO & FAVORITOS
-  const DEFAULT_FAVORITES = ["comedor", "educamos", "orientacion-sb", "reserva-dispositivos", "incidencias", "recogida-infantil"];
+  // ACCESOS RÁPIDOS BENTO & FAVORITOS DE PORTADA (TOP 5 APPS ESCOLARES)
+  const FAVORITES_SCHEMA_VERSION = "2026-10-18-top5-apps";
+  const DEFAULT_FAVORITES = [
+    "comedor",
+    "orientacion-sb",
+    "incidencias",
+    "recogida-infantil",
+    "alumnos-extraescolares"
+  ];
   const [favoriteAppIds, setFavoriteAppIds] = useState(() => {
     try {
+      const savedVersion = localStorage.getItem("sb_favorites_version");
+      if (savedVersion !== FAVORITES_SCHEMA_VERSION) {
+        localStorage.setItem("sb_favorite_apps", JSON.stringify(DEFAULT_FAVORITES));
+        localStorage.setItem("sb_favorites_version", FAVORITES_SCHEMA_VERSION);
+        return DEFAULT_FAVORITES;
+      }
       const saved = localStorage.getItem("sb_favorite_apps");
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -2852,7 +2865,7 @@ export function App() {
 
             {/* BENTO GRID DE APLICACIONES FAVORITAS */}
             {isQuickLaunchOpen && favoriteApps.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 pt-1">
                 {favoriteApps.map(app => (
                   <a
                     key={app.id}
@@ -3410,75 +3423,77 @@ export function App() {
 
       </div>
 
-      {/* BARRA DE NAVEGACIÓN INFERIOR MÓVIL OPTIMIZADA (FLOATING DOCK FLUIDO) */}
-      <div className="md:hidden fixed bottom-3 left-2 right-2 sm:left-4 sm:right-4 z-40 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 backdrop-blur-xl px-1.5 py-1.5 rounded-2xl flex items-center justify-around shadow-2xl">
+      {/* BARRA DE NAVEGACIÓN INFERIOR MÓVIL OPTIMIZADA (TOP 5 APPS ESCOLARES) */}
+      <div className="md:hidden fixed bottom-3 left-2 right-2 sm:left-4 sm:right-4 z-40 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 backdrop-blur-xl px-1 py-1.5 rounded-2xl flex items-center justify-around shadow-2xl">
         
-        {/* 1. Menú Apps */}
-        <button
-          onClick={() => setIsSidebarOpen(true)}
-          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
-          title="Abrir Menú de Aplicaciones"
-        >
-          <IconRenderer name="Menu" className="w-4 h-4" />
-          <span>Menú</span>
-        </button>
-
-        {/* 2. Comedor */}
+        {/* 1. Comedor */}
         <a
           href="https://comedor-san-buenaventura.vercel.app/"
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          className="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400 font-bold text-[9px] p-1 rounded-xl active:scale-95 transition"
           title="Pase de lista Comedor"
         >
           <IconRenderer name="Utensils" className="w-4 h-4" />
           <span>Comedor</span>
         </a>
 
-        {/* 3. Dispositivos */}
-        <a
-          href="https://gestion-dispositivos-three.vercel.app/#view-calendar"
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 text-pink-600 dark:text-pink-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
-          title="Reserva de Chromebooks e iPads"
-        >
-          <IconRenderer name="Laptop2" className="w-4 h-4" />
-          <span>Equipos</span>
-        </a>
-
-        {/* 4. Orientación Escolar */}
+        {/* 2. Orientación */}
         <a
           href="https://orientacion.vercel.app/"
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 text-teal-600 dark:text-teal-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
+          className="flex flex-col items-center gap-0.5 text-teal-600 dark:text-teal-400 font-bold text-[9px] p-1 rounded-xl active:scale-95 transition"
           title="Orientación Escolar & DUA"
         >
           <IconRenderer name="Brain" className="w-4 h-4" />
           <span>Orientación</span>
         </a>
 
-        {/* 5. Kit de Aula */}
-        <button
-          onClick={() => setIsClassroomKitOpen(true)}
-          className="flex flex-col items-center gap-0.5 text-amber-600 dark:text-amber-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
-          title="Kit de Aula: Temporizador, Semáforo y Notas"
+        {/* 3. Incidencias & TIC */}
+        <a
+          href="https://incidencias-colegio-1wx3.vercel.app/"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center gap-0.5 text-cyan-600 dark:text-cyan-400 font-bold text-[9px] p-1 rounded-xl active:scale-95 transition"
+          title="Incidencias & TIC"
         >
-          <IconRenderer name="Zap" className="w-4 h-4" />
-          <span>Kit Aula</span>
-        </button>
+          <IconRenderer name="Wrench" className="w-4 h-4" />
+          <span>Incidencias</span>
+        </a>
 
-        {/* 6. Semana */}
-        <button
-          onClick={() => {
-            document.getElementById('programacion-semanal')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[9px] sm:text-[10px] p-1 rounded-xl active:scale-95 transition"
-          title="Programación Semanal del Claustro"
+        {/* 4. Recogidas (Infantil) */}
+        <a
+          href="https://recogida-infantil.vercel.app/"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center gap-0.5 text-amber-600 dark:text-amber-400 font-bold text-[9px] p-1 rounded-xl active:scale-95 transition"
+          title="Recogida Infantil"
         >
-          <IconRenderer name="ClipboardList" className="w-4 h-4" />
-          <span>Semana</span>
+          <IconRenderer name="UserCheck" className="w-4 h-4" />
+          <span>Recogidas</span>
+        </a>
+
+        {/* 5. Alumnos Extraescolares */}
+        <a
+          href="https://alumnos-extraescolares-csb.vercel.app/"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[9px] p-1 rounded-xl active:scale-95 transition"
+          title="Alumnos Extraescolares"
+        >
+          <IconRenderer name="Users" className="w-4 h-4" />
+          <span>Extraesc.</span>
+        </a>
+
+        {/* 6. Menú General */}
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className="flex flex-col items-center gap-0.5 text-slate-600 dark:text-slate-400 font-bold text-[9px] p-1 rounded-xl active:scale-95 transition"
+          title="Abrir Menú Completo de Aplicaciones"
+        >
+          <IconRenderer name="Menu" className="w-4 h-4" />
+          <span>Menú</span>
         </button>
 
       </div>
