@@ -342,13 +342,67 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-19-23-oct-2026",
+    weekTitle: "Semana del 19 al 23 de Octubre: Museo Naval (5.º), Salida de Infantil y Reuniones de Ciclo",
+    academicYear: "2026/2027",
+    summary: "Salida al Museo Naval para 5.º B y 5.º C el martes, Salida de Infantil a la Casa de Campo el viernes, reuniones de ciclo y decoración de otoño el jueves, inicio de catequesis (3.º y 4.º) y reparto de circulares y sobres de actividades.",
+    publishedAt: "2026-10-18",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1792368000000,
+    days: [
+      {
+        day: "Lunes",
+        date: "19 Oct",
+        items: [
+          "✝️ Comienzo de Catequesis (3.º y 4.º EP): comen primero y van después a las 12:30h (registro habitual en app de comedor, sin diferenciar).",
+          "✉️ Circulares de Actividades: publicación y reparto de sobres por las aulas para recoger el dinero."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "20 Oct",
+        items: [
+          "⚓ Salida Museo Naval (5.º B y 5.º C): por la mañana. Acompañan Paula Gómez, Álvaro Fernández e Isabel Peña.",
+          "🔄 Cobertura de clases: quien tenga clase en 5.º B o 5.º C acude al grupo que le correspondiera a Paula o Álvaro según horario."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "21 Oct",
+        items: [
+          "📊 Actividades: registrar los pagos recibidos en el Excel de cada curso (enlazado en el portal).",
+          "🎒 5 Años: tutoras, enviar recordatorio a familias por Educamos sobre autorización y picnic de Parque Europa (salida 29 oct)."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "22 Oct",
+        items: [
+          "🍂 16:15 Reunión Infantil: Decoración de otoño conjunta con hojas y posterior trabajo por niveles.",
+          "👥 16:15 Reunión Primaria: Trabajo por líneas y ciclos (coordinación de Tejiendo Redes entre niveles, programación y proyectos)."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "23 Oct",
+        items: [
+          "🍁 Salida Infantil a la Casa de Campo: observación del otoño (revisar autorizaciones en Educamos → Autorizaciones o agenda).",
+          "📬 Recogida de sobres con el dinero de las actividades por las clases."
+        ]
+      }
+    ],
+    generalNotes: "Catequesis (3.º y 4.º): comen primero y a las 12:30h van a catequesis; registrar en la app de comedor el número habitual de alumnos sin diferenciar. Martes 20: Visita al Museo Naval (5.º B y 5.º C con Paula, Álvaro e Isabel; quien tenga clase con ellos asume el grupo de Paula o Álvaro). Jueves 22: Reunión de Infantil a las 16:15h (decoración de otoño y trabajo por niveles) y Primaria por líneas y ciclos (Tejiendo Redes, programación). Viernes 23: Salida de Infantil a la Casa de Campo (revisar autorizaciones en Educamos; válida también por agenda) y recogida de sobres de actividades. Recordatorio 5 Años: Salida a Parque Europa el 29 de octubre (picnic automático para comensales habituales; avisar 3 días antes si se renuncia).",
+    fullEmailText: "Hola a todos, vamos con otra semana de un tiempo que por fin parece terminar con el verano…\n\nCOMIENZO DE LA CATEQUESIS\nEsta semana comienza ya la catequesis para los alumnos de 3.º y 4.º de Primaria.\nFinalmente, como la catequesis comienza a las 12:30, no es necesario indicar en la aplicación del comedor qué alumnos van a catequesis y cuáles no.\nEsto se hizo únicamente al comienzo del curso pasado, cuando la organización era diferente, pero posteriormente los alumnos pasaron a comer primero y acudir después a catequesis.\nComo este curso seguimos el mismo funcionamiento, tanto en 3.º como en 4.º de Primaria basta con registrar en la aplicación del comedor el número habitual de alumnos que hacen uso del servicio, sin diferenciar cuáles van después a catequesis.\n\nCIRCULARES DE ACTIVIDADES Y PAGOS\nEsta semana se publicarán también las circulares de actividades de cada curso.\nOs iré repartiendo por las clases el sobre para recoger el dinero de las actividades correspondientes.\nEl viernes recogeré los sobres para guardar el dinero que se haya ido entregando durante la semana.\nImportante: conforme los alumnos vayan realizando los pagos, recordad registrarlos también en el Excel de pagos de vuestro curso, que tenéis hipervinculado directamente en el portal de actividades.\n\nMUSEO NAVAL – 5.º B Y 5.º C\nEl martes 20 de octubre, por la mañana, los grupos de 5.º B y 5.º C realizarán la visita al Museo Naval.\nLos grupos irán acompañados por sus tutores, Paula Gómez y Álvaro Fernández, junto con Isabel Peña. Durante el tiempo que estén fuera, cualquier profesor que tuviera clase con 5.º B o 5.º C deberá acudir al grupo en el que, según el horario, Paula o Álvaro tendrían clase en ese momento.\n\nREUNIÓN DEL JUEVES – PRIMARIA\nEste jueves continuaremos con trabajo de curso y de ciclo.\nEn Primaria, cada curso puede organizarse por líneas para seguir preparando y coordinando el trabajo que tenga pendiente y, cuando sea necesario, hacerlo también por ciclos. Especialmente podemos aprovechar para avanzar cuestiones que necesitamos coordinar entre niveles, como Tejiendo Redes de Compromiso Social, que este curso, como ya comentamos, vamos a desarrollar compartiendo el trabajo dentro de cada ciclo.\nAdemás de esto, programación, organización de contenidos, actividades, proyectos... cada equipo sabe qué tiene pendiente y qué necesita sacar adelante.\n\nREUNIÓN DEL JUEVES – INFANTIL\nEn Infantil comenzaremos el jueves todos juntos a las 16:15 para realizar la decoración de otoño del colegio con las hojas.\nUna vez terminada la decoración, continuaremos trabajando por niveles. La idea es comprobar primero que hemos terminado aquello que estaba previsto para la reunión del jueves pasado y, a partir de ahí, que cada nivel trabaje sobre las necesidades que tenga en este momento: proyectos, EntusiasMAT, SITE, programación, secuenciación, preparación de actividades, etc.\n\nSALIDA DE INFANTIL A LA CASA DE CAMPO\nEl viernes, si el tiempo nos acompaña, Infantil realizará su salida a la Casa de Campo para observar el otoño.\nEs importante que durante estos días todas las tutoras reviséis en Educamos → Autorizaciones que los alumnos tengan correctamente autorizada la salida. Si alguna familia no lo ha hecho todavía mediante la plataforma, puede servirnos también una autorización escrita en la agenda, pero intentemos poco a poco acostumbrar a las familias a realizar este tipo de gestiones desde Educamos.\nSobre todo porque a nosotros nos facilita muchísimo tener una única vía donde consultar las autorizaciones, en lugar de terminar revisando Educamos, agendas, correos y algún papel que aparece misteriosamente en una mochila.\n\n5 AÑOS – PARQUE EUROPA\nRecordatorio también de que el próximo 29 de octubre, los grupos de 5 años realizarán su visita al Parque Europa.\nLa autorización ya está publicada en Educamos, por lo que podéis ir comprobando durante estos días qué alumnos están correctamente autorizados.\nAdemás, importante respecto al picnic del comedor: A los alumnos que sean usuarios habituales del comedor se les preparará automáticamente el picnic para la excursión.\nSi una familia no quiere el picnic, debe comunicarlo con un mínimo de tres días de antelación. Si no comunica nada, se preparará igualmente. Aunque el alumno lleve su propio bocadillo, el picnic se le entregará porque forma parte del servicio que tiene contratado y no se ha solicitado su renuncia. El picnic se prepara únicamente para los alumnos que están inscritos habitualmente en el servicio de comedor.\nElena ya ha enviado una comunicación general sobre ello, pero os pediría a las tutoras de 5 años que a lo largo de la semana mandéis también un pequeño recordatorio a vuestras familias, tanto de la salida como de la autorización y del funcionamiento del picnic.\n\n“Dad al César lo que es del César y a Dios lo que es de Dios Y al líder todo lo demás.”\nY quizá, llevado a nuestro trabajo, tenga mucho que ver con dar a cada cosa su lugar.\nComo profesores tenemos horarios, programaciones, evaluaciones, reuniones, plataformas y, algunos privilegiados, unas cuantas aplicaciones más de las estrictamente necesarias 😅. Todo eso forma parte del trabajo.\nPero hay algo igual de importante que no aparece en ningún documento: cómo miramos al alumno y cómo miramos al compañero. Al niño que necesita un poco más de tiempo, pero también al que trabaja a nuestro lado. Al que preguntamos cómo está, con el que compartimos un café o al que simplemente escuchamos cinco minutos aunque ese día vayamos todos con prisa.\nPorque educar bien también pasa por cuidar a quienes tenemos delante y a quienes caminan a nuestro lado. Esta semana habrá mucho que hacer. Hagámoslo, pero sin perder de vista para quién lo hacemos y con quién lo hacemos.\n\nQue tengamos una muy buena semana.\nUn abrazo."
+  },
+  {
     id: "plan-semana-13-16-oct-2026",
     weekTitle: "Semana del 13 al 16 de Octubre: Inicio de Catequesis, Tejiendo Redes y Trabajo por Niveles",
     academicYear: "2026/2027",
     summary: "Inicio de catequesis (martes 1.ª etapa; control de comensales), nuevo enfoque por ciclos en Tejiendo Redes de Primaria, reuniones del jueves para trabajo por niveles y consulta en la app de Orientación.",
     publishedAt: "2026-10-12",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1791763200000,
     days: [
       {
