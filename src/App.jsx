@@ -4,7 +4,11 @@ import {
   SCHOOL_TEACHERS,
   SCHOOL_CLASSROOMS,
   SCHEDULE_PERIOD_COLUMNS,
-  TEACHER_SCHEDULES
+  TEACHER_SCHEDULES,
+  DANIEL_ASENJO_DRIVE_URL,
+  DANIEL_ASENJO_CUSTOM_TIMETABLE,
+  DANIEL_ASENJO_STUDENTS,
+  DANIEL_ASENJO_OBSERVATIONS
 } from './data/schoolSchedules';
 
 function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
@@ -1419,6 +1423,7 @@ export function App() {
   const [selectedViewTeacherId, setSelectedViewTeacherId] = useState(() => {
     return localStorage.getItem("sb_my_teacher_id") || "jos7";
   });
+  const [asenjoScheduleTab, setAsenjoScheduleTab] = useState("horario"); // "horario" | "alumnos" | "cuadricula" 
   const [selectedViewClassroom, setSelectedViewClassroom] = useState("6ºEP-B");
   const [scheduleTeacherFilter, setScheduleTeacherFilter] = useState("");
 
@@ -2801,52 +2806,106 @@ export function App() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 flex-1">
-                  {["1H", "2H", "3H", "4H", "5H", "6H"].map((pId, idx) => {
-                    const slot = TEACHER_SCHEDULES[myTeacherObj.id]?.[String(activeDayForSchedule)]?.[pId];
-                    const isNow = currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4 && livePeriodIdNow === pId;
-                    const type = slot ? slot[0] : "N";
-                    const aula = slot ? slot[1] : "";
-                    const materia = slot ? slot[2] : "Libre / Comp.";
+                {myTeacherObj.id === "dasenjo" ? (() => {
+                  const daySessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[String(activeDayForSchedule)] || [];
+                  const nowMins = nowDateObj.getHours() * 60 + nowDateObj.getMinutes();
+                  const isTodayWeekday = currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4 && currentWeekdayIdx === activeDayForSchedule;
 
-                    return (
-                      <button
-                        key={pId}
-                        type="button"
-                        onClick={() => {
-                          setSelectedViewTeacherId(myTeacherObj.id);
-                          setScheduleCenterTab("teacher");
-                          setIsScheduleCenterOpen(true);
-                        }}
-                        className={`p-2 rounded-xl border text-left transition flex flex-col justify-between ${
-                          isNow
-                            ? "ring-2 ring-emerald-500 bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/50 shadow-xs"
-                            : type === "L"
-                            ? "bg-white dark:bg-slate-900 border-indigo-200/80 dark:border-indigo-500/30"
-                            : type === "D"
-                            ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-500/30"
-                            : "bg-slate-100/70 dark:bg-slate-900/40 border-slate-200/60 dark:border-slate-800 opacity-75"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-1 text-[10px] font-bold">
-                          <span className="text-slate-500 dark:text-slate-400">{idx + 1}.ª Hora</span>
-                          {aula ? (
-                            <span className="px-1.5 py-0.2 rounded bg-indigo-600 text-white font-extrabold text-[9px]">
-                              {aula}
-                            </span>
-                          ) : type === "D" ? (
-                            <span className="px-1.5 py-0.2 rounded bg-emerald-600 text-white font-extrabold text-[9px]">
-                              APOYO
-                            </span>
-                          ) : null}
-                        </div>
-                        <div className="text-[11px] font-extrabold text-slate-900 dark:text-white truncate mt-0.5" title={materia}>
-                          {type === "L" ? materia : type === "D" ? "Disponible / Guardia" : "Sin clase lectiva"}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                  return (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-1.5 flex-1">
+                      {daySessions.map((ses, sIdx) => {
+                        const [sH, sM] = ses.start.split(":").map(Number);
+                        const [eH, eM] = ses.end.split(":").map(Number);
+                        const sTotal = sH * 60 + sM;
+                        const eTotal = eH * 60 + eM;
+                        const isNow = isTodayWeekday && nowMins >= sTotal && nowMins < eTotal;
+
+                        return (
+                          <button
+                            key={sIdx}
+                            type="button"
+                            onClick={() => {
+                              setSelectedViewTeacherId(myTeacherObj.id);
+                              setScheduleCenterTab("teacher");
+                              setIsScheduleCenterOpen(true);
+                            }}
+                            className={`p-2 rounded-xl border text-left transition flex flex-col justify-between ${
+                              isNow
+                                ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 border-emerald-300 dark:border-emerald-500/50 shadow-xs"
+                                : "bg-white dark:bg-slate-900 border-indigo-200/80 dark:border-indigo-500/30 hover:border-indigo-400"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-1 text-[10px] font-bold">
+                              <span className="font-mono text-indigo-700 dark:text-indigo-300 font-extrabold">{ses.time}</span>
+                              <span className={`px-1.5 py-0.2 rounded text-[9px] font-black ${
+                                ses.stage === "Infantil"
+                                  ? "bg-pink-600 text-white"
+                                  : ses.stage === "Secundaria"
+                                  ? "bg-violet-600 text-white"
+                                  : "bg-indigo-600 text-white"
+                              }`}>
+                                {ses.aula}
+                              </span>
+                            </div>
+                            <div className="text-[11px] font-extrabold text-slate-900 dark:text-white truncate mt-0.5" title={ses.materia + " - " + ses.students}>
+                              {ses.materia}
+                            </div>
+                            <div className="text-[9px] text-slate-500 dark:text-slate-400 truncate mt-0.5" title={ses.students}>
+                              👥 {ses.students}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })() : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 flex-1">
+                    {["1H", "2H", "3H", "4H", "5H", "6H"].map((pId, idx) => {
+                      const slot = TEACHER_SCHEDULES[myTeacherObj.id]?.[String(activeDayForSchedule)]?.[pId];
+                      const isNow = currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4 && livePeriodIdNow === pId;
+                      const type = slot ? slot[0] : "N";
+                      const aula = slot ? slot[1] : "";
+                      const materia = slot ? slot[2] : "Libre / Comp.";
+
+                      return (
+                        <button
+                          key={pId}
+                          type="button"
+                          onClick={() => {
+                            setSelectedViewTeacherId(myTeacherObj.id);
+                            setScheduleCenterTab("teacher");
+                            setIsScheduleCenterOpen(true);
+                          }}
+                          className={`p-2 rounded-xl border text-left transition flex flex-col justify-between ${
+                            isNow
+                              ? "ring-2 ring-emerald-500 bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/50 shadow-xs"
+                              : type === "L"
+                              ? "bg-white dark:bg-slate-900 border-indigo-200/80 dark:border-indigo-500/30"
+                              : type === "D"
+                              ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-500/30"
+                              : "bg-slate-100/70 dark:bg-slate-900/40 border-slate-200/60 dark:border-slate-800 opacity-75"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-1 text-[10px] font-bold">
+                            <span className="text-slate-500 dark:text-slate-400">{idx + 1}.ª Hora</span>
+                            {aula ? (
+                              <span className="px-1.5 py-0.2 rounded bg-indigo-600 text-white font-extrabold text-[9px]">
+                                {aula}
+                              </span>
+                            ) : type === "D" ? (
+                              <span className="px-1.5 py-0.2 rounded bg-emerald-600 text-white font-extrabold text-[9px]">
+                                APOYO
+                              </span>
+                            ) : null}
+                          </div>
+                          <div className="text-[11px] font-extrabold text-slate-900 dark:text-white truncate mt-0.5" title={materia}>
+                            {type === "L" ? materia : type === "D" ? "Disponible / Guardia" : "Sin clase lectiva"}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
 
                 <button
                   type="button"
@@ -3780,6 +3839,7 @@ export function App() {
               {/* TAB 2: HORARIO POR PROFESOR */}
               {scheduleCenterTab === "teacher" && (() => {
                 const currentTeacher = SCHOOL_TEACHERS.find(t => t.id === selectedViewTeacherId) || SCHOOL_TEACHERS[0];
+                const isDanielAsenjo = currentTeacher.id === "dasenjo";
                 const teacherSched = TEACHER_SCHEDULES[currentTeacher.id] || {};
                 const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
@@ -3800,6 +3860,9 @@ export function App() {
                     }
                   });
                 }
+
+                // Total de sesiones en el horario personalizado de Daniel Asenjo
+                const asenjoTotalSesiones = Object.values(DANIEL_ASENJO_CUSTOM_TIMETABLE).reduce((acc, curr) => acc + curr.length, 0);
 
                 return (
                   <div className="space-y-4">
@@ -3832,111 +3895,437 @@ export function App() {
                         >
                           <span>{myTeacherId === currentTeacher.id ? "✓ Es mi horario fijado en portada" : "📌 Fijar como Mi Horario en Portada"}</span>
                         </button>
+
+                        {isDanielAsenjo && (
+                          <a
+                            href={DANIEL_ASENJO_DRIVE_URL}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-3 py-2 rounded-xl text-xs font-extrabold bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30 hover:bg-blue-100 flex items-center gap-1.5 transition"
+                            title="Abrir PDF oficial original en Google Drive"
+                          >
+                            <span>📄 PDF Oficial en Drive ↗</span>
+                          </a>
+                        )}
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
-                        <span className="px-2.5 py-1 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300">
-                          📚 {totalLectivas} sesiones lectivas
-                        </span>
-                        <span className="px-2.5 py-1 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
-                          🟢 {totalApoyos} apoyos/disp.
-                        </span>
-                        {aulasImpartidas.size > 0 && (
-                          <span className="px-2.5 py-1 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-900 dark:text-amber-300">
-                            🏫 Grupos: {Array.from(aulasImpartidas).join(", ")}
-                          </span>
+                        {isDanielAsenjo ? (
+                          <>
+                            <span className="px-2.5 py-1 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300">
+                              📚 {asenjoTotalSesiones} sesiones PT
+                            </span>
+                            <span className="px-2.5 py-1 rounded-xl bg-pink-100 dark:bg-pink-500/20 text-pink-800 dark:text-pink-300">
+                              👶 Infantil (3 gr.)
+                            </span>
+                            <span className="px-2.5 py-1 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300">
+                              🎒 Primaria (5 gr.)
+                            </span>
+                            <span className="px-2.5 py-1 rounded-xl bg-violet-100 dark:bg-violet-500/20 text-violet-800 dark:text-violet-300">
+                              🎓 Secundaria (3 gr.)
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="px-2.5 py-1 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300">
+                              📚 {totalLectivas} sesiones lectivas
+                            </span>
+                            <span className="px-2.5 py-1 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                              🟢 {totalApoyos} apoyos/disp.
+                            </span>
+                            {aulasImpartidas.size > 0 && (
+                              <span className="px-2.5 py-1 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-900 dark:text-amber-300">
+                                🏫 Grupos: {Array.from(aulasImpartidas).join(", ")}
+                              </span>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
 
-                    {/* Tabla de Horario Semanal del Profesor */}
-                    <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
-                      <table className="w-full text-left border-collapse min-w-[720px]">
-                        <thead>
-                          <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
-                            <th className="p-3 w-36">Hora / Tramo</th>
-                            {dayNames.map((dName, idx) => (
-                              <th key={dName} className={`p-3 ${currentTime.getDay() - 1 === idx ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/30" : ""}`}>
-                                {dName} {currentTime.getDay() - 1 === idx && " (Hoy)"}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
-                          {SCHEDULE_PERIOD_COLUMNS.map((col, rowIdx) => (
-                            <React.Fragment key={col.id}>
-                              {/* Fila separadora de Recreo o Comedor */}
-                              {rowIdx === 2 && (
-                                <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
-                                  <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                    ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
-                                  </td>
-                                </tr>
-                              )}
-                              {rowIdx === 4 && (
-                                <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
-                                  <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                    🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía
-                                  </td>
-                                </tr>
-                              )}
-                              <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
-                                <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
-                                  <span className="block text-xs text-indigo-600 dark:text-indigo-400">{col.label}</span>
-                                  <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
-                                </td>
-                                {[0, 1, 2, 3, 4].map((dIdx) => {
-                                  const slot = teacherSched[String(dIdx)]?.[col.id];
-                                  if (!slot) {
-                                    return <td key={dIdx} className="p-2.5 text-slate-400 italic">—</td>;
-                                  }
-                                  const [typeCode, aula, materia] = slot;
-                                  const isLectiva = typeCode === "L";
-                                  const isDisp = typeCode === "D";
-                                  return (
-                                    <td key={dIdx} className="p-2 align-top">
-                                      <div
-                                        className={`p-2.5 rounded-xl border h-full transition ${
-                                          isLectiva
-                                            ? "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-200/80 dark:border-indigo-500/30"
-                                            : isDisp
-                                            ? "bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-500/30"
-                                            : "bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800 opacity-60"
-                                        }`}
-                                      >
-                                        <div className="flex items-center justify-between gap-1 mb-1">
-                                          <span
-                                            className={`px-1.5 py-0.5 rounded text-[10px] font-black ${
-                                              isLectiva
-                                                ? "bg-indigo-600 text-white cursor-pointer hover:bg-indigo-500"
-                                                : isDisp
-                                                ? "bg-emerald-600 text-white"
-                                                : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                    {/* VISTA ESPECÍFICA PARA DANIEL ASENJO CON FRANJAS INDIVIDUALES */}
+                    {isDanielAsenjo ? (
+                      <div className="space-y-4">
+                        {/* Subpestañas de visualización para Daniel Asenjo */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 p-1.5 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-extrabold">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => setAsenjoScheduleTab("horario")}
+                              className={`px-3 py-2 rounded-lg flex items-center gap-1.5 transition ${
+                                asenjoScheduleTab === "horario"
+                                  ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                              }`}
+                            >
+                              <span>🕒 Franjas Horarias PT (Recomendado)</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setAsenjoScheduleTab("alumnos")}
+                              className={`px-3 py-2 rounded-lg flex items-center gap-1.5 transition ${
+                                asenjoScheduleTab === "alumnos"
+                                  ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                              }`}
+                            >
+                              <span>👥 Alumnos e Intervenciones (Infantil, Primaria, ESO)</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setAsenjoScheduleTab("cuadricula")}
+                              className={`px-3 py-2 rounded-lg flex items-center gap-1.5 transition ${
+                                asenjoScheduleTab === "cuadricula"
+                                  ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                              }`}
+                            >
+                              <span>📊 Cuadrícula General (1.ª - 6.ª hora)</span>
+                            </button>
+                          </div>
+                          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 px-2 hidden sm:inline">
+                            ⏱️ Franjas individualizadas según intervención
+                          </span>
+                        </div>
+
+                        {/* SUB-TAB 1: FRANJAS HORARIAS INDIVIDUALES SEMANALES */}
+                        {asenjoScheduleTab === "horario" && (
+                          <div className="space-y-3">
+                            <div className="p-3 bg-indigo-50/80 dark:bg-indigo-950/30 rounded-xl border border-indigo-200/80 dark:border-indigo-500/30 text-xs text-indigo-900 dark:text-indigo-200 flex items-start gap-2">
+                              <span className="text-base leading-none">ℹ️</span>
+                              <div>
+                                <span className="font-extrabold">Horario especializado de Pedagogía Terapéutica (PT):</span>
+                                <span className="ml-1 font-medium">
+                                  Las sesiones están adaptadas con franjas temporales individualizadas por alumno y grupo a lo largo de toda la semana.
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+                              {dayNames.map((dName, dIdx) => {
+                                const sessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[String(dIdx)] || [];
+                                const isToday = currentTime.getDay() - 1 === dIdx;
+                                const nowMins = currentTime.getHours() * 60 + currentTime.getMinutes();
+
+                                return (
+                                  <div
+                                    key={dName}
+                                    className={`rounded-2xl border p-3 flex flex-col gap-2.5 transition ${
+                                      isToday
+                                        ? "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-300 dark:border-indigo-500/50 shadow-xs"
+                                        : "bg-slate-50/70 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800"
+                                    }`}
+                                  >
+                                    <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                                      <span className={`text-xs font-black uppercase tracking-wider ${isToday ? "text-indigo-600 dark:text-indigo-400" : "text-slate-700 dark:text-slate-300"}`}>
+                                        {dName} {isToday && "⭐ (Hoy)"}
+                                      </span>
+                                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                                        {sessions.length} sesiones
+                                      </span>
+                                    </div>
+
+                                    <div className="space-y-2 flex-1">
+                                      {sessions.map((ses, sIdx) => {
+                                        const [sH, sM] = ses.start.split(":").map(Number);
+                                        const [eH, eM] = ses.end.split(":").map(Number);
+                                        const sTotal = sH * 60 + sM;
+                                        const eTotal = eH * 60 + eM;
+                                        const isNow = isToday && nowMins >= sTotal && nowMins < eTotal;
+
+                                        return (
+                                          <div
+                                            key={sIdx}
+                                            className={`p-2.5 rounded-xl border text-xs transition ${
+                                              isNow
+                                                ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-500/60 shadow-xs"
+                                                : "bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-600"
                                             }`}
-                                            onClick={() => {
-                                              if (isLectiva && SCHOOL_CLASSROOMS.includes(aula)) {
-                                                setSelectedViewClassroom(aula);
-                                                setScheduleCenterTab("classroom");
-                                              }
-                                            }}
-                                            title={isLectiva && SCHOOL_CLASSROOMS.includes(aula) ? `Ver horario de ${aula}` : ""}
                                           >
-                                            {isLectiva ? (aula !== "Sin Aula" ? aula : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
-                                          </span>
+                                            <div className="flex items-center justify-between gap-1 mb-1">
+                                              <span className="font-mono text-[11px] font-black text-indigo-700 dark:text-indigo-300">
+                                                ⏱️ {ses.time}
+                                              </span>
+                                              <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
+                                                ses.stage === "Infantil"
+                                                  ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
+                                                  : ses.stage === "Secundaria"
+                                                  ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
+                                                  : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                                              }`}>
+                                                {ses.stage}
+                                              </span>
+                                            </div>
+
+                                            <div className="flex items-center justify-between gap-1">
+                                              <span className="font-extrabold text-slate-900 dark:text-white text-xs">
+                                                {ses.aula}
+                                              </span>
+                                              {isNow && (
+                                                <span className="animate-pulse inline-flex items-center gap-1 text-[9px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50 px-1.5 py-0.5 rounded">
+                                                  🟢 AHORA
+                                                </span>
+                                              )}
+                                            </div>
+
+                                            <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 mt-0.5">
+                                              {ses.materia}
+                                            </p>
+
+                                            <div className="mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800/80 text-[10px] text-slate-500 dark:text-slate-400 flex items-start gap-1">
+                                              <span className="shrink-0">👥</span>
+                                              <span className="font-medium text-slate-700 dark:text-slate-300 line-clamp-2" title={ses.students}>
+                                                {ses.students}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* SUB-TAB 2: ALUMNOS E INTERVENCIONES POR ETAPA */}
+                        {asenjoScheduleTab === "alumnos" && (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              {DANIEL_ASENJO_STUDENTS.map((stageGroup, stIdx) => (
+                                <div key={stIdx} className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+                                  <div>
+                                    <div className="flex items-center justify-between mb-3">
+                                      <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                                        {stageGroup.stage}
+                                      </h4>
+                                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-black border ${stageGroup.badgeColor}`}>
+                                        {stageGroup.badge}
+                                      </span>
+                                    </div>
+                                    <div className="space-y-2.5">
+                                      {stageGroup.groups.map((grp, gIdx) => (
+                                        <div key={gIdx} className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200/80 dark:border-slate-800 text-xs">
+                                          <div className="flex items-center justify-between gap-1 font-bold text-slate-800 dark:text-slate-200">
+                                            <span>🎒 {grp.curso}</span>
+                                            <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">Tut: {grp.tutor}</span>
+                                          </div>
+                                          <ul className="mt-1.5 space-y-0.5 text-[11px] text-slate-600 dark:text-slate-300 font-medium list-disc list-inside">
+                                            {grp.alumnos.map((alum, aIdx) => (
+                                              <li key={aIdx}>{alum}</li>
+                                            ))}
+                                          </ul>
                                         </div>
-                                        <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
-                                          {isLectiva ? materia : isDisp ? "Disponibilidad / Sustitución" : "Sin sesión lectiva"}
-                                        </p>
-                                      </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Observaciones de asistencia y horarios específicos */}
+                            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-xs">
+                              <h5 className="font-black text-amber-900 dark:text-amber-200 flex items-center gap-1.5 mb-2">
+                                <span>⚠️ Observaciones de Horarios y Asistencia de Alumnos:</span>
+                              </h5>
+                              <ul className="space-y-1.5 text-amber-800 dark:text-amber-300 font-medium">
+                                {DANIEL_ASENJO_OBSERVATIONS.map((obsItem, oIdx) => (
+                                  <li key={oIdx} className="flex items-start gap-1.5">
+                                    <span className="font-bold">• {obsItem.student}:</span>
+                                    <span>{obsItem.obs}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* SUB-TAB 3: CUADRÍCULA ESTÁNDAR 1H-6H */}
+                        {asenjoScheduleTab === "cuadricula" && (
+                          <div className="space-y-3">
+                            <div className="p-3 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 flex items-center justify-between">
+                              <span>ℹ️ Esta vista muestra el mapeo aproximado de Daniel Asenjo a los 6 periodos lectivos generales del centro escolar.</span>
+                              <button
+                                type="button"
+                                onClick={() => setAsenjoScheduleTab("horario")}
+                                className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline shrink-0"
+                              >
+                                Ver con franjas exactas PT →
+                              </button>
+                            </div>
+
+                            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                              <table className="w-full text-left border-collapse min-w-[720px]">
+                                <thead>
+                                  <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                                    <th className="p-3 w-36">Hora / Tramo</th>
+                                    {dayNames.map((dName, idx) => (
+                                      <th key={dName} className={`p-3 ${currentTime.getDay() - 1 === idx ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/30" : ""}`}>
+                                        {dName} {currentTime.getDay() - 1 === idx && " (Hoy)"}
+                                      </th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                                  {SCHEDULE_PERIOD_COLUMNS.map((col, rowIdx) => (
+                                    <React.Fragment key={col.id}>
+                                      {rowIdx === 2 && (
+                                        <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
+                                          <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                            ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
+                                          </td>
+                                        </tr>
+                                      )}
+                                      {rowIdx === 4 && (
+                                        <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
+                                          <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                            🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía
+                                          </td>
+                                        </tr>
+                                      )}
+                                      <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                                        <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                                          <span className="block text-xs text-indigo-600 dark:text-indigo-400">{col.label}</span>
+                                          <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
+                                        </td>
+                                        {[0, 1, 2, 3, 4].map((dIdx) => {
+                                          const slot = teacherSched[String(dIdx)]?.[col.id];
+                                          if (!slot) {
+                                            return <td key={dIdx} className="p-2.5 text-slate-400 italic">—</td>;
+                                          }
+                                          const [typeCode, aula, materia] = slot;
+                                          const isLectiva = typeCode === "L";
+                                          const isDisp = typeCode === "D";
+                                          return (
+                                            <td key={dIdx} className="p-2 align-top">
+                                              <div
+                                                className={`p-2.5 rounded-xl border h-full transition ${
+                                                  isLectiva
+                                                    ? "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-200/80 dark:border-indigo-500/30"
+                                                    : isDisp
+                                                    ? "bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-500/30"
+                                                    : "bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800 opacity-60"
+                                                }`}
+                                              >
+                                                <div className="flex items-center justify-between gap-1 mb-1">
+                                                  <span
+                                                    className={`px-1.5 py-0.5 rounded text-[10px] font-black ${
+                                                      isLectiva
+                                                        ? "bg-indigo-600 text-white"
+                                                        : isDisp
+                                                        ? "bg-emerald-600 text-white"
+                                                        : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                                                    }`}
+                                                  >
+                                                    {isLectiva ? (aula !== "Sin Aula" ? aula : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
+                                                  </span>
+                                                </div>
+                                                <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
+                                                  {isLectiva ? materia : isDisp ? "Disponibilidad / Sustitución" : "Sin sesión lectiva"}
+                                                </p>
+                                              </div>
+                                            </td>
+                                          );
+                                        })}
+                                      </tr>
+                                    </React.Fragment>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      /* Tabla de Horario Semanal Estándar para el resto de Profesores */
+                      <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                        <table className="w-full text-left border-collapse min-w-[720px]">
+                          <thead>
+                            <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                              <th className="p-3 w-36">Hora / Tramo</th>
+                              {dayNames.map((dName, idx) => (
+                                <th key={dName} className={`p-3 ${currentTime.getDay() - 1 === idx ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/30" : ""}`}>
+                                  {dName} {currentTime.getDay() - 1 === idx && " (Hoy)"}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                            {SCHEDULE_PERIOD_COLUMNS.map((col, rowIdx) => (
+                              <React.Fragment key={col.id}>
+                                {rowIdx === 2 && (
+                                  <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
+                                    <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                      ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
                                     </td>
-                                  );
-                                })}
-                              </tr>
-                            </React.Fragment>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                                  </tr>
+                                )}
+                                {rowIdx === 4 && (
+                                  <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
+                                    <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                      🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía
+                                    </td>
+                                  </tr>
+                                )}
+                                <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                                  <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                                    <span className="block text-xs text-indigo-600 dark:text-indigo-400">{col.label}</span>
+                                    <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
+                                  </td>
+                                  {[0, 1, 2, 3, 4].map((dIdx) => {
+                                    const slot = teacherSched[String(dIdx)]?.[col.id];
+                                    if (!slot) {
+                                      return <td key={dIdx} className="p-2.5 text-slate-400 italic">—</td>;
+                                    }
+                                    const [typeCode, aula, materia] = slot;
+                                    const isLectiva = typeCode === "L";
+                                    const isDisp = typeCode === "D";
+                                    return (
+                                      <td key={dIdx} className="p-2 align-top">
+                                        <div
+                                          className={`p-2.5 rounded-xl border h-full transition ${
+                                            isLectiva
+                                              ? "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-200/80 dark:border-indigo-500/30"
+                                              : isDisp
+                                              ? "bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-500/30"
+                                              : "bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800 opacity-60"
+                                          }`}
+                                        >
+                                          <div className="flex items-center justify-between gap-1 mb-1">
+                                            <span
+                                              className={`px-1.5 py-0.5 rounded text-[10px] font-black ${
+                                                isLectiva
+                                                  ? "bg-indigo-600 text-white cursor-pointer hover:bg-indigo-500"
+                                                  : isDisp
+                                                  ? "bg-emerald-600 text-white"
+                                                  : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                                              }`}
+                                              onClick={() => {
+                                                if (isLectiva && SCHOOL_CLASSROOMS.includes(aula)) {
+                                                  setSelectedViewClassroom(aula);
+                                                  setScheduleCenterTab("classroom");
+                                                }
+                                              }}
+                                              title={isLectiva && SCHOOL_CLASSROOMS.includes(aula) ? `Ver horario de ${aula}` : ""}
+                                            >
+                                              {isLectiva ? (aula !== "Sin Aula" ? aula : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
+                                            </span>
+                                          </div>
+                                          <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
+                                            {isLectiva ? materia : isDisp ? "Disponibilidad / Sustitución" : "Sin sesión lectiva"}
+                                          </p>
+                                        </div>
+                                      </td>
+                                    );
+                                  })}
+                                </tr>
+                              </React.Fragment>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 );
               })()}
