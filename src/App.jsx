@@ -2223,6 +2223,7 @@ export function App() {
 
   // Fecha y saludo dinámico personalizado
   const nowDateObj = new Date();
+  const currentTime = nowDateObj;
   const currentHour = nowDateObj.getHours();
   const myTeacherObj = SCHOOL_TEACHERS.find(t => t.id === myTeacherId) || null;
   const myShortFirstName = myTeacherObj ? myTeacherObj.name.split(" ")[0] : "Claustro";
@@ -2926,7 +2927,7 @@ export function App() {
                     setScheduleCenterTab("teacher");
                     setIsScheduleCenterOpen(true);
                   }}
-                  className="hidden xl:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-500/15 hover:bg-indigo-100 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 text-[11px] font-extrabold shrink-0 transition"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-extrabold shrink-0 shadow-xs transition"
                 >
                   <span>Mi Cuadrante</span>
                   <IconRenderer name="ArrowUpRight" className="w-3.5 h-3.5" />
