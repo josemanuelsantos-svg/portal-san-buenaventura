@@ -3208,23 +3208,7 @@ export function App() {
                         </div>
                       </div>
 
-                      {/* BANNER DESTACADO "FOCO DE HOY" (Solo si estamos viendo la semana en curso en Lunes-Viernes) */}
-                      {todayPlanData && todayPlanData.items && todayPlanData.items.length > 0 && (
-                        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 dark:from-emerald-500/15 dark:via-teal-500/10 dark:to-indigo-500/15 border border-emerald-300/80 dark:border-emerald-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                          <div className="flex items-start sm:items-center gap-2.5">
-                            <span className="px-2.5 py-1 rounded-xl bg-emerald-600 text-white font-black text-[10px] uppercase tracking-wider shrink-0 shadow-xs">
-                              🎯 Hoy {todayPlanData.day} {todayPlanData.date}
-                            </span>
-                            <div className="text-xs font-semibold text-slate-800 dark:text-slate-100 flex flex-wrap items-center gap-x-3 gap-y-1">
-                              {todayPlanData.items.map((it, idx) => (
-                                <span key={idx} className="inline-flex items-center gap-1">
-                                  <span>{renderFormattedText(it)}</span>
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      )}
+
 
                       {/* Selector de Días Móvil (Solo visible en pantallas < md) */}
                       <div className="md:hidden flex items-center justify-between gap-1 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200 dark:border-slate-700/80">
