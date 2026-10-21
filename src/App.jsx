@@ -3276,8 +3276,8 @@ export function App() {
                                   <div className="flex items-center gap-1.5">
                                     <span>{dayName}</span>
                                     {isTodayCard && (
-                                      <span className="text-[9px] bg-indigo-600 text-white px-1.5 py-0.2 rounded-full uppercase tracking-wider font-black">
-                                        HOY
+                                      <span className="text-[9px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-900/40 px-1.5 py-0.2 rounded-full uppercase tracking-wider">
+                                        Hoy
                                       </span>
                                     )}
                                   </div>
