@@ -187,7 +187,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "6º EP C",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov"
+      "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov",
+      "turn": "mañana",
+      "studentsShort": "Álvaro, Mª Laura, María, Cristhian"
     },
     {
       "start": "10:30",
@@ -196,7 +198,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "5 años C",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Mª Fernanda Mendoza, Mª Flor Mendoza"
+      "students": "Mª Fernanda Mendoza, Mª Flor Mendoza",
+      "turn": "mañana",
+      "studentsShort": "Mª Fernanda, Mª Flor"
     },
     {
       "start": "11:00",
@@ -205,7 +209,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "2º EP C",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Juliette Cardoza, Oliver Luna"
+      "students": "Juliette Cardoza, Oliver Luna",
+      "turn": "mañana",
+      "studentsShort": "Juliette, Oliver"
     },
     {
       "start": "11:30",
@@ -214,7 +220,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "1º ESO B",
       "stage": "Secundaria",
       "materia": "Matemáticas (Apoyo PT)",
-      "students": "Derek de León"
+      "students": "Derek de León",
+      "turn": "mañana",
+      "studentsShort": "Derek de León"
     },
     {
       "start": "14:00",
@@ -223,7 +231,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "4 años A",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Jeyco Andree Cerda, Jorge de la Purificación"
+      "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+      "turn": "tarde",
+      "studentsShort": "Jeyco, Jorge"
     },
     {
       "start": "14:30",
@@ -232,7 +242,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "3 años B",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Ian Milan Vaca"
+      "students": "Ian Milan Vaca",
+      "turn": "tarde",
+      "studentsShort": "Ian Milan"
     },
     {
       "start": "15:15",
@@ -241,7 +253,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "4º EP A",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Adrian Chuquimango, Dylan Villalba (ACNEAE)"
+      "students": "Adrian Chuquimango, Dylan Villalba (ACNEAE)",
+      "turn": "tarde",
+      "studentsShort": "Adrian, Dylan (ACNEAE)"
     }
   ],
   "1": [
@@ -252,7 +266,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "3 años B",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Ian Milan Vaca"
+      "students": "Ian Milan Vaca",
+      "turn": "mañana",
+      "studentsShort": "Ian Milan"
     },
     {
       "start": "09:10",
@@ -261,7 +277,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "1º ESO B",
       "stage": "Secundaria",
       "materia": "Lengua Castellana (Apoyo PT)",
-      "students": "Derek de León"
+      "students": "Derek de León",
+      "turn": "mañana",
+      "studentsShort": "Derek de León"
     },
     {
       "start": "10:30",
@@ -270,7 +288,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "4 años A",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Jeyco Andree Cerda, Jorge de la Purificación"
+      "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+      "turn": "mañana",
+      "studentsShort": "Jeyco, Jorge"
     },
     {
       "start": "11:00",
@@ -279,7 +299,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "5º EP A / 6º EP A",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)"
+      "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)",
+      "turn": "mañana",
+      "studentsShort": "Jhonathan (5ºA), Ysabella (6ºA)"
     },
     {
       "start": "11:45",
@@ -288,7 +310,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "2º EP C",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Juliette Cardoza, Oliver Luna"
+      "students": "Juliette Cardoza, Oliver Luna",
+      "turn": "mañana",
+      "studentsShort": "Juliette, Oliver"
     },
     {
       "start": "14:15",
@@ -297,7 +321,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "6º EP C",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov"
+      "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov",
+      "turn": "tarde",
+      "studentsShort": "Álvaro, Mª Laura, María, Cristhian"
     },
     {
       "start": "15:15",
@@ -306,7 +332,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "5 años C",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Mª Fernanda Mendoza, Mª Flor Mendoza"
+      "students": "Mª Fernanda Mendoza, Mª Flor Mendoza",
+      "turn": "tarde",
+      "studentsShort": "Mª Fernanda, Mª Flor"
     }
   ],
   "2": [
@@ -317,7 +345,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "5º EP A / 6º EP A",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)"
+      "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)",
+      "turn": "mañana",
+      "studentsShort": "Jhonathan (5ºA), Ysabella (6ºA)"
     },
     {
       "start": "10:30",
@@ -326,7 +356,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "5 años C",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Mª Fernanda Mendoza, Mª Flor Mendoza"
+      "students": "Mª Fernanda Mendoza, Mª Flor Mendoza",
+      "turn": "mañana",
+      "studentsShort": "Mª Fernanda, Mª Flor"
     },
     {
       "start": "11:15",
@@ -335,7 +367,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "4 años A",
       "stage": "Infantil",
       "materia": "Psicomotricidad (Apoyo PT)",
-      "students": "Jeyco Andree Cerda, Jorge de la Purificación"
+      "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+      "turn": "mañana",
+      "studentsShort": "Jeyco, Jorge"
     },
     {
       "start": "14:00",
@@ -344,7 +378,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "4 años A",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Jeyco Andree Cerda, Jorge de la Purificación"
+      "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+      "turn": "tarde",
+      "studentsShort": "Jeyco, Jorge"
     },
     {
       "start": "14:30",
@@ -353,7 +389,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "3 años B",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Ian Milan Vaca"
+      "students": "Ian Milan Vaca",
+      "turn": "tarde",
+      "studentsShort": "Ian Milan"
     },
     {
       "start": "15:15",
@@ -362,7 +400,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "6º EP C",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov"
+      "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov",
+      "turn": "tarde",
+      "studentsShort": "Álvaro, Mª Laura, María, Cristhian"
     }
   ],
   "3": [
@@ -373,7 +413,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "3 años B",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Ian Milan Vaca"
+      "students": "Ian Milan Vaca",
+      "turn": "mañana",
+      "studentsShort": "Ian Milan"
     },
     {
       "start": "09:10",
@@ -382,7 +424,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "4º ESO DIV2",
       "stage": "Secundaria",
       "materia": "Ámbito / PT (2º PDC)",
-      "students": "Rubén Pérez (4ºB 2ºPDC), Andrés Nafría (4ºC 2ºPDC)"
+      "students": "Rubén Pérez (4ºB 2ºPDC), Andrés Nafría (4ºC 2ºPDC)",
+      "turn": "mañana",
+      "studentsShort": "Rubén, Andrés (2º PDC)"
     },
     {
       "start": "10:30",
@@ -391,7 +435,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "5 años C",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Mª Fernanda Mendoza, Mª Flor Mendoza"
+      "students": "Mª Fernanda Mendoza, Mª Flor Mendoza",
+      "turn": "mañana",
+      "studentsShort": "Mª Fernanda, Mª Flor"
     },
     {
       "start": "11:00",
@@ -400,7 +446,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "6º EP C",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov"
+      "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov",
+      "turn": "mañana",
+      "studentsShort": "Álvaro, Mª Laura, María, Cristhian"
     },
     {
       "start": "11:45",
@@ -409,7 +457,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "5º EP A / 6º EP A",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)"
+      "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)",
+      "turn": "mañana",
+      "studentsShort": "Jhonathan (5ºA), Ysabella (6ºA)"
     },
     {
       "start": "14:00",
@@ -418,7 +468,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "4 años A",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Jeyco Andree Cerda, Jorge de la Purificación"
+      "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+      "turn": "tarde",
+      "studentsShort": "Jeyco, Jorge"
     },
     {
       "start": "14:30",
@@ -427,7 +479,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "3 años B",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Ian Milan Vaca"
+      "students": "Ian Milan Vaca",
+      "turn": "tarde",
+      "studentsShort": "Ian Milan"
     },
     {
       "start": "15:30",
@@ -436,7 +490,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "2º EP C",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Juliette Cardoza, Oliver Luna"
+      "students": "Juliette Cardoza, Oliver Luna",
+      "turn": "tarde",
+      "studentsShort": "Juliette, Oliver"
     }
   ],
   "4": [
@@ -447,7 +503,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "5º EP A / 6º EP A",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)"
+      "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)",
+      "turn": "mañana",
+      "studentsShort": "Jhonathan (5ºA), Ysabella (6ºA)"
     },
     {
       "start": "10:05",
@@ -456,7 +514,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "2º ESO C",
       "stage": "Secundaria",
       "materia": "Apoyo PT",
-      "students": "Carlos Álvarez"
+      "students": "Carlos Álvarez",
+      "turn": "mañana",
+      "studentsShort": "Carlos Álvarez"
     },
     {
       "start": "11:00",
@@ -465,7 +525,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "3 años B",
       "stage": "Infantil",
       "materia": "Apoyo PT",
-      "students": "Ian Milan Vaca"
+      "students": "Ian Milan Vaca",
+      "turn": "mañana",
+      "studentsShort": "Ian Milan"
     },
     {
       "start": "11:30",
@@ -474,7 +536,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "4º ESO DIV2",
       "stage": "Secundaria",
       "materia": "Ámbito / PT (2º PDC)",
-      "students": "Rubén Pérez (4ºB 2ºPDC), Andrés Nafría (4ºC 2ºPDC)"
+      "students": "Rubén Pérez (4ºB 2ºPDC), Andrés Nafría (4ºC 2ºPDC)",
+      "turn": "mañana",
+      "studentsShort": "Rubén, Andrés (2º PDC)"
     },
     {
       "start": "14:15",
@@ -483,7 +547,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "4º EP A",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Adrian Chuquimango, Dylan Villalba (ACNEAE)"
+      "students": "Adrian Chuquimango, Dylan Villalba (ACNEAE)",
+      "turn": "tarde",
+      "studentsShort": "Adrian, Dylan (ACNEAE)"
     },
     {
       "start": "15:15",
@@ -492,7 +558,9 @@ export const DANIEL_ASENJO_CUSTOM_TIMETABLE = {
       "aula": "2º EP C",
       "stage": "Primaria",
       "materia": "Apoyo PT",
-      "students": "Juliette Cardoza, Oliver Luna"
+      "students": "Juliette Cardoza, Oliver Luna",
+      "turn": "tarde",
+      "studentsShort": "Juliette, Oliver"
     }
   ]
 };
@@ -614,5 +682,471 @@ export const DANIEL_ASENJO_OBSERVATIONS = [
   {
     "student": "Mª Flor y Mª Fernanda Mendoza (5 años C)",
     "obs": "Miércoles salen a las 15:00 del colegio. Jueves salen a las 15:30."
+  }
+];
+
+export const DANIEL_ASENJO_MATRIX_SLOTS = [
+  {
+    "id": "M1",
+    "time": "08:45 - 09:10",
+    "turn": "mañana",
+    "label": "Entrada Temprana",
+    "days": {
+      "1": {
+        "time": "08:45 - 09:10",
+        "start": "08:45",
+        "end": "09:10",
+        "aula": "3 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Ian Milan Vaca",
+        "studentsShort": "Ian Milan"
+      },
+      "3": {
+        "time": "08:45 - 09:10",
+        "start": "08:45",
+        "end": "09:10",
+        "aula": "3 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Ian Milan Vaca",
+        "studentsShort": "Ian Milan"
+      }
+    }
+  },
+  {
+    "id": "M2",
+    "time": "09:00 - 10:05",
+    "turn": "mañana",
+    "label": "1.ª Sesión Mañana",
+    "days": {
+      "0": {
+        "time": "09:00 - 09:45",
+        "start": "09:00",
+        "end": "09:45",
+        "aula": "6º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov",
+        "studentsShort": "Álvaro, Mª Laura, María, Cristhian"
+      },
+      "1": {
+        "time": "09:10 - 10:05",
+        "start": "09:10",
+        "end": "10:05",
+        "aula": "1º ESO B",
+        "stage": "Secundaria",
+        "materia": "Lengua Castellana (Apoyo PT)",
+        "students": "Derek de León",
+        "studentsShort": "Derek de León"
+      },
+      "2": {
+        "time": "09:00 - 10:00",
+        "start": "09:00",
+        "end": "10:00",
+        "aula": "5º EP A / 6º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)",
+        "studentsShort": "Jhonathan (5ºA), Ysabella (6ºA)"
+      },
+      "3": {
+        "time": "09:10 - 10:05",
+        "start": "09:10",
+        "end": "10:05",
+        "aula": "4º ESO DIV2",
+        "stage": "Secundaria",
+        "materia": "Ámbito / PT (2º PDC)",
+        "students": "Rubén Pérez (4ºB 2ºPDC), Andrés Nafría (4ºC 2ºPDC)",
+        "studentsShort": "Rubén, Andrés (2º PDC)"
+      },
+      "4": {
+        "time": "09:00 - 10:05",
+        "start": "09:00",
+        "end": "10:05",
+        "aula": "5º EP A / 6º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)",
+        "studentsShort": "Jhonathan (5ºA), Ysabella (6ºA)"
+      }
+    }
+  },
+  {
+    "id": "M3",
+    "time": "10:05 - 10:30",
+    "turn": "mañana",
+    "label": "Intermedio Mañana",
+    "days": {
+      "4": {
+        "time": "10:05 - 11:00",
+        "start": "10:05",
+        "end": "11:00",
+        "aula": "2º ESO C",
+        "stage": "Secundaria",
+        "materia": "Apoyo PT",
+        "students": "Carlos Álvarez",
+        "studentsShort": "Carlos Álvarez"
+      }
+    }
+  },
+  {
+    "id": "M4",
+    "time": "10:30 - 11:00",
+    "turn": "mañana",
+    "label": "Recreo / Infantil",
+    "days": {
+      "0": {
+        "time": "10:30 - 11:00",
+        "start": "10:30",
+        "end": "11:00",
+        "aula": "5 años C",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Mª Fernanda Mendoza, Mª Flor Mendoza",
+        "studentsShort": "Mª Fernanda, Mª Flor"
+      },
+      "1": {
+        "time": "10:30 - 11:00",
+        "start": "10:30",
+        "end": "11:00",
+        "aula": "4 años A",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+        "studentsShort": "Jeyco, Jorge"
+      },
+      "2": {
+        "time": "10:30 - 11:15",
+        "start": "10:30",
+        "end": "11:15",
+        "aula": "5 años C",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Mª Fernanda Mendoza, Mª Flor Mendoza",
+        "studentsShort": "Mª Fernanda, Mª Flor"
+      },
+      "3": {
+        "time": "10:30 - 11:00",
+        "start": "10:30",
+        "end": "11:00",
+        "aula": "5 años C",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Mª Fernanda Mendoza, Mª Flor Mendoza",
+        "studentsShort": "Mª Fernanda, Mª Flor"
+      },
+      "4": {
+        "time": "10:05 - 11:00",
+        "start": "10:05",
+        "end": "11:00",
+        "aula": "2º ESO C",
+        "stage": "Secundaria",
+        "materia": "Apoyo PT (cont.)",
+        "students": "Carlos Álvarez",
+        "studentsShort": "Carlos Álvarez",
+        "isContinued": true
+      }
+    }
+  },
+  {
+    "id": "M5",
+    "time": "11:00 - 11:45",
+    "turn": "mañana",
+    "label": "Media Mañana",
+    "days": {
+      "0": {
+        "time": "11:00 - 11:30",
+        "start": "11:00",
+        "end": "11:30",
+        "aula": "2º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Juliette Cardoza, Oliver Luna",
+        "studentsShort": "Juliette, Oliver"
+      },
+      "1": {
+        "time": "11:00 - 11:45",
+        "start": "11:00",
+        "end": "11:45",
+        "aula": "5º EP A / 6º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)",
+        "studentsShort": "Jhonathan (5ºA), Ysabella (6ºA)"
+      },
+      "2": {
+        "time": "11:15 - 12:25",
+        "start": "11:15",
+        "end": "12:25",
+        "aula": "4 años A",
+        "stage": "Infantil",
+        "materia": "Psicomotricidad (Apoyo PT)",
+        "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+        "studentsShort": "Jeyco, Jorge (Psico)"
+      },
+      "3": {
+        "time": "11:00 - 11:45",
+        "start": "11:00",
+        "end": "11:45",
+        "aula": "6º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov",
+        "studentsShort": "Álvaro, Mª Laura, María, Cristhian"
+      },
+      "4": {
+        "time": "11:00 - 11:30",
+        "start": "11:00",
+        "end": "11:30",
+        "aula": "3 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Ian Milan Vaca",
+        "studentsShort": "Ian Milan"
+      }
+    }
+  },
+  {
+    "id": "M6",
+    "time": "11:45 - 12:30",
+    "turn": "mañana",
+    "label": "Final Mañana",
+    "days": {
+      "0": {
+        "time": "11:30 - 12:25",
+        "start": "11:30",
+        "end": "12:25",
+        "aula": "1º ESO B",
+        "stage": "Secundaria",
+        "materia": "Matemáticas (Apoyo PT)",
+        "students": "Derek de León",
+        "studentsShort": "Derek de León"
+      },
+      "1": {
+        "time": "11:45 - 12:30",
+        "start": "11:45",
+        "end": "12:30",
+        "aula": "2º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Juliette Cardoza, Oliver Luna",
+        "studentsShort": "Juliette, Oliver"
+      },
+      "2": {
+        "time": "11:15 - 12:25",
+        "start": "11:15",
+        "end": "12:25",
+        "aula": "4 años A",
+        "stage": "Infantil",
+        "materia": "Psicomotricidad (cont.)",
+        "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+        "studentsShort": "Jeyco, Jorge (Psico)",
+        "isContinued": true
+      },
+      "3": {
+        "time": "11:45 - 12:30",
+        "start": "11:45",
+        "end": "12:30",
+        "aula": "5º EP A / 6º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Jhonathan Chino Camacho (5ºA), Ysabella Cardoza (6ºA)",
+        "studentsShort": "Jhonathan (5ºA), Ysabella (6ºA)"
+      },
+      "4": {
+        "time": "11:30 - 12:25",
+        "start": "11:30",
+        "end": "12:25",
+        "aula": "4º ESO DIV2",
+        "stage": "Secundaria",
+        "materia": "Ámbito / PT (2º PDC)",
+        "students": "Rubén Pérez (4ºB 2ºPDC), Andrés Nafría (4ºC 2ºPDC)",
+        "studentsShort": "Rubén, Andrés (2º PDC)"
+      }
+    }
+  },
+  {
+    "id": "COM",
+    "time": "12:30 - 14:00",
+    "turn": "break",
+    "label": "🍽️ Comedor Escolar y Descanso Mediodía",
+    "isBreak": true
+  },
+  {
+    "id": "T1",
+    "time": "14:00 - 14:30",
+    "turn": "tarde",
+    "label": "Inicio Tarde",
+    "days": {
+      "0": {
+        "time": "14:00 - 14:30",
+        "start": "14:00",
+        "end": "14:30",
+        "aula": "4 años A",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+        "studentsShort": "Jeyco, Jorge"
+      },
+      "1": {
+        "time": "14:15 - 15:15",
+        "start": "14:15",
+        "end": "15:15",
+        "aula": "6º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov",
+        "studentsShort": "Alumnos 6º C"
+      },
+      "2": {
+        "time": "14:00 - 14:30",
+        "start": "14:00",
+        "end": "14:30",
+        "aula": "4 años A",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+        "studentsShort": "Jeyco, Jorge"
+      },
+      "3": {
+        "time": "14:00 - 14:45",
+        "start": "14:00",
+        "end": "14:45",
+        "aula": "4 años A",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Jeyco Andree Cerda, Jorge de la Purificación",
+        "studentsShort": "Jeyco, Jorge"
+      },
+      "4": {
+        "time": "14:15 - 15:00",
+        "start": "14:15",
+        "end": "15:00",
+        "aula": "4º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Adrian Chuquimango, Dylan Villalba (ACNEAE)",
+        "studentsShort": "Adrian, Dylan"
+      }
+    }
+  },
+  {
+    "id": "T2",
+    "time": "14:30 - 15:15",
+    "turn": "tarde",
+    "label": "Media Tarde",
+    "days": {
+      "0": {
+        "time": "14:30 - 15:15",
+        "start": "14:30",
+        "end": "15:15",
+        "aula": "3 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Ian Milan Vaca",
+        "studentsShort": "Ian Milan"
+      },
+      "1": {
+        "time": "14:15 - 15:15",
+        "start": "14:15",
+        "end": "15:15",
+        "aula": "6º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo PT (cont.)",
+        "students": "Alumnos 6º C",
+        "studentsShort": "Alumnos 6º C",
+        "isContinued": true
+      },
+      "2": {
+        "time": "14:30 - 15:15",
+        "start": "14:30",
+        "end": "15:15",
+        "aula": "3 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Ian Milan Vaca",
+        "studentsShort": "Ian Milan"
+      },
+      "3": {
+        "time": "14:30 - 15:15",
+        "start": "14:30",
+        "end": "15:15",
+        "aula": "3 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Ian Milan Vaca",
+        "studentsShort": "Ian Milan"
+      },
+      "4": {
+        "time": "14:15 - 15:00",
+        "start": "14:15",
+        "end": "15:00",
+        "aula": "4º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo PT (cont.)",
+        "students": "Adrian Chuquimango, Dylan Villalba (ACNEAE)",
+        "studentsShort": "Adrian, Dylan",
+        "isContinued": true
+      }
+    }
+  },
+  {
+    "id": "T3",
+    "time": "15:15 - 16:15",
+    "turn": "tarde",
+    "label": "Final Tarde",
+    "days": {
+      "0": {
+        "time": "15:15 - 16:00",
+        "start": "15:15",
+        "end": "16:00",
+        "aula": "4º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Adrian Chuquimango, Dylan Villalba (ACNEAE)",
+        "studentsShort": "Adrian, Dylan"
+      },
+      "1": {
+        "time": "15:15 - 16:00",
+        "start": "15:15",
+        "end": "16:00",
+        "aula": "5 años C",
+        "stage": "Infantil",
+        "materia": "Apoyo PT",
+        "students": "Mª Fernanda Mendoza, Mª Flor Mendoza",
+        "studentsShort": "Mª Fernanda, Mª Flor"
+      },
+      "2": {
+        "time": "15:15 - 16:15",
+        "start": "15:15",
+        "end": "16:15",
+        "aula": "6º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Álvaro Lionel Astupiña, Mª Laura Gonzales, María Cantero, Cristhian Hristov",
+        "studentsShort": "Alumnos 6º C"
+      },
+      "3": {
+        "time": "15:30 - 16:15",
+        "start": "15:30",
+        "end": "16:15",
+        "aula": "2º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Juliette Cardoza, Oliver Luna",
+        "studentsShort": "Juliette, Oliver"
+      },
+      "4": {
+        "time": "15:15 - 16:15",
+        "start": "15:15",
+        "end": "16:15",
+        "aula": "2º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo PT",
+        "students": "Juliette Cardoza, Oliver Luna",
+        "studentsShort": "Juliette, Oliver"
+      }
+    }
   }
 ];

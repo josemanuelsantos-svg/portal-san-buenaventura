@@ -8,7 +8,8 @@ import {
   DANIEL_ASENJO_DRIVE_URL,
   DANIEL_ASENJO_CUSTOM_TIMETABLE,
   DANIEL_ASENJO_STUDENTS,
-  DANIEL_ASENJO_OBSERVATIONS
+  DANIEL_ASENJO_OBSERVATIONS,
+  DANIEL_ASENJO_MATRIX_SLOTS
 } from './data/schoolSchedules';
 
 function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
@@ -1423,7 +1424,8 @@ export function App() {
   const [selectedViewTeacherId, setSelectedViewTeacherId] = useState(() => {
     return localStorage.getItem("sb_my_teacher_id") || "jos7";
   });
-  const [asenjoScheduleTab, setAsenjoScheduleTab] = useState("horario"); // "horario" | "alumnos" | "cuadricula" 
+  const [asenjoScheduleTab, setAsenjoScheduleTab] = useState("matriz"); // "matriz" | "dias" | "alumnos" | "cuadricula"
+  const [asenjoDayFilter, setAsenjoDayFilter] = useState("all"); // "all" | "0" | "1" | "2" | "3" | "4" 
   const [selectedViewClassroom, setSelectedViewClassroom] = useState("6ºEP-B");
   const [scheduleTeacherFilter, setScheduleTeacherFilter] = useState("");
 
@@ -2812,7 +2814,7 @@ export function App() {
                   const isTodayWeekday = currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4 && currentWeekdayIdx === activeDayForSchedule;
 
                   return (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-1.5 flex-1">
+                    <div className="flex items-stretch gap-2 overflow-x-auto pb-1 scrollbar-thin flex-1 min-w-0">
                       {daySessions.map((ses, sIdx) => {
                         const [sH, sM] = ses.start.split(":").map(Number);
                         const [eH, eM] = ses.end.split(":").map(Number);
@@ -2829,29 +2831,39 @@ export function App() {
                               setScheduleCenterTab("teacher");
                               setIsScheduleCenterOpen(true);
                             }}
-                            className={`p-2 rounded-xl border text-left transition flex flex-col justify-between ${
+                            className={`p-2.5 rounded-xl border text-left transition flex flex-col justify-between shrink-0 min-w-[155px] sm:min-w-[170px] max-w-[210px] ${
                               isNow
-                                ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 border-emerald-300 dark:border-emerald-500/50 shadow-xs"
-                                : "bg-white dark:bg-slate-900 border-indigo-200/80 dark:border-indigo-500/30 hover:border-indigo-400"
+                                ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 dark:border-emerald-500/60 shadow-sm"
+                                : "bg-white dark:bg-slate-900 border-indigo-200/80 dark:border-indigo-500/30 hover:border-indigo-400 hover:shadow-xs"
                             }`}
                           >
-                            <div className="flex items-center justify-between gap-1 text-[10px] font-bold">
-                              <span className="font-mono text-indigo-700 dark:text-indigo-300 font-extrabold">{ses.time}</span>
-                              <span className={`px-1.5 py-0.2 rounded text-[9px] font-black ${
+                            <div className="flex items-center justify-between gap-1 text-[10px] font-bold mb-1">
+                              <span className="font-mono text-indigo-700 dark:text-indigo-300 font-black flex items-center gap-1">
+                                ⏱️ {ses.time}
+                              </span>
+                              <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
                                 ses.stage === "Infantil"
-                                  ? "bg-pink-600 text-white"
+                                  ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
                                   : ses.stage === "Secundaria"
-                                  ? "bg-violet-600 text-white"
-                                  : "bg-indigo-600 text-white"
+                                  ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
+                                  : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
                               }`}>
                                 {ses.aula}
                               </span>
                             </div>
-                            <div className="text-[11px] font-extrabold text-slate-900 dark:text-white truncate mt-0.5" title={ses.materia + " - " + ses.students}>
-                              {ses.materia}
+                            <div className="flex items-center justify-between gap-1">
+                              <span className="text-xs font-black text-slate-900 dark:text-white truncate" title={ses.materia}>
+                                {ses.materia}
+                              </span>
+                              {isNow && (
+                                <span className="animate-pulse inline-flex items-center px-1.5 py-0.2 bg-emerald-600 text-white rounded text-[8px] font-black uppercase shrink-0">
+                                  AHORA
+                                </span>
+                              )}
                             </div>
-                            <div className="text-[9px] text-slate-500 dark:text-slate-400 truncate mt-0.5" title={ses.students}>
-                              👥 {ses.students}
+                            <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-1 pt-1 border-t border-slate-100 dark:border-slate-800/80 flex items-center gap-1" title={ses.students}>
+                              <span className="shrink-0">👥</span>
+                              <span className="truncate font-medium">{ses.studentsShort || ses.students}</span>
                             </div>
                           </button>
                         );
@@ -3951,14 +3963,25 @@ export function App() {
                           <div className="flex flex-wrap items-center gap-1.5">
                             <button
                               type="button"
-                              onClick={() => setAsenjoScheduleTab("horario")}
+                              onClick={() => setAsenjoScheduleTab("matriz")}
                               className={`px-3 py-2 rounded-lg flex items-center gap-1.5 transition ${
-                                asenjoScheduleTab === "horario"
+                                asenjoScheduleTab === "matriz"
                                   ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
                                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                               }`}
                             >
-                              <span>🕒 Franjas Horarias PT (Recomendado)</span>
+                              <span>📋 Cuadrante Oficial (Tabla Matriz)</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setAsenjoScheduleTab("dias")}
+                              className={`px-3 py-2 rounded-lg flex items-center gap-1.5 transition ${
+                                asenjoScheduleTab === "dias"
+                                  ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                              }`}
+                            >
+                              <span>🗂️ Vista por Días y Turnos</span>
                             </button>
                             <button
                               type="button"
@@ -3969,7 +3992,7 @@ export function App() {
                                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                               }`}
                             >
-                              <span>👥 Alumnos e Intervenciones (Infantil, Primaria, ESO)</span>
+                              <span>👥 Alumnos e Intervenciones</span>
                             </button>
                             <button
                               type="button"
@@ -3988,108 +4011,462 @@ export function App() {
                           </span>
                         </div>
 
-                        {/* SUB-TAB 1: FRANJAS HORARIAS INDIVIDUALES SEMANALES */}
-                        {asenjoScheduleTab === "horario" && (
+                        {/* SUB-TAB 1: CUADRANTE OFICIAL MATRIZ (IDÉNTICO A LA ESTRUCTURA DEL DOCUMENTO DE DANIEL) */}
+                        {asenjoScheduleTab === "matriz" && (
                           <div className="space-y-3">
-                            <div className="p-3 bg-indigo-50/80 dark:bg-indigo-950/30 rounded-xl border border-indigo-200/80 dark:border-indigo-500/30 text-xs text-indigo-900 dark:text-indigo-200 flex items-start gap-2">
-                              <span className="text-base leading-none">ℹ️</span>
-                              <div>
-                                <span className="font-extrabold">Horario especializado de Pedagogía Terapéutica (PT):</span>
-                                <span className="ml-1 font-medium">
-                                  Las sesiones están adaptadas con franjas temporales individualizadas por alumno y grupo a lo largo de toda la semana.
+                            <div className="p-3 bg-indigo-50/80 dark:bg-indigo-950/30 rounded-xl border border-indigo-200/80 dark:border-indigo-500/30 text-xs text-indigo-900 dark:text-indigo-200 flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-base leading-none">ℹ️</span>
+                                <span>
+                                  <strong>Cuadrante oficial sincronizado:</strong> Estructura semanal completa de Daniel Asenjo con franjas temporales por tramo y separación de mañana y tarde.
                                 </span>
                               </div>
+                              <a
+                                href={DANIEL_ASENJO_DRIVE_URL}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline shrink-0"
+                              >
+                                Ver PDF en Drive ↗
+                              </a>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-                              {dayNames.map((dName, dIdx) => {
-                                const sessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[String(dIdx)] || [];
-                                const isToday = currentTime.getDay() - 1 === dIdx;
-                                const nowMins = currentTime.getHours() * 60 + currentTime.getMinutes();
+                            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs bg-white dark:bg-slate-900">
+                              <table className="w-full text-left border-collapse min-w-[840px]">
+                                <thead>
+                                  <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                                    <th className="p-3 w-40 text-left">Tramo / Franja</th>
+                                    {dayNames.map((dName, idx) => (
+                                      <th key={dName} className={`p-3 text-center ${currentTime.getDay() - 1 === idx ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/30" : ""}`}>
+                                        {dName} {currentTime.getDay() - 1 === idx && "⭐ (Hoy)"}
+                                      </th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                                  {DANIEL_ASENJO_MATRIX_SLOTS.map((slot) => {
+                                    if (slot.isBreak) {
+                                      return (
+                                        <tr key={slot.id} className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-900 dark:text-orange-300 font-extrabold text-[11px] text-center">
+                                          <td colSpan={6} className="py-2.5 px-3 tracking-wider uppercase border-y border-orange-200/80 dark:border-orange-900/40">
+                                            {slot.label} · ({slot.time})
+                                          </td>
+                                        </tr>
+                                      );
+                                    }
 
+                                    return (
+                                      <tr key={slot.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition">
+                                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200 bg-slate-50/40 dark:bg-slate-950/40 border-r border-slate-200 dark:border-slate-800 align-middle">
+                                          <span className="block text-[11px] font-black text-indigo-700 dark:text-indigo-300">{slot.label}</span>
+                                          <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{slot.time}</span>
+                                        </td>
+                                        {[0, 1, 2, 3, 4].map((dIdx) => {
+                                          const ses = slot.days ? slot.days[String(dIdx)] : null;
+                                          if (!ses) {
+                                            return <td key={dIdx} className="p-2.5 text-center text-slate-300 dark:text-slate-700 italic select-none">—</td>;
+                                          }
+
+                                          const isToday = currentTime.getDay() - 1 === dIdx;
+                                          const nowMins = currentTime.getHours() * 60 + currentTime.getMinutes();
+                                          const [sH, sM] = ses.start.split(":").map(Number);
+                                          const [eH, eM] = ses.end.split(":").map(Number);
+                                          const isNow = isToday && nowMins >= (sH * 60 + sM) && nowMins < (eH * 60 + eM);
+
+                                          return (
+                                            <td key={dIdx} className="p-2 align-top">
+                                              <div
+                                                className={`p-2.5 rounded-xl border h-full transition flex flex-col justify-between ${
+                                                  isNow
+                                                    ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 dark:border-emerald-500/60 shadow-xs"
+                                                    : "bg-slate-50/90 dark:bg-slate-950/50 border-slate-200/90 dark:border-slate-800 hover:border-indigo-300"
+                                                }`}
+                                              >
+                                                <div>
+                                                  <div className="flex items-center justify-between gap-1 mb-1">
+                                                    <span className="font-mono text-[10px] font-black text-indigo-700 dark:text-indigo-300">
+                                                      ⏱️ {ses.time}
+                                                    </span>
+                                                    <span className={`px-1.5 py-0.2 rounded text-[8px] font-black uppercase tracking-wider ${
+                                                      ses.stage === "Infantil"
+                                                        ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
+                                                        : ses.stage === "Secundaria"
+                                                        ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
+                                                        : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                                                    }`}>
+                                                      {ses.stage}
+                                                    </span>
+                                                  </div>
+                                                  <div className="flex items-center justify-between gap-1">
+                                                    <span className="font-extrabold text-slate-900 dark:text-white text-xs">
+                                                      {ses.aula}
+                                                    </span>
+                                                    {isNow && (
+                                                      <span className="animate-pulse inline-flex items-center gap-0.5 text-[8px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50 px-1 py-0.2 rounded">
+                                                        🟢 AHORA
+                                                      </span>
+                                                    )}
+                                                  </div>
+                                                  <p className="text-[10px] font-semibold text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
+                                                    {ses.materia}
+                                                  </p>
+                                                </div>
+                                                <div className="mt-1.5 pt-1 border-t border-slate-200/60 dark:border-slate-800/80 text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1" title={ses.students}>
+                                                  <span className="shrink-0">👥</span>
+                                                  <span className="truncate font-medium">{ses.studentsShort || ses.students}</span>
+                                                </div>
+                                              </div>
+                                            </td>
+                                          );
+                                        })}
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* SUB-TAB 2: VISTA POR DÍAS Y TURNOS CON FILTRO RÁPIDO */}
+                        {asenjoScheduleTab === "dias" && (
+                          <div className="space-y-4">
+                            {/* Filtro por día */}
+                            <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold">
+                              <span className="text-[11px] text-slate-500 dark:text-slate-400 px-2 font-extrabold uppercase">
+                                Ver Día:
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setAsenjoDayFilter("all")}
+                                className={`px-3 py-1.5 rounded-lg transition ${
+                                  asenjoDayFilter === "all"
+                                    ? "bg-indigo-600 text-white shadow-xs font-black"
+                                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                                }`}
+                              >
+                                🗓️ Todos los Días (L - V)
+                              </button>
+                              {dayNames.map((dName, dIdx) => {
+                                const count = (DANIEL_ASENJO_CUSTOM_TIMETABLE[String(dIdx)] || []).length;
+                                const isCurrent = currentTime.getDay() - 1 === dIdx;
                                 return (
-                                  <div
+                                  <button
                                     key={dName}
-                                    className={`rounded-2xl border p-3 flex flex-col gap-2.5 transition ${
-                                      isToday
-                                        ? "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-300 dark:border-indigo-500/50 shadow-xs"
-                                        : "bg-slate-50/70 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800"
+                                    type="button"
+                                    onClick={() => setAsenjoDayFilter(String(dIdx))}
+                                    className={`px-3 py-1.5 rounded-lg flex items-center gap-1 transition ${
+                                      asenjoDayFilter === String(dIdx)
+                                        ? "bg-indigo-600 text-white shadow-xs font-black"
+                                        : isCurrent
+                                        ? "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold border border-indigo-200/60 dark:border-indigo-500/30"
+                                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
                                     }`}
                                   >
-                                    <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
-                                      <span className={`text-xs font-black uppercase tracking-wider ${isToday ? "text-indigo-600 dark:text-indigo-400" : "text-slate-700 dark:text-slate-300"}`}>
-                                        {dName} {isToday && "⭐ (Hoy)"}
-                                      </span>
-                                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                                        {sessions.length} sesiones
-                                      </span>
-                                    </div>
+                                    <span>{dName} ({count})</span>
+                                    {isCurrent && <span className="text-[10px]">⭐</span>}
+                                  </button>
+                                );
+                              })}
+                            </div>
 
-                                    <div className="space-y-2 flex-1">
-                                      {sessions.map((ses, sIdx) => {
+                            {/* Contenido según filtro (Todos o Día Específico) */}
+                            {asenjoDayFilter !== "all" ? (() => {
+                              const dayIdx = parseInt(asenjoDayFilter);
+                              const daySessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[String(dayIdx)] || [];
+                              const morningSessions = daySessions.filter(s => s.turn === "mañana");
+                              const afternoonSessions = daySessions.filter(s => s.turn === "tarde");
+                              const isToday = currentTime.getDay() - 1 === dayIdx;
+                              const nowMins = currentTime.getHours() * 60 + currentTime.getMinutes();
+
+                              return (
+                                <div className="space-y-4">
+                                  {/* Mañana */}
+                                  <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800">
+                                      <h4 className="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                                        <span>☀️ Sesiones de Mañana · {dayNames[dayIdx]}</span>
+                                        {isToday && (
+                                          <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+                                            HOY
+                                          </span>
+                                        )}
+                                      </h4>
+                                      <span className="text-xs font-bold text-slate-500">{morningSessions.length} sesiones</span>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                      {morningSessions.map((ses, sIdx) => {
                                         const [sH, sM] = ses.start.split(":").map(Number);
                                         const [eH, eM] = ses.end.split(":").map(Number);
-                                        const sTotal = sH * 60 + sM;
-                                        const eTotal = eH * 60 + eM;
-                                        const isNow = isToday && nowMins >= sTotal && nowMins < eTotal;
+                                        const isNow = isToday && nowMins >= (sH * 60 + sM) && nowMins < (eH * 60 + eM);
 
                                         return (
                                           <div
                                             key={sIdx}
-                                            className={`p-2.5 rounded-xl border text-xs transition ${
+                                            className={`p-3.5 rounded-2xl border text-xs transition flex flex-col justify-between ${
                                               isNow
-                                                ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-500/60 shadow-xs"
-                                                : "bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-600"
+                                                ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 dark:border-emerald-500/60 shadow-xs"
+                                                : "bg-slate-50/80 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 hover:border-indigo-300"
                                             }`}
                                           >
-                                            <div className="flex items-center justify-between gap-1 mb-1">
-                                              <span className="font-mono text-[11px] font-black text-indigo-700 dark:text-indigo-300">
-                                                ⏱️ {ses.time}
-                                              </span>
-                                              <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
-                                                ses.stage === "Infantil"
-                                                  ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
-                                                  : ses.stage === "Secundaria"
-                                                  ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
-                                                  : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
-                                              }`}>
-                                                {ses.stage}
-                                              </span>
-                                            </div>
-
-                                            <div className="flex items-center justify-between gap-1">
-                                              <span className="font-extrabold text-slate-900 dark:text-white text-xs">
-                                                {ses.aula}
-                                              </span>
-                                              {isNow && (
-                                                <span className="animate-pulse inline-flex items-center gap-1 text-[9px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50 px-1.5 py-0.5 rounded">
-                                                  🟢 AHORA
+                                            <div>
+                                              <div className="flex items-center justify-between gap-1 mb-1.5">
+                                                <span className="font-mono text-xs font-black text-indigo-700 dark:text-indigo-300">
+                                                  ⏱️ {ses.time}
                                                 </span>
-                                              )}
+                                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                                                  ses.stage === "Infantil"
+                                                    ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
+                                                    : ses.stage === "Secundaria"
+                                                    ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
+                                                    : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                                                }`}>
+                                                  {ses.stage}
+                                                </span>
+                                              </div>
+                                              <div className="flex items-center justify-between gap-1">
+                                                <span className="font-extrabold text-sm text-slate-900 dark:text-white">
+                                                  {ses.aula}
+                                                </span>
+                                                {isNow && (
+                                                  <span className="animate-pulse inline-flex items-center gap-1 text-[9px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50 px-2 py-0.5 rounded-full">
+                                                    🟢 EN CURSO
+                                                  </span>
+                                                )}
+                                              </div>
+                                              <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-1">
+                                                {ses.materia}
+                                              </p>
                                             </div>
-
-                                            <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 mt-0.5">
-                                              {ses.materia}
-                                            </p>
-
-                                            <div className="mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800/80 text-[10px] text-slate-500 dark:text-slate-400 flex items-start gap-1">
-                                              <span className="shrink-0">👥</span>
-                                              <span className="font-medium text-slate-700 dark:text-slate-300 line-clamp-2" title={ses.students}>
-                                                {ses.students}
-                                              </span>
+                                            <div className="mt-2.5 pt-2 border-t border-slate-200/80 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+                                              <span className="font-bold text-slate-800 dark:text-slate-200">👥 Alumnos: </span>
+                                              <span>{ses.students}</span>
                                             </div>
                                           </div>
                                         );
                                       })}
                                     </div>
                                   </div>
-                                );
-                              })}
-                            </div>
+
+                                  {/* Pausa de Mediodía */}
+                                  <div className="p-3 bg-orange-50/70 dark:bg-orange-950/25 rounded-2xl border border-orange-200/80 dark:border-orange-900/50 text-xs font-bold text-orange-900 dark:text-orange-300 flex items-center justify-center gap-2">
+                                    <span>🍽️ 12:30 - 14:00 · Comedor Escolar y Descanso Mediodía</span>
+                                  </div>
+
+                                  {/* Tarde */}
+                                  <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800">
+                                      <h4 className="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                                        <span>🌤️ Sesiones de Tarde · {dayNames[dayIdx]}</span>
+                                      </h4>
+                                      <span className="text-xs font-bold text-slate-500">{afternoonSessions.length} sesiones</span>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                      {afternoonSessions.map((ses, sIdx) => {
+                                        const [sH, sM] = ses.start.split(":").map(Number);
+                                        const [eH, eM] = ses.end.split(":").map(Number);
+                                        const isNow = isToday && nowMins >= (sH * 60 + sM) && nowMins < (eH * 60 + eM);
+
+                                        return (
+                                          <div
+                                            key={sIdx}
+                                            className={`p-3.5 rounded-2xl border text-xs transition flex flex-col justify-between ${
+                                              isNow
+                                                ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 dark:border-emerald-500/60 shadow-xs"
+                                                : "bg-slate-50/80 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 hover:border-indigo-300"
+                                            }`}
+                                          >
+                                            <div>
+                                              <div className="flex items-center justify-between gap-1 mb-1.5">
+                                                <span className="font-mono text-xs font-black text-indigo-700 dark:text-indigo-300">
+                                                  ⏱️ {ses.time}
+                                                </span>
+                                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                                                  ses.stage === "Infantil"
+                                                    ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
+                                                    : ses.stage === "Secundaria"
+                                                    ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
+                                                    : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                                                }`}>
+                                                  {ses.stage}
+                                                </span>
+                                              </div>
+                                              <div className="flex items-center justify-between gap-1">
+                                                <span className="font-extrabold text-sm text-slate-900 dark:text-white">
+                                                  {ses.aula}
+                                                </span>
+                                                {isNow && (
+                                                  <span className="animate-pulse inline-flex items-center gap-1 text-[9px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50 px-2 py-0.5 rounded-full">
+                                                    🟢 EN CURSO
+                                                  </span>
+                                                )}
+                                              </div>
+                                              <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-1">
+                                                {ses.materia}
+                                              </p>
+                                            </div>
+                                            <div className="mt-2.5 pt-2 border-t border-slate-200/80 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+                                              <span className="font-bold text-slate-800 dark:text-slate-200">👥 Alumnos: </span>
+                                              <span>{ses.students}</span>
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })() : (
+                              /* Vista 5 Columnas con separación Mañana/Tarde */
+                              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3">
+                                {dayNames.map((dName, dIdx) => {
+                                  const sessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[String(dIdx)] || [];
+                                  const morningSessions = sessions.filter(s => s.turn === "mañana");
+                                  const afternoonSessions = sessions.filter(s => s.turn === "tarde");
+                                  const isToday = currentTime.getDay() - 1 === dIdx;
+                                  const nowMins = currentTime.getHours() * 60 + currentTime.getMinutes();
+
+                                  return (
+                                    <div
+                                      key={dName}
+                                      className={`rounded-2xl border p-3 flex flex-col gap-2.5 transition ${
+                                        isToday
+                                          ? "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-300 dark:border-indigo-500/50 shadow-xs"
+                                          : "bg-slate-50/70 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800"
+                                      }`}
+                                    >
+                                      <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                                        <span className={`text-xs font-black uppercase tracking-wider ${isToday ? "text-indigo-600 dark:text-indigo-400" : "text-slate-700 dark:text-slate-300"}`}>
+                                          {dName} {isToday && "⭐ (Hoy)"}
+                                        </span>
+                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                                          {sessions.length} ses.
+                                        </span>
+                                      </div>
+
+                                      {/* Mañana */}
+                                      <div className="space-y-1.5">
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
+                                          ☀️ Mañana ({morningSessions.length})
+                                        </span>
+                                        {morningSessions.map((ses, sIdx) => {
+                                          const [sH, sM] = ses.start.split(":").map(Number);
+                                          const [eH, eM] = ses.end.split(":").map(Number);
+                                          const isNow = isToday && nowMins >= (sH * 60 + sM) && nowMins < (eH * 60 + eM);
+
+                                          return (
+                                            <div
+                                              key={sIdx}
+                                              className={`p-2.5 rounded-xl border text-xs transition ${
+                                                isNow
+                                                  ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-500/60 shadow-xs"
+                                                  : "bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 hover:border-indigo-300"
+                                              }`}
+                                            >
+                                              <div className="flex items-center justify-between gap-1 mb-1">
+                                                <span className="font-mono text-[10px] font-black text-indigo-700 dark:text-indigo-300">
+                                                  ⏱️ {ses.time}
+                                                </span>
+                                                <span className={`px-1.5 py-0.2 rounded text-[8px] font-black uppercase tracking-wider ${
+                                                  ses.stage === "Infantil"
+                                                    ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
+                                                    : ses.stage === "Secundaria"
+                                                    ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
+                                                    : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                                                }`}>
+                                                  {ses.stage}
+                                                </span>
+                                              </div>
+                                              <div className="flex items-center justify-between gap-1">
+                                                <span className="font-extrabold text-slate-900 dark:text-white text-xs">
+                                                  {ses.aula}
+                                                </span>
+                                                {isNow && (
+                                                  <span className="animate-pulse inline-flex items-center gap-0.5 text-[8px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50 px-1 py-0.2 rounded">
+                                                    🟢 AHORA
+                                                  </span>
+                                                )}
+                                              </div>
+                                              <p className="text-[10px] font-semibold text-slate-600 dark:text-slate-300 mt-0.5 truncate">
+                                                {ses.materia}
+                                              </p>
+                                              <div className="mt-1 pt-1 border-t border-slate-100 dark:border-slate-800/80 text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1" title={ses.students}>
+                                                <span className="shrink-0">👥</span>
+                                                <span className="truncate font-medium">{ses.studentsShort || ses.students}</span>
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+
+                                      {/* Separador de Comedor */}
+                                      <div className="py-1 px-2 rounded-lg bg-orange-50/70 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 text-[10px] font-bold text-orange-800 dark:text-orange-300 text-center">
+                                        🍽️ 12:30 Comedor
+                                      </div>
+
+                                      {/* Tarde */}
+                                      <div className="space-y-1.5 flex-1">
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
+                                          🌤️ Tarde ({afternoonSessions.length})
+                                        </span>
+                                        {afternoonSessions.map((ses, sIdx) => {
+                                          const [sH, sM] = ses.start.split(":").map(Number);
+                                          const [eH, eM] = ses.end.split(":").map(Number);
+                                          const isNow = isToday && nowMins >= (sH * 60 + sM) && nowMins < (eH * 60 + eM);
+
+                                          return (
+                                            <div
+                                              key={sIdx}
+                                              className={`p-2.5 rounded-xl border text-xs transition ${
+                                                isNow
+                                                  ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-500/60 shadow-xs"
+                                                  : "bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 hover:border-indigo-300"
+                                              }`}
+                                            >
+                                              <div className="flex items-center justify-between gap-1 mb-1">
+                                                <span className="font-mono text-[10px] font-black text-indigo-700 dark:text-indigo-300">
+                                                  ⏱️ {ses.time}
+                                                </span>
+                                                <span className={`px-1.5 py-0.2 rounded text-[8px] font-black uppercase tracking-wider ${
+                                                  ses.stage === "Infantil"
+                                                    ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
+                                                    : ses.stage === "Secundaria"
+                                                    ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
+                                                    : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                                                }`}>
+                                                  {ses.stage}
+                                                </span>
+                                              </div>
+                                              <div className="flex items-center justify-between gap-1">
+                                                <span className="font-extrabold text-slate-900 dark:text-white text-xs">
+                                                  {ses.aula}
+                                                </span>
+                                                {isNow && (
+                                                  <span className="animate-pulse inline-flex items-center gap-0.5 text-[8px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50 px-1 py-0.2 rounded">
+                                                    🟢 AHORA
+                                                  </span>
+                                                )}
+                                              </div>
+                                              <p className="text-[10px] font-semibold text-slate-600 dark:text-slate-300 mt-0.5 truncate">
+                                                {ses.materia}
+                                              </p>
+                                              <div className="mt-1 pt-1 border-t border-slate-100 dark:border-slate-800/80 text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1" title={ses.students}>
+                                                <span className="shrink-0">👥</span>
+                                                <span className="truncate font-medium">{ses.studentsShort || ses.students}</span>
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
                         )}
 
-                        {/* SUB-TAB 2: ALUMNOS E INTERVENCIONES POR ETAPA */}
+                        {/* SUB-TAB 3: ALUMNOS E INTERVENCIONES POR ETAPA */}
                         {asenjoScheduleTab === "alumnos" && (
                           <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -4141,17 +4518,17 @@ export function App() {
                           </div>
                         )}
 
-                        {/* SUB-TAB 3: CUADRÍCULA ESTÁNDAR 1H-6H */}
+                        {/* SUB-TAB 4: CUADRÍCULA GENERAL 1H-6H */}
                         {asenjoScheduleTab === "cuadricula" && (
                           <div className="space-y-3">
                             <div className="p-3 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 flex items-center justify-between">
                               <span>ℹ️ Esta vista muestra el mapeo aproximado de Daniel Asenjo a los 6 periodos lectivos generales del centro escolar.</span>
                               <button
                                 type="button"
-                                onClick={() => setAsenjoScheduleTab("horario")}
+                                onClick={() => setAsenjoScheduleTab("matriz")}
                                 className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline shrink-0"
                               >
-                                Ver con franjas exactas PT →
+                                Ver Cuadrante Oficial PT →
                               </button>
                             </div>
 
@@ -4238,7 +4615,6 @@ export function App() {
                         )}
                       </div>
                     ) : (
-                      /* Tabla de Horario Semanal Estándar para el resto de Profesores */
                       <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
                         <table className="w-full text-left border-collapse min-w-[720px]">
                           <thead>
