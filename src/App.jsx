@@ -3,7 +3,10 @@ import IconRenderer from './components/IconHelper';
 import {
   SCHOOL_TEACHERS,
   SCHOOL_CLASSROOMS,
+  INFANTIL_CLASSROOMS,
+  PRIMARIA_CLASSROOMS,
   SCHEDULE_PERIOD_COLUMNS,
+  SCHEDULE_PERIOD_COLUMNS_INFANTIL,
   TEACHER_SCHEDULES,
   DANIEL_ASENJO_DRIVE_URL,
   DANIEL_ASENJO_CUSTOM_TIMETABLE,
@@ -34,8 +37,19 @@ const SCHOOL_PERIODS = [
   { id: "CLAU", name: "👥 Reuniones / Extraescolares", start: "16:15", end: "18:00", type: "meeting", nextEvent: "Fin de Jornada" }
 ];
 
-function getLivePeriodId(now = new Date()) {
+function getLivePeriodId(now = new Date(), isInfantil = false) {
   const mins = now.getHours() * 60 + now.getMinutes();
+  if (isInfantil) {
+    if (mins >= 8 * 60 + 45 && mins < 9 * 60 + 30) return "1H";
+    if (mins >= 9 * 60 + 30 && mins < 10 * 60 + 0) return "2H";
+    if (mins >= 10 * 60 + 0 && mins < 10 * 60 + 30) return "REC";
+    if (mins >= 10 * 60 + 30 && mins < 11 * 60 + 15) return "3H";
+    if (mins >= 11 * 60 + 15 && mins < 12 * 60 + 15) return "4H";
+    if (mins >= 12 * 60 + 15 && mins < 14 * 60 + 0) return "COM";
+    if (mins >= 14 * 60 + 0 && mins < 15 * 60 + 0) return "5H";
+    if (mins >= 15 * 60 + 0 && mins < 16 * 60 + 0) return "6H";
+    return "1H";
+  }
   if (mins >= 9 * 60 && mins < 9 * 60 + 45) return "1H";
   if (mins >= 9 * 60 + 45 && mins < 10 * 60 + 30) return "2H";
   if (mins >= 10 * 60 + 30 && mins < 11 * 60 + 45) return "3H";
@@ -2239,7 +2253,7 @@ export function App() {
   });
   const currentWeekdayIdx = nowDateObj.getDay() - 1; // 0 = Lunes ... 4 = Viernes
   const activeDayForSchedule = (currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4) ? currentWeekdayIdx : 0;
-  const livePeriodIdNow = getLivePeriodId(nowDateObj);
+  const livePeriodIdNow = getLivePeriodId(nowDateObj, myTeacherObj?.stage === "Infantil");
 
   let activeCalendarSrc = "";
   if (activeCalTab === "unificados") {
@@ -2750,11 +2764,20 @@ export function App() {
                       title="Elige tu nombre para ver tu horario de hoy en directo"
                     >
                       <option value="" className="dark:bg-slate-900">Elegir mi horario docente...</option>
-                      {SCHOOL_TEACHERS.map(t => (
-                        <option key={t.id} value={t.id} className="dark:bg-slate-900">
-                          {t.name}
-                        </option>
-                      ))}
+                      <optgroup label="👶 Educación Infantil" className="dark:bg-slate-900 font-bold text-emerald-600 dark:text-emerald-400">
+                        {SCHOOL_TEACHERS.filter(t => t.stage === "Infantil").map(t => (
+                          <option key={t.id} value={t.id} className="dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+                            {t.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="🎒 Educación Primaria" className="dark:bg-slate-900 font-bold text-indigo-600 dark:text-indigo-400">
+                        {SCHOOL_TEACHERS.filter(t => t.stage !== "Infantil").map(t => (
+                          <option key={t.id} value={t.id} className="dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+                            {t.name}
+                          </option>
+                        ))}
+                      </optgroup>
                     </select>
                   </div>
                 </div>
@@ -2871,54 +2894,62 @@ export function App() {
                       })}
                     </div>
                   );
-                })() : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 flex-1">
-                    {["1H", "2H", "3H", "4H", "5H", "6H"].map((pId, idx) => {
-                      const slot = TEACHER_SCHEDULES[myTeacherObj.id]?.[String(activeDayForSchedule)]?.[pId];
-                      const isNow = currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4 && livePeriodIdNow === pId;
-                      const type = slot ? slot[0] : "N";
-                      const aula = slot ? slot[1] : "";
-                      const materia = slot ? slot[2] : "Libre / Comp.";
+                })() : (() => {
+                    const isInf = myTeacherObj?.stage === "Infantil";
+                    const periodCols = (isInf ? SCHEDULE_PERIOD_COLUMNS_INFANTIL : SCHEDULE_PERIOD_COLUMNS).filter(c => !c.isBreak);
 
-                      return (
-                        <button
-                          key={pId}
-                          type="button"
-                          onClick={() => {
-                            setSelectedViewTeacherId(myTeacherObj.id);
-                            setScheduleCenterTab("teacher");
-                            setIsScheduleCenterOpen(true);
-                          }}
-                          className={`p-2 rounded-xl border text-left transition flex flex-col justify-between ${
-                            isNow
-                              ? "ring-2 ring-emerald-500 bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/50 shadow-xs"
-                              : type === "L"
-                              ? "bg-white dark:bg-slate-900 border-indigo-200/80 dark:border-indigo-500/30"
-                              : type === "D"
-                              ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-500/30"
-                              : "bg-slate-100/70 dark:bg-slate-900/40 border-slate-200/60 dark:border-slate-800 opacity-75"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between gap-1 text-[10px] font-bold">
-                            <span className="text-slate-500 dark:text-slate-400">{idx + 1}.ª Hora</span>
-                            {aula ? (
-                              <span className="px-1.5 py-0.2 rounded bg-indigo-600 text-white font-extrabold text-[9px]">
-                                {aula}
-                              </span>
-                            ) : type === "D" ? (
-                              <span className="px-1.5 py-0.2 rounded bg-emerald-600 text-white font-extrabold text-[9px]">
-                                APOYO
-                              </span>
-                            ) : null}
-                          </div>
-                          <div className="text-[11px] font-extrabold text-slate-900 dark:text-white truncate mt-0.5" title={materia}>
-                            {type === "L" ? materia : type === "D" ? "Disponible / Guardia" : "Sin clase lectiva"}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+                    return (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 flex-1">
+                        {periodCols.map((col, idx) => {
+                          const pId = col.id;
+                          const slot = TEACHER_SCHEDULES[myTeacherObj.id]?.[String(activeDayForSchedule)]?.[pId];
+                          const isNow = currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4 && livePeriodIdNow === pId;
+                          const type = slot ? slot[0] : "N";
+                          const aula = slot ? slot[1] : "";
+                          const materia = slot ? slot[2] : "Libre / Comp.";
+
+                          return (
+                            <button
+                              key={pId}
+                              type="button"
+                              onClick={() => {
+                                setSelectedViewTeacherId(myTeacherObj.id);
+                                setScheduleCenterTab("teacher");
+                                setIsScheduleCenterOpen(true);
+                              }}
+                              className={`p-2 rounded-xl border text-left transition flex flex-col justify-between ${
+                                isNow
+                                  ? "ring-2 ring-emerald-500 bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/50 shadow-xs"
+                                  : type === "L"
+                                  ? "bg-white dark:bg-slate-900 border-indigo-200/80 dark:border-indigo-500/30"
+                                  : type === "D"
+                                  ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-500/30"
+                                  : "bg-slate-100/70 dark:bg-slate-900/40 border-slate-200/60 dark:border-slate-800 opacity-75"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between gap-1 text-[10px] font-bold">
+                                <span className="text-slate-500 dark:text-slate-400">
+                                  {idx + 1}.ª Hora <span className="font-mono text-[9px] opacity-80">({col.shortTime})</span>
+                                </span>
+                                {aula ? (
+                                  <span className={`px-1.5 py-0.2 rounded font-extrabold text-[9px] text-white ${isInf ? "bg-emerald-600" : "bg-indigo-600"}`}>
+                                    {aula}
+                                  </span>
+                                ) : type === "D" ? (
+                                  <span className="px-1.5 py-0.2 rounded bg-emerald-600 text-white font-extrabold text-[9px]">
+                                    APOYO
+                                  </span>
+                                ) : null}
+                              </div>
+                              <div className="text-[11px] font-extrabold text-slate-900 dark:text-white truncate mt-0.5" title={materia}>
+                                {type === "L" ? materia : type === "D" ? (materia || "Disponible / Guardia") : "Sin clase lectiva"}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
 
                 <button
                   type="button"
@@ -3874,11 +3905,20 @@ export function App() {
                           onChange={(e) => setSelectedViewTeacherId(e.target.value)}
                           className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white outline-none focus:border-indigo-500 min-w-[250px]"
                         >
-                          {SCHOOL_TEACHERS.map(t => (
-                            <option key={t.id} value={t.id}>
-                              {t.name} ({t.dept})
-                            </option>
-                          ))}
+                          <optgroup label="👶 Educación Infantil" className="font-bold text-emerald-600 dark:text-emerald-400">
+                            {SCHOOL_TEACHERS.filter(t => t.stage === "Infantil").map(t => (
+                              <option key={t.id} value={t.id} className="text-slate-900 dark:text-slate-100">
+                                {t.name} ({t.dept})
+                              </option>
+                            ))}
+                          </optgroup>
+                          <optgroup label="🎒 Educación Primaria" className="font-bold text-indigo-600 dark:text-indigo-400">
+                            {SCHOOL_TEACHERS.filter(t => t.stage !== "Infantil").map(t => (
+                              <option key={t.id} value={t.id} className="text-slate-900 dark:text-slate-100">
+                                {t.name} ({t.dept})
+                              </option>
+                            ))}
+                          </optgroup>
                         </select>
 
                         <button
@@ -4029,84 +4069,89 @@ export function App() {
                                   </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
-                                  {DANIEL_ASENJO_MATRIX_SLOTS.map((slot) => {
-                                    if (slot.isBreak) {
-                                      return (
-                                        <tr key={slot.id} className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-900 dark:text-orange-300 font-extrabold text-[11px] text-center">
-                                          <td colSpan={6} className="py-2.5 px-3 tracking-wider uppercase border-y border-orange-200/80 dark:border-orange-900/40">
-                                            {slot.label} · ({slot.time})
+                                  {(() => {
+                                    const isInfTeacher = currentTeacher?.stage === "Infantil";
+                                    const periodCols = (isInfTeacher ? SCHEDULE_PERIOD_COLUMNS_INFANTIL : SCHEDULE_PERIOD_COLUMNS).filter(c => !c.isBreak);
+
+                                    return periodCols.map((col, rowIdx) => (
+                                      <React.Fragment key={col.id}>
+                                        {rowIdx === 2 && (
+                                          <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
+                                            <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                              {isInfTeacher
+                                                ? "☕ 10:00 - 10:30 · Recreo Infantil (Patio)"
+                                                : "☕ 10:30 - 11:00 · Recreo de Mañana (Patio)"}
+                                            </td>
+                                          </tr>
+                                        )}
+                                        {rowIdx === 4 && (
+                                          <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
+                                            <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                              {isInfTeacher
+                                                ? "🍽️ 12:15 - 14:00 · Comedor Infantil y Descanso"
+                                                : "🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía"}
+                                            </td>
+                                          </tr>
+                                        )}
+                                        <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                                          <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                                            <span className={`block text-xs font-black ${isInfTeacher ? "text-emerald-600 dark:text-emerald-400" : "text-indigo-600 dark:text-indigo-400"}`}>
+                                              {col.label}
+                                            </span>
+                                            <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
                                           </td>
-                                        </tr>
-                                      );
-                                    }
-
-                                    return (
-                                      <tr key={slot.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition">
-                                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200 bg-slate-50/40 dark:bg-slate-950/40 border-r border-slate-200 dark:border-slate-800 align-middle">
-                                          <span className="block text-[11px] font-black text-indigo-700 dark:text-indigo-300">{slot.label}</span>
-                                          <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{slot.time}</span>
-                                        </td>
-                                        {[0, 1, 2, 3, 4].map((dIdx) => {
-                                          const ses = slot.days ? slot.days[String(dIdx)] : null;
-                                          if (!ses) {
-                                            return <td key={dIdx} className="p-2.5 text-center text-slate-300 dark:text-slate-700 italic select-none">—</td>;
-                                          }
-
-                                          const isToday = currentTime.getDay() - 1 === dIdx;
-                                          const nowMins = currentTime.getHours() * 60 + currentTime.getMinutes();
-                                          const [sH, sM] = ses.start.split(":").map(Number);
-                                          const [eH, eM] = ses.end.split(":").map(Number);
-                                          const isNow = isToday && nowMins >= (sH * 60 + sM) && nowMins < (eH * 60 + eM);
-
-                                          return (
-                                            <td key={dIdx} className="p-2 align-top">
-                                              <div
-                                                className={`p-2.5 rounded-xl border h-full transition flex flex-col justify-between ${
-                                                  isNow
-                                                    ? "ring-2 ring-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 dark:border-emerald-500/60 shadow-xs"
-                                                    : "bg-slate-50/90 dark:bg-slate-950/50 border-slate-200/90 dark:border-slate-800 hover:border-indigo-300"
-                                                }`}
-                                              >
-                                                <div>
+                                          {[0, 1, 2, 3, 4].map((dIdx) => {
+                                            const slot = teacherSched[String(dIdx)]?.[col.id];
+                                            if (!slot) {
+                                              return <td key={dIdx} className="p-2.5 text-slate-400 italic text-center">—</td>;
+                                            }
+                                            const [typeCode, aula, materia] = slot;
+                                            const isLectiva = typeCode === "L";
+                                            const isDisp = typeCode === "D";
+                                            return (
+                                              <td key={dIdx} className="p-2 align-top">
+                                                <div
+                                                  className={`p-2.5 rounded-xl border h-full transition ${
+                                                    isLectiva
+                                                      ? isInfTeacher
+                                                        ? "bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200/70 dark:border-emerald-500/30"
+                                                        : "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-200/80 dark:border-indigo-500/30"
+                                                      : isDisp
+                                                      ? "bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-500/30"
+                                                      : "bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800 opacity-60"
+                                                  }`}
+                                                >
                                                   <div className="flex items-center justify-between gap-1 mb-1">
-                                                    <span className="font-mono text-[10px] font-black text-indigo-700 dark:text-indigo-300">
-                                                      ⏱️ {ses.time}
-                                                    </span>
-                                                    <span className={`px-1.5 py-0.2 rounded text-[8px] font-black uppercase tracking-wider ${
-                                                      ses.stage === "Infantil"
-                                                        ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
-                                                        : ses.stage === "Secundaria"
-                                                        ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
-                                                        : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
-                                                    }`}>
-                                                      {ses.stage}
+                                                    <span
+                                                      className={`px-1.5 py-0.5 rounded text-[10px] font-black cursor-pointer ${
+                                                        isLectiva
+                                                          ? isInfTeacher ? "bg-emerald-600 text-white" : "bg-indigo-600 text-white"
+                                                          : isDisp
+                                                          ? "bg-emerald-600 text-white"
+                                                          : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                                                      }`}
+                                                      onClick={() => {
+                                                        if (isLectiva && SCHOOL_CLASSROOMS.includes(aula)) {
+                                                          setSelectedViewClassroom(aula);
+                                                          setScheduleCenterTab("classroom");
+                                                        }
+                                                      }}
+                                                      title={isLectiva && SCHOOL_CLASSROOMS.includes(aula) ? `Ver horario de ${aula}` : ""}
+                                                    >
+                                                      {isLectiva ? (aula !== "Sin Aula" ? aula : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
                                                     </span>
                                                   </div>
-                                                  <div className="flex items-center justify-between gap-1">
-                                                    <span className="font-extrabold text-slate-900 dark:text-white text-xs">
-                                                      {ses.aula}
-                                                    </span>
-                                                    {isNow && (
-                                                      <span className="animate-pulse inline-flex items-center gap-0.5 text-[8px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50 px-1 py-0.2 rounded">
-                                                        🟢 AHORA
-                                                      </span>
-                                                    )}
-                                                  </div>
-                                                  <p className="text-[10px] font-semibold text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
-                                                    {ses.materia}
+                                                  <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
+                                                    {isLectiva ? materia : isDisp ? (materia || "Disponibilidad / Sustitución") : "Sin sesión lectiva"}
                                                   </p>
                                                 </div>
-                                                <div className="mt-1.5 pt-1 border-t border-slate-200/60 dark:border-slate-800/80 text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1" title={ses.students}>
-                                                  <span className="shrink-0">👥</span>
-                                                  <span className="truncate font-medium">{ses.studentsShort || ses.students}</span>
-                                                </div>
-                                              </div>
-                                            </td>
-                                          );
-                                        })}
-                                      </tr>
-                                    );
-                                  })}
+                                              </td>
+                                            );
+                                          })}
+                                        </tr>
+                                      </React.Fragment>
+                                    ));
+                                  })()}
                                 </tbody>
                               </table>
                             </div>
@@ -4697,31 +4742,67 @@ export function App() {
 
                 return (
                   <div className="space-y-4">
-                    {/* Selector rápido de las 18 Aulas */}
-                    <div className="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2.5">
+                    {/* Selector de Aulas organizado por Etapa: Infantil y Primaria */}
+                    <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3.5">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                          Selecciona Curso y Grupo de Educación Primaria:
+                          Selecciona Curso y Grupo:
                         </span>
-                        <span className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400">
+                        <span className={`text-xs font-black px-2.5 py-0.5 rounded-full ${
+                          INFANTIL_CLASSROOMS.includes(selectedViewClassroom)
+                            ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700"
+                            : "bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700"
+                        }`}>
                           Aula activa: {selectedViewClassroom}
                         </span>
                       </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {SCHOOL_CLASSROOMS.map((aula) => (
-                          <button
-                            key={aula}
-                            type="button"
-                            onClick={() => setSelectedViewClassroom(aula)}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
-                              selectedViewClassroom === aula
-                                ? "bg-indigo-600 text-white shadow-xs scale-105"
-                                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-400"
-                            }`}
-                          >
-                            {aula}
-                          </button>
-                        ))}
+
+                      {/* Grupo Infantil */}
+                      <div>
+                        <div className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 mb-1.5 flex items-center gap-1.5">
+                          <span>👶</span>
+                          <span>Educación Infantil (9 Aulas):</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {INFANTIL_CLASSROOMS.map((aula) => (
+                            <button
+                              key={aula}
+                              type="button"
+                              onClick={() => setSelectedViewClassroom(aula)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
+                                selectedViewClassroom === aula
+                                  ? "bg-emerald-600 text-white shadow-xs scale-105"
+                                  : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-emerald-200/80 dark:border-emerald-900/40 hover:border-emerald-500"
+                              }`}
+                            >
+                              {aula}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Grupo Primaria */}
+                      <div>
+                        <div className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-700 dark:text-indigo-400 mb-1.5 flex items-center gap-1.5">
+                          <span>🎒</span>
+                          <span>Educación Primaria (18 Aulas):</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {PRIMARIA_CLASSROOMS.map((aula) => (
+                            <button
+                              key={aula}
+                              type="button"
+                              onClick={() => setSelectedViewClassroom(aula)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
+                                selectedViewClassroom === aula
+                                  ? "bg-indigo-600 text-white shadow-xs scale-105"
+                                  : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-400"
+                              }`}
+                            >
+                              {aula}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
 
@@ -4739,70 +4820,106 @@ export function App() {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
-                          {SCHEDULE_PERIOD_COLUMNS.map((col, rowIdx) => (
-                            <React.Fragment key={col.id}>
-                              {rowIdx === 2 && (
-                                <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
-                                  <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                    ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
-                                  </td>
-                                </tr>
-                              )}
-                              {rowIdx === 4 && (
-                                <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
-                                  <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                    🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía
-                                  </td>
-                                </tr>
-                              )}
-                              <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
-                                <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
-                                  <span className="block text-xs text-indigo-600 dark:text-indigo-400">{col.label}</span>
-                                  <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
-                                </td>
-                                {[0, 1, 2, 3, 4].map((dIdx) => {
-                                  const matches = [];
-                                  SCHOOL_TEACHERS.forEach((t) => {
-                                    const slot = TEACHER_SCHEDULES[t.id]?.[String(dIdx)]?.[col.id];
-                                    if (slot && slot[0] === "L" && slot[1] === selectedViewClassroom) {
-                                      matches.push({ teacher: t, materia: slot[2] });
-                                    }
-                                  });
+                          {(() => {
+                            const isInfAula = INFANTIL_CLASSROOMS.includes(selectedViewClassroom);
+                            const periodCols = (isInfAula ? SCHEDULE_PERIOD_COLUMNS_INFANTIL : SCHEDULE_PERIOD_COLUMNS).filter(c => !c.isBreak);
 
-                                  return (
-                                    <td key={dIdx} className="p-2 align-top">
-                                      {matches.length === 0 ? (
-                                        <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 text-slate-400 italic text-[11px]">
-                                          Especialidad / Otro docente
-                                        </div>
-                                      ) : (
-                                        <div className="space-y-1.5">
-                                          {matches.map((m, i) => (
-                                            <button
-                                              key={i}
-                                              type="button"
-                                              onClick={() => {
-                                                setSelectedViewTeacherId(m.teacher.id);
-                                                setScheduleCenterTab("teacher");
-                                              }}
-                                              className="w-full text-left p-2.5 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-500/30 hover:border-indigo-500 transition group"
-                                            >
-                                              <p className="font-extrabold text-xs text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
-                                                {m.materia}
-                                              </p>
-                                              <p className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 truncate mt-0.5">
-                                                👨‍🏫 {m.teacher.name}
-                                              </p>
-                                            </button>
-                                          ))}
-                                        </div>
-                                      )}
+                            return periodCols.map((col, rowIdx) => (
+                              <React.Fragment key={col.id}>
+                                {rowIdx === 2 && (
+                                  <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
+                                    <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                      {isInfAula
+                                        ? "☕ 10:00 - 10:30 · Recreo Infantil (Patio)"
+                                        : "☕ 10:30 - 11:00 · Recreo de Mañana (Patio)"}
                                     </td>
-                                  );
-                                })}
-                              </tr>
-                            </React.Fragment>
-                          ))}
+                                  </tr>
+                                )}
+                                {rowIdx === 4 && (
+                                  <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
+                                    <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                      {isInfAula
+                                        ? "🍽️ 12:15 - 14:00 · Comedor Infantil y Descanso"
+                                        : "🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía"}
+                                    </td>
+                                  </tr>
+                                )}
+                                <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                                  <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                                    <span className={`block text-xs font-black ${isInfAula ? "text-emerald-600 dark:text-emerald-400" : "text-indigo-600 dark:text-indigo-400"}`}>
+                                      {col.label}
+                                    </span>
+                                    <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
+                                  </td>
+                                  {[0, 1, 2, 3, 4].map((dIdx) => {
+                                    const rawMatches = [];
+                                    SCHOOL_TEACHERS.forEach((t) => {
+                                      const slot = TEACHER_SCHEDULES[t.id]?.[String(dIdx)]?.[col.id];
+                                      if (slot && slot[0] === "L" && slot[1] === selectedViewClassroom) {
+                                        rawMatches.push({ teacher: t, materia: slot[2] });
+                                      }
+                                    });
+
+                                    const matches = [];
+                                    const seen = new Set();
+                                    rawMatches.forEach(m => {
+                                      if (m.teacher.id === "mparras" || m.teacher.id === "plozano") {
+                                        if (!seen.has("mparras_group")) {
+                                          seen.add("mparras_group");
+                                          matches.push({
+                                            teacher: { ...m.teacher, name: "Mª Jesús Parras / Paula Lozano" },
+                                            materia: m.materia
+                                          });
+                                        }
+                                      } else if (!seen.has(m.teacher.id)) {
+                                        seen.add(m.teacher.id);
+                                        matches.push(m);
+                                      }
+                                    });
+
+                                    return (
+                                      <td key={dIdx} className="p-2 align-top">
+                                        {matches.length === 0 ? (
+                                          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 text-slate-400 italic text-[11px]">
+                                            — Sin asignar
+                                          </div>
+                                        ) : (
+                                          <div className="space-y-1.5">
+                                            {matches.map((m, mIdx) => (
+                                              <button
+                                                key={mIdx}
+                                                type="button"
+                                                onClick={() => {
+                                                  setSelectedViewTeacherId(m.teacher.id);
+                                                  setScheduleCenterTab("teacher");
+                                                }}
+                                                className={`w-full text-left p-2.5 rounded-xl border transition group hover:shadow-xs ${
+                                                  isInfAula
+                                                    ? "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-500/30 hover:border-emerald-500"
+                                                    : "bg-indigo-50/60 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-500/30 hover:border-indigo-500"
+                                                }`}
+                                              >
+                                                <p className={`font-extrabold text-xs text-slate-900 dark:text-white ${
+                                                  isInfAula ? "group-hover:text-emerald-700 dark:group-hover:text-emerald-400" : "group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
+                                                }`}>
+                                                  {m.materia}
+                                                </p>
+                                                <p className={`text-[10px] font-bold truncate mt-0.5 ${
+                                                  isInfAula ? "text-emerald-700 dark:text-emerald-300" : "text-indigo-700 dark:text-indigo-300"
+                                                }`}>
+                                                  👩‍🏫 {m.teacher.name}
+                                                </p>
+                                              </button>
+                                            ))}
+                                          </div>
+                                        )}
+                                      </td>
+                                    );
+                                  })}
+                                </tr>
+                              </React.Fragment>
+                            ));
+                          })()}
                         </tbody>
                       </table>
                     </div>
