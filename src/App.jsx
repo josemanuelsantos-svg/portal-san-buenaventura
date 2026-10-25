@@ -361,13 +361,115 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-26-30-oct-2026",
+    weekTitle: "Semana del 26 al 30 de Octubre: Jubilación de Isabel, Parque Europa (5 años), Revisión Visual y Oración Comunitaria",
+    academicYear: "2026/2027",
+    summary: "Eucaristía y ágape por la jubilación de Isabel el jueves a las 16:15 en la iglesia, salida de 5 años al Parque Europa el jueves (picnics coordinados con Nuria Romero), diez minutos de oración comunitaria el miércoles, revisión oftalmológica en 6.º EP el viernes, entrega de credenciales en Infantil, cierre de recogida de pagos de actividades (miércoles) y bienvenida a Casandra Olivares en 6.º B.",
+    publishedAt: "2026-10-25",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1792972800000,
+    days: [
+      {
+        day: "Lunes",
+        date: "26 Oct",
+        items: [
+          "📬 Pagos de Actividades (1.º Trimestre): nuevo reparto de sobres por las clases para recoger importes pendientes (último día: miércoles).",
+          "💻 Credenciales Infantil: entrega a tutoras de hojas individuales de CiberEMAT y Great Little People para familias (Elena confirmará el día de entrega común).",
+          "👩‍🏫 Incorporación de Casandra Olivares: asume la tutoría de 6.º B, sus asignaturas y apoyos durante la baja médica de Jose Manuel."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "27 Oct",
+        items: [
+          "🎒 Salida 5 Años (Parque Europa - jueves 29): fecha límite para comunicar renuncia al picnic. Tutoras: comunicar a Nuria Romero las bajas de picnic para cocina.",
+          "📊 Excel de Pagos: registrar puntualmente los cobros de actividades de vuestro curso mediante el enlace del portal."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "28 Oct",
+        items: [
+          "🙏 10 Minutos con la Comunidad Educativa: retoma de la oración matinal comunitaria antes de clase (familias, docentes y alumnos bienvenidos).",
+          "🛑 Fin de Recogida de Sobres: último día para recopilar el dinero de actividades de las diferentes clases."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "29 Oct",
+        items: [
+          "🎉 16:15 Jubilación de Isabel: Eucaristía de acción de gracias en la iglesia y ágape fraterno de agradecimiento por su entrega al colegio (sustituye la reunión habitual).",
+          "🌳 Salida 5 Años a Parque Europa (Torrejón de Ardoz): jornada completa (sin comedor en cole). Acompañan Alejandra Pérez, Marta Rodríguez, Tere Espejo y Paula Lozano. Recogida de picnic a primera hora."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "30 Oct",
+        items: [
+          "👁️ Revisión Oftalmológica (6.º EP): seguimiento del estudio visual del curso anterior (solo alumnos participantes). A primera hora Bea confirmará la sala definitiva.",
+          "🍂 Puente de Todos los Santos: inicio del descanso al finalizar la jornada escolar. ¡Feliz puente y descanso a todo el claustro!"
+        ]
+      }
+    ],
+    generalNotes: "Jueves 29: Reunión especial a las 16:15 en la iglesia para celebrar la jubilación de Isabel (Eucaristía de acción de gracias y ágape; no habrá reunión de curso/ciclo ordinaria). Jueves 29: Salida de 5 años al Parque Europa (toda la jornada; acompañan Alejandra, Marta, Tere y Paula Lozano; picnics preparados automáticamente para usuarios habituales, tutoras trasladar a Nuria Romero las bajas comunicadas por familias antes del martes). Miércoles 28: Retorno de los 'Diez minutos de oración con la comunidad educativa' a primera hora y fecha límite definitiva para la recogida de sobres de actividades (registrar los pagos en el Excel del portal). Viernes 30: Revisión oftalmológica en 6.º EP para alumnos que participaron en el estudio del curso pasado (Bea confirmará ubicación a primera hora). Infantil: Entrega coordinada de credenciales CiberEMAT y Great Little People a familias (Elena avisará el día). Sustitución: Bienvenida a Casandra Olivares, quien asume la tutoría de 6.º B, asignaturas y apoyos durante la baja de Jose Manuel.",
+    fullEmailText: `Buenos días a todos:
+Comenzamos una nueva semana, esta vez con la alegría de saber que tenemos por delante un pequeño puente con motivo de Todos los Santos. Unos días que, estoy seguro, todos recibimos con bastante alegría y que también nos vendrán fenomenal para descansar, desconectar un poquito y coger fuerzas para lo que queda de trimestre.
+
+JUEVES 29 – INVITACIÓN DE ISABEL
+Este jueves nuestra reunión tendrá un motivo muy especial.
+Como ya habéis podido ver a través de Educamos, Isabel nos ha invitado a compartir con ella la celebración de su jubilación.
+Por tanto, este jueves nos reuniremos todos en la iglesia, tal y como nos ha indicado, para comenzar con una Eucaristía de acción de gracias y, posteriormente, compartir ese pequeño ágape con el que podremos agradecerle tantos años de trabajo, dedicación y entrega a nuestro colegio.
+Será una ocasión muy bonita para acompañarla y celebrar juntos todo lo que ha significado y sigue significando para nuestra comunidad educativa.
+
+PAGOS DE ACTIVIDADES DEL PRIMER TRIMESTRE
+El viernes recogimos los sobres con el dinero de las actividades de las diferentes clases.
+Mañana lunes volveremos a repartirlos para que podáis terminar de recoger las cantidades que todavía estén pendientes. El miércoles será el último día de recogida, por lo que os pido que para entonces tengamos recopilado todo lo que falte.
+Recordad, por favor, que es importante ir registrando los pagos en el Excel de actividades, cuyo enlace tenéis disponible directamente en el portal del curso. Así podremos llevar un control actualizado y evitar que después tengamos que estar revisando cantidades o buscando pagos que no estén anotados.
+
+JUEVES 29 – SALIDA DE 5 AÑOS AL PARQUE EUROPA
+Este jueves los alumnos de 5 años realizarán su salida al Parque Europa de Torrejón de Ardoz. Irán acompañados por sus tutoras, Alejandra, Marta y Tere, y por Paula Lozano.
+La actividad ocupará toda la jornada, por lo que no comerán en el colegio.
+Como hacemos habitualmente, todos los alumnos que utilizan el comedor tendrán preparado su picnic para recogerlo a primera hora, antes de salir.
+Recordad que aquellas familias que no quieran el picnic deben comunicarlo a su tutora con al menos dos días de antelación. Si no recibimos ninguna indicación, se preparará el picnic correspondiente para todos los alumnos que tengan contratado el comedor. En este caso, os pido a las tutoras que comuniquéis a Nuria Romero qué alumnos no van a necesitarlo, para que ella pueda trasladar directamente a cocina el número definitivo de picnics que deben preparar.
+
+CREDENCIALES DE ACCESO A CIBEREMAT Y GREAT LITTLE PEOPLE
+Esta semana entregaremos a las tutoras de Infantil una hoja individual para cada alumno con sus credenciales de acceso a CiberEMAT y Great Little People, para que las familias puedan utilizar ambas plataformas desde casa.
+Una vez que tengamos todas las hojas preparadas y repartidas a las tutoras, Elena nos confirmará el día en el que deberán entregarse a las familias, de manera que todos los grupos de Infantil las hagan llegar el mismo día.
+
+VIERNES 30 – REVISIÓN OFTALMOLÓGICA DE 6.º DE PRIMARIA
+Este viernes volverá a realizarse el seguimiento del estudio visual que se llevó a cabo el curso pasado con algunos alumnos que ahora están en 6.º de Primaria. Es importante recordar que no se realizará a todos los alumnos de sexto, sino únicamente a aquellos que participaron en el estudio del curso anterior.
+El año pasado las pruebas se realizaron en la sala múltiple, pero, como actualmente tenemos allí montada la Casa del Cántico, todavía no sabemos con seguridad qué espacio utilizaremos. El viernes, a primera hora, Bea nos confirmará dónde se realizarán finalmente las pruebas para que podamos organizar el paso de los alumnos.
+
+MIÉRCOLES – DIEZ MINUTOS CON TODA LA COMUNIDAD EDUCATIVA
+Este miércoles retomamos una iniciativa que ya compartimos el curso pasado: nuestros diez minutos de oración con toda la comunidad educativa. Volvemos a abrir este pequeño momento de encuentro a todas las familias que quieran acompañarnos y, por supuesto, a todos los profesores.
+Es una oportunidad estupenda para comenzar el día de una manera diferente, compartiendo unos minutos de oración antes de entrar en la dinámica habitual de las clases. Podemos participar con nuestros hijos, con nuestros alumnos o simplemente acercarnos a compartir ese ratito con el resto de la comunidad.
+Son solo diez minutos, pero creo que merece mucho la pena seguir cuidando estos pequeños espacios que también forman parte de lo que somos como colegio.
+
+INCORPORACIÓN DE CASANDRA – 6.º B Y APOYOS
+Por último, como algunos ya sabéis, desde el viernes se ha incorporado Casandra Olivares para sustituirme durante estos días en los que, por indicación médica, voy a tener que continuar de baja.
+Casandra se hará cargo de la tutoría de 6.º B y de las asignaturas que venía impartiendo, de manera que los alumnos puedan mantener la mayor continuidad posible hasta que pueda reincorporarme. Además, también estará colaborando en el horario de apoyos, así que no os extrañe verla entrando en alguna clase para trabajar con determinados alumnos durante estos días.
+
+El Evangelio de hoy nos recuerda dos mandamientos que, en realidad, resumen mucho de lo que debería ser nuestra forma de vivir: amar a Dios con todo el corazón, con toda el alma y con toda la mente, y amar al prójimo como a nosotros mismos (y, por favor, no nos olvidemos del líder).
+Y pensando en esto, estos días me viene a la cabeza algo que creo que todos deberíamos recordar de vez en cuando.
+A lo largo de los años compartimos nuestro colegio con muchísimas personas. Algunas llevan toda una vida entre estas paredes; otras nos acompañan durante una etapa más corta. Hay quienes se jubilan, quienes emprenden otros caminos y quienes, por distintas circunstancias, ya no están con nosotros este curso. Pero estoy convencido de que la huella que dejamos en los demás no depende del tiempo que hayamos estado, sino del cariño que hayamos sido capaces de entregar.
+Porque, si lo pensamos, dentro de unos años seguramente nadie se acordará de aquella programación que tanto nos costó terminar, de los documentos que entregamos a tiempo o de las reuniones que tuvimos. Pero sí recordaremos al compañero que nos ayudó cuando lo necesitábamos, a quien siempre tenía una palabra amable, a quien nos hizo sentir parte de algo. Y nuestros alumnos, probablemente, tampoco recordarán todas nuestras explicaciones, pero sí cómo les hicimos sentir, cuánto confiamos en ellos y cuánto los quisimos.
+Y creo que ahí está lo verdaderamente importante de nuestra vocación. Al final, cuando una etapa termina, cuando dejamos un colegio o cuando simplemente miramos atrás, lo que queda de nosotros no es todo lo que hemos hecho, sino todo lo que hemos amado.
+Ojalá nunca se nos olvide, especialmente en medio de tantas prisas, papeles y obligaciones, que lo más importante que hacemos cada día es cuidar a las personas que tenemos al lado.
+Ya que podemos jubilarnos de nuestro trabajo, pero el amor no puede jubilarse.
+
+Que tengamos una estupenda semana, que disfrutemos de los momentos bonitos que nos esperan estos días y que después podamos descansar un poquito durante el puente.
+
+Un abrazo a todos.`
+  },
+  {
     id: "plan-semana-19-23-oct-2026",
     weekTitle: "Semana del 19 al 23 de Octubre: Museo Naval (5.º), Salida de Infantil y Reuniones de Ciclo",
     academicYear: "2026/2027",
     summary: "Salida al Museo Naval para 5.º B y 5.º C el martes, Salida de Infantil a la Casa de Campo el viernes, reuniones de ciclo y decoración de otoño el jueves, inicio de catequesis (3.º y 4.º) y reparto de circulares y sobres de actividades.",
     publishedAt: "2026-10-18",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1792368000000,
     days: [
       {
@@ -4868,6 +4970,14 @@ export function App() {
                                           seen.add("mparras_group");
                                           matches.push({
                                             teacher: { ...m.teacher, name: "Mª Jesús Parras / Paula Lozano" },
+                                            materia: m.materia
+                                          });
+                                        }
+                                      } else if (m.teacher.id === "jos7" || m.teacher.id === "colivares") {
+                                        if (!seen.has("jos7_group")) {
+                                          seen.add("jos7_group");
+                                          matches.push({
+                                            teacher: { ...m.teacher, name: "José Manuel Santos / Casandra Olivares" },
                                             materia: m.materia
                                           });
                                         }
