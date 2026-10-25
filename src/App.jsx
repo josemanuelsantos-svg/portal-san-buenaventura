@@ -40,20 +40,37 @@ const SCHOOL_PERIODS = [
 
 function formatShortAula(aula) {
   if (!aula) return "";
-  const m = aula.match(/^(\d)\s*años?[- ]*([A-C])$/i);
-  return m ? `${m[1]}º${m[2].toUpperCase()}` : aula;
+  const mInf = aula.match(/^(\d)\s*años?[- ]*([A-C])$/i);
+  if (mInf) return `${mInf[1]}º${mInf[2].toUpperCase()}`;
+  const mPrim = aula.match(/^(\d)º?\s*EP[- ]*([A-C])$/i);
+  if (mPrim) return `${mPrim[1]}º${mPrim[2].toUpperCase()}`;
+  return aula;
 }
 
 function formatShortSubject(materia) {
   if (!materia) return "";
-  if (materia.includes("Descubrimiento")) return "Desc. Entorno";
-  if (materia.includes("Comunicación") || materia.includes("representación")) return "Comunicación";
-  if (materia.includes("Crecimiento")) return "Crec. Armonía";
-  if (materia.includes("extranjera")) return "Inglés";
-  if (materia.includes("musical")) return "Música";
-  if (materia.includes("Robótica")) return "Robótica";
-  if (materia.includes("Psicomotricidad")) return "Psicomotricidad";
-  return materia;
+  const m = materia.trim();
+  // Infantil
+  if (m.includes("Descubrimiento")) return "Desc. Entorno";
+  if (m.includes("Comunicación") || m.includes("representación")) return "Comunicación";
+  if (m.includes("Crecimiento")) return "Crec. Armonía";
+  // Asignaturas específicas de Primaria
+  if (m.includes("musical") || m.includes("Música")) return "Música";
+  if (m.includes("Valores")) return "Valores";
+  if (m.includes("Plástica") || m.includes("Artística")) return "Plástica";
+  if (m.includes("Lengua Castellana") || m.includes("Lengua y Literatura")) return "Lengua";
+  if (m.includes("Ciencias de la Naturaleza") || m.includes("Naturales")) return "C. Naturales";
+  if (m.includes("Ciencias Sociales") || m.includes("Sociales")) return "C. Sociales";
+  if (m.includes("Educación Física") || m.includes("Ed. Física")) return "Ed. Física";
+  if (m.includes("Robótica") || m.includes("robótica") || m.includes("Programación")) return "Robótica";
+  if (m.includes("extranjera") || m.includes("Inglés") || m.includes("Ingles")) return "Inglés";
+  if (m.includes("Psicomotricidad")) return "Psicomotricidad";
+  if (m.includes("Matemáticas")) return "Matemáticas";
+  if (m.includes("Religión")) return "Religión";
+  if (m.startsWith("PT ") && m.length > 20) {
+    return m.split("(")[0].trim();
+  }
+  return m;
 }
 
 function getLivePeriodId(now = new Date(), isInfantil = false) {
@@ -4262,8 +4279,8 @@ export function App() {
                                                       {isLectiva ? (aula !== "Sin Aula" ? formatShortAula(aula) : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
                                                     </span>
                                                   </div>
-                                                  <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
-                                                    {isLectiva ? materia : isDisp ? (materia || "Disponibilidad / Sustitución") : "Sin sesión lectiva"}
+                                                  <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug" title={materia}>
+                                                    {isLectiva ? formatShortSubject(materia) : isDisp ? (materia || "Disponibilidad / Sustitución") : "Sin sesión lectiva"}
                                                   </p>
                                                 </div>
                                               </td>
@@ -4915,13 +4932,14 @@ export function App() {
                               key={aula}
                               type="button"
                               onClick={() => setSelectedViewClassroom(aula)}
-                              className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
+                              title={aula}
+                              className={`px-2.5 py-1.5 rounded-xl text-xs font-black transition ${
                                 selectedViewClassroom === aula
                                   ? "bg-indigo-600 text-white shadow-xs scale-105"
                                   : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-400"
                               }`}
                             >
-                              {aula}
+                              {formatShortAula(aula)}
                             </button>
                           ))}
                         </div>
@@ -5031,8 +5049,8 @@ export function App() {
                                               >
                                                 <p className={`font-extrabold text-xs text-slate-900 dark:text-white ${
                                                   isInfAula ? "group-hover:text-emerald-700 dark:group-hover:text-emerald-400" : "group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
-                                                }`}>
-                                                  {m.materia}
+                                                }`} title={m.materia}>
+                                                  {formatShortSubject(m.materia)}
                                                 </p>
                                                 <p className={`text-[10px] font-bold truncate mt-0.5 ${
                                                   isInfAula ? "text-emerald-700 dark:text-emerald-300" : "text-indigo-700 dark:text-indigo-300"
