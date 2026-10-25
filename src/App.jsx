@@ -37,6 +37,25 @@ const SCHOOL_PERIODS = [
   { id: "CLAU", name: "👥 Reuniones / Extraescolares", start: "16:15", end: "18:00", type: "meeting", nextEvent: "Fin de Jornada" }
 ];
 
+
+function formatShortAula(aula) {
+  if (!aula) return "";
+  const m = aula.match(/^(\d)\s*años?[- ]*([A-C])$/i);
+  return m ? `${m[1]}º${m[2].toUpperCase()}` : aula;
+}
+
+function formatShortSubject(materia) {
+  if (!materia) return "";
+  if (materia.includes("Descubrimiento")) return "Desc. Entorno";
+  if (materia.includes("Comunicación") || materia.includes("representación")) return "Comunicación";
+  if (materia.includes("Crecimiento")) return "Crec. Armonía";
+  if (materia.includes("extranjera")) return "Inglés";
+  if (materia.includes("musical")) return "Música";
+  if (materia.includes("Robótica")) return "Robótica";
+  if (materia.includes("Psicomotricidad")) return "Psicomotricidad";
+  return materia;
+}
+
 function getLivePeriodId(now = new Date(), isInfantil = false) {
   const mins = now.getHours() * 60 + now.getMinutes();
   if (isInfantil) {
@@ -362,9 +381,9 @@ const INITIAL_BOOKMARKS = [
 const INITIAL_WEEKLY_PLANS = [
   {
     id: "plan-semana-26-30-oct-2026",
-    weekTitle: "Semana del 26 al 30 de Octubre: Jubilación de Isabel, Parque Europa (5 años), Revisión Visual y Oración Comunitaria",
+    weekTitle: "Semana del 26 al 30 de Octubre: Jubilación de Isabel, Parque Europa y Oración",
     academicYear: "2026/2027",
-    summary: "Eucaristía y ágape por la jubilación de Isabel el jueves a las 16:15 en la iglesia, salida de 5 años al Parque Europa el jueves (picnics coordinados con Nuria Romero), diez minutos de oración comunitaria el miércoles, revisión oftalmológica en 6.º EP el viernes, entrega de credenciales en Infantil, cierre de recogida de pagos de actividades (miércoles) y bienvenida a Casandra Olivares en 6.º B.",
+    summary: "Jubilación de Isabel (jueves 16:15h), salida de 5 años a Parque Europa (jueves), 10 min de oración (miércoles), revisión visual en 6.º EP (viernes) y bienvenida a Casandra Olivares (6.º B).",
     publishedAt: "2026-10-25",
     author: "Dirección & Jefatura de Estudios",
     isCurrent: true,
@@ -374,45 +393,45 @@ const INITIAL_WEEKLY_PLANS = [
         day: "Lunes",
         date: "26 Oct",
         items: [
-          "📬 Pagos de Actividades (1.º Trimestre): nuevo reparto de sobres por las clases para recoger importes pendientes (último día: miércoles).",
-          "💻 Credenciales Infantil: entrega a tutoras de hojas individuales de CiberEMAT y Great Little People para familias (Elena confirmará el día de entrega común).",
-          "👩‍🏫 Incorporación de Casandra Olivares: asume la tutoría de 6.º B, sus asignaturas y apoyos durante la baja médica de Jose Manuel."
+          "📬 Sobres de actividades: continuar recogida de cobros pendientes (fin: miércoles).",
+          "💻 Credenciales Infantil: reparto a tutoras de CiberEMAT y GLP (Elena avisará día a familias).",
+          "👩‍🏫 Casandra Olivares: asume tutoría de 6.º B y apoyos (sustitución Jose Manuel)."
         ]
       },
       {
         day: "Martes",
         date: "27 Oct",
         items: [
-          "🎒 Salida 5 Años (Parque Europa - jueves 29): fecha límite para comunicar renuncia al picnic. Tutoras: comunicar a Nuria Romero las bajas de picnic para cocina.",
-          "📊 Excel de Pagos: registrar puntualmente los cobros de actividades de vuestro curso mediante el enlace del portal."
+          "🎒 Salida 5 Años: comunicar a Nuria Romero renuncias a picnic antes del miércoles.",
+          "📊 Excel de Pagos: registrar cobros de actividades en la plantilla enlazada en el portal."
         ]
       },
       {
         day: "Miércoles",
         date: "28 Oct",
         items: [
-          "🙏 10 Minutos con la Comunidad Educativa: retoma de la oración matinal comunitaria antes de clase (familias, docentes y alumnos bienvenidos).",
-          "🛑 Fin de Recogida de Sobres: último día para recopilar el dinero de actividades de las diferentes clases."
+          "🙏 10 Minutos de Oración: retomamos el encuentro matinal comunitario previo a clase.",
+          "🛑 Fin de Recogida: último día para entregar sobres de actividades."
         ]
       },
       {
         day: "Jueves",
         date: "29 Oct",
         items: [
-          "🎉 16:15 Jubilación de Isabel: Eucaristía de acción de gracias en la iglesia y ágape fraterno de agradecimiento por su entrega al colegio (sustituye la reunión habitual).",
-          "🌳 Salida 5 Años a Parque Europa (Torrejón de Ardoz): jornada completa (sin comedor en cole). Acompañan Alejandra Pérez, Marta Rodríguez, Tere Espejo y Paula Lozano. Recogida de picnic a primera hora."
+          "🎉 16:15h Jubilación de Isabel: Eucaristía en la iglesia y ágape (reunión conjunta).",
+          "🌳 Salida 5 Años (Parque Europa): jornada completa (Alejandra, Marta, Tere y Paula Lozano)."
         ]
       },
       {
         day: "Viernes",
         date: "30 Oct",
         items: [
-          "👁️ Revisión Oftalmológica (6.º EP): seguimiento del estudio visual del curso anterior (solo alumnos participantes). A primera hora Bea confirmará la sala definitiva.",
-          "🍂 Puente de Todos los Santos: inicio del descanso al finalizar la jornada escolar. ¡Feliz puente y descanso a todo el claustro!"
+          "👁️ Revisión Visual 6.º EP: seguimiento estudio curso pasado (Bea confirma aula).",
+          "🍂 ¡Feliz Puente de Todos los Santos a todo el claustro!"
         ]
       }
     ],
-    generalNotes: "Jueves 29: Reunión especial a las 16:15 en la iglesia para celebrar la jubilación de Isabel (Eucaristía de acción de gracias y ágape; no habrá reunión de curso/ciclo ordinaria). Jueves 29: Salida de 5 años al Parque Europa (toda la jornada; acompañan Alejandra, Marta, Tere y Paula Lozano; picnics preparados automáticamente para usuarios habituales, tutoras trasladar a Nuria Romero las bajas comunicadas por familias antes del martes). Miércoles 28: Retorno de los 'Diez minutos de oración con la comunidad educativa' a primera hora y fecha límite definitiva para la recogida de sobres de actividades (registrar los pagos en el Excel del portal). Viernes 30: Revisión oftalmológica en 6.º EP para alumnos que participaron en el estudio del curso pasado (Bea confirmará ubicación a primera hora). Infantil: Entrega coordinada de credenciales CiberEMAT y Great Little People a familias (Elena avisará el día). Sustitución: Bienvenida a Casandra Olivares, quien asume la tutoría de 6.º B, asignaturas y apoyos durante la baja de Jose Manuel.",
+    generalNotes: "Jueves 16:15h: Eucaristía y ágape por la jubilación de Isabel en la iglesia. Jueves: Salida de 5 años al Parque Europa (picnics preparados). Miércoles: 10 min de oración comunitaria y fecha límite para sobres de actividades. Viernes: Revisión oftalmológica en 6.º EP. Incorporación de Casandra Olivares en 6.º B.",
     fullEmailText: `Buenos días a todos:
 Comenzamos una nueva semana, esta vez con la alegría de saber que tenemos por delante un pequeño puente con motivo de Todos los Santos. Unos días que, estoy seguro, todos recibimos con bastante alegría y que también nos vendrán fenomenal para descansar, desconectar un poquito y coger fuerzas para lo que queda de trimestre.
 
@@ -2281,7 +2300,7 @@ export function App() {
       )
     : [];
   const filteredSearchClassrooms = qLower.length >= 1
-    ? SCHOOL_CLASSROOMS.filter(c => c.toLowerCase().includes(qLower))
+    ? SCHOOL_CLASSROOMS.filter(c => c.toLowerCase().includes(qLower) || formatShortAula(c).toLowerCase().includes(qLower))
     : [];
 
   const quickActionsList = [
@@ -2967,19 +2986,19 @@ export function App() {
                               <span className="font-mono text-indigo-700 dark:text-indigo-300 font-black flex items-center gap-1">
                                 ⏱️ {ses.time}
                               </span>
-                              <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
+                              <span title={ses.aula} className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
                                 ses.stage === "Infantil"
                                   ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border border-pink-200 dark:border-pink-800"
                                   : ses.stage === "Secundaria"
                                   ? "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border border-violet-200 dark:border-violet-800"
                                   : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
                               }`}>
-                                {ses.aula}
+                                {formatShortAula(ses.aula)}
                               </span>
                             </div>
                             <div className="flex items-center justify-between gap-1">
                               <span className="text-xs font-black text-slate-900 dark:text-white truncate" title={ses.materia}>
-                                {ses.materia}
+                                {formatShortSubject(ses.materia)}
                               </span>
                               {isNow && (
                                 <span className="animate-pulse inline-flex items-center px-1.5 py-0.2 bg-emerald-600 text-white rounded text-[8px] font-black uppercase shrink-0">
@@ -3034,8 +3053,8 @@ export function App() {
                                   {idx + 1}.ª Hora <span className="font-mono text-[9px] opacity-80">({col.shortTime})</span>
                                 </span>
                                 {aula ? (
-                                  <span className={`px-1.5 py-0.2 rounded font-extrabold text-[9px] text-white ${isInf ? "bg-emerald-600" : "bg-indigo-600"}`}>
-                                    {aula}
+                                  <span title={aula} className={`px-1.5 py-0.2 rounded font-extrabold text-[9px] text-white ${isInf ? "bg-emerald-600" : "bg-indigo-600"}`}>
+                                    {formatShortAula(aula)}
                                   </span>
                                 ) : type === "D" ? (
                                   <span className="px-1.5 py-0.2 rounded bg-emerald-600 text-white font-extrabold text-[9px]">
@@ -3044,7 +3063,7 @@ export function App() {
                                 ) : null}
                               </div>
                               <div className="text-[11px] font-extrabold text-slate-900 dark:text-white truncate mt-0.5" title={materia}>
-                                {type === "L" ? materia : type === "D" ? (materia || "Disponible / Guardia") : "Sin clase lectiva"}
+                                {type === "L" ? formatShortSubject(materia) : type === "D" ? (materia || "Disponible / Guardia") : "Sin clase lectiva"}
                               </div>
                             </button>
                           );
@@ -3203,7 +3222,7 @@ export function App() {
           )}
 
           {/* 3. SECCIÓN PROGRAMACIÓN SEMANAL DEL CLAUSTRO */}
-          <section id="programacion-semanal" className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
+          <section id="programacion-semanal" className="bg-white dark:bg-slate-900/90 rounded-3xl p-3.5 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
             {(() => {
               const currentSelectedPlan = weeklyPlans.find(p => p.id === selectedWeekId) || weeklyPlans[0];
               const weekdaysList = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
@@ -3318,9 +3337,9 @@ export function App() {
                   </div>
 
                   {currentSelectedPlan ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {/* Tarjeta de Cabecera de la Semana */}
-                      <div className="p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="p-3 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
                           <div className="flex items-center gap-2">
                             <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
@@ -3398,7 +3417,7 @@ export function App() {
                           return (
                             <div 
                               key={dayName} 
-                              className={`rounded-2xl border p-3.5 flex flex-col justify-between transition min-w-0 break-words ${dayColors[idx]} ${
+                              className={`rounded-2xl border p-3 flex flex-col justify-between transition min-w-0 break-words ${dayColors[idx]} ${
                                 isTodayCard ? "ring-2 ring-indigo-500 dark:ring-indigo-400 shadow-md" : ""
                               } ${
                                 !isVisibleOnMobile ? "hidden md:flex" : "flex"
@@ -3439,7 +3458,7 @@ export function App() {
 
                       {/* Notas Generales / Recordatorios */}
                       {currentSelectedPlan.generalNotes && (
-                        <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
+                        <div className="p-3 rounded-xl bg-amber-50/70 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
                           <IconRenderer name="AlertCircle" className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                           <div className="leading-relaxed">
                             <strong className="font-bold block mb-0.5">Notas y Recordatorios de la Semana:</strong>
@@ -3932,8 +3951,8 @@ export function App() {
                               className="text-left p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/80 hover:bg-indigo-50/70 dark:hover:bg-indigo-950/30 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 transition flex flex-col justify-between min-h-[92px] group"
                             >
                               <div className="flex items-center justify-between gap-1 mb-1.5">
-                                <span className="px-2 py-0.5 rounded-lg text-[11px] font-black bg-indigo-600 text-white">
-                                  {aula}
+                                <span title={aula} className="px-2 py-0.5 rounded-lg text-[11px] font-black bg-indigo-600 text-white">
+                                  {formatShortAula(aula)}
                                 </span>
                                 <span className="text-[10px] font-bold text-slate-400 group-hover:text-indigo-500">
                                   Horario →
@@ -4240,7 +4259,7 @@ export function App() {
                                                       }}
                                                       title={isLectiva && SCHOOL_CLASSROOMS.includes(aula) ? `Ver horario de ${aula}` : ""}
                                                     >
-                                                      {isLectiva ? (aula !== "Sin Aula" ? aula : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
+                                                      {isLectiva ? (aula !== "Sin Aula" ? formatShortAula(aula) : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
                                                     </span>
                                                   </div>
                                                   <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
@@ -4727,7 +4746,7 @@ export function App() {
                                                         : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                                                     }`}
                                                   >
-                                                    {isLectiva ? (aula !== "Sin Aula" ? aula : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
+                                                    {isLectiva ? (aula !== "Sin Aula" ? formatShortAula(aula) : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
                                                   </span>
                                                 </div>
                                                 <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
@@ -4817,7 +4836,7 @@ export function App() {
                                               }}
                                               title={isLectiva && SCHOOL_CLASSROOMS.includes(aula) ? `Ver horario de ${aula}` : ""}
                                             >
-                                              {isLectiva ? (aula !== "Sin Aula" ? aula : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
+                                              {isLectiva ? (aula !== "Sin Aula" ? formatShortAula(aula) : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
                                             </span>
                                           </div>
                                           <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
@@ -4871,13 +4890,14 @@ export function App() {
                               key={aula}
                               type="button"
                               onClick={() => setSelectedViewClassroom(aula)}
-                              className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
+                              title={aula}
+                              className={`px-2.5 py-1.5 rounded-xl text-xs font-black transition ${
                                 selectedViewClassroom === aula
                                   ? "bg-emerald-600 text-white shadow-xs scale-105"
                                   : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-emerald-200/80 dark:border-emerald-900/40 hover:border-emerald-500"
                               }`}
                             >
-                              {aula}
+                              {formatShortAula(aula)}
                             </button>
                           ))}
                         </div>
