@@ -12,7 +12,10 @@ import {
   DANIEL_ASENJO_CUSTOM_TIMETABLE,
   DANIEL_ASENJO_STUDENTS,
   DANIEL_ASENJO_OBSERVATIONS,
-  DANIEL_ASENJO_MATRIX_SLOTS
+  DANIEL_ASENJO_MATRIX_SLOTS,
+  SCHOOL_SUPPORT_ASSIGNMENTS,
+  getSupportForSession,
+  formatSupportText
 } from './data/schoolSchedules';
 
 function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
@@ -40,6 +43,9 @@ const SCHOOL_PERIODS = [
 
 function formatShortAula(aula) {
   if (!aula) return "";
+  if (aula.includes("/")) {
+    return aula.split("/").map(s => formatShortAula(s.trim())).join(" / ");
+  }
   const mInf = aula.match(/^(\d)\s*años?[- ]*([A-C])$/i);
   if (mInf) return `${mInf[1]}º${mInf[2].toUpperCase()}`;
   const mPrim = aula.match(/^(\d)º?\s*EP[- ]*([A-C])$/i);
@@ -50,6 +56,7 @@ function formatShortAula(aula) {
 function formatShortSubject(materia) {
   if (!materia) return "";
   const m = materia.trim();
+  if (m.startsWith("Apoyo")) return m;
   // Infantil
   if (m.includes("Descubrimiento")) return "Desc. Entorno";
   if (m.includes("Comunicación") || m.includes("representación")) return "Comunicación";
@@ -1567,7 +1574,8 @@ export function App() {
     return localStorage.getItem("sb_my_teacher_id") || "";
   });
   const [isScheduleCenterOpen, setIsScheduleCenterOpen] = useState(false);
-  const [scheduleCenterTab, setScheduleCenterTab] = useState("radar"); // "radar" | "teacher" | "classroom"
+  const [scheduleCenterTab, setScheduleCenterTab] = useState("radar");
+  const [supportFilterTeacher, setSupportFilterTeacher] = useState("all"); // "radar" | "teacher" | "classroom"
   const [selectedRadarDay, setSelectedRadarDay] = useState(() => {
     const d = new Date().getDay();
     return d >= 1 && d <= 5 ? d - 1 : 0;
@@ -3046,6 +3054,10 @@ export function App() {
                           const aula = slot ? slot[1] : "";
                           const materia = slot ? slot[2] : "Libre / Comp.";
 
+                          const supportList = (myTeacherObj && slot && slot[1])
+                            ? getSupportForSession(activeDayForSchedule, pId, slot[1], myTeacherObj.id)
+                            : [];
+
                           return (
                             <button
                               key={pId}
@@ -3070,7 +3082,7 @@ export function App() {
                                   {idx + 1}.ª Hora <span className="font-mono text-[9px] opacity-80">({col.shortTime})</span>
                                 </span>
                                 {aula ? (
-                                  <span title={aula} className={`px-1.5 py-0.2 rounded font-extrabold text-[9px] text-white ${isInf ? "bg-emerald-600" : "bg-indigo-600"}`}>
+                                  <span title={aula} className={`px-1.5 py-0.2 rounded font-extrabold text-[9px] text-white ${type === "D" ? "bg-emerald-600" : isInf ? "bg-emerald-600" : "bg-indigo-600"}`}>
                                     {formatShortAula(aula)}
                                   </span>
                                 ) : type === "D" ? (
@@ -3082,6 +3094,15 @@ export function App() {
                               <div className="text-[11px] font-extrabold text-slate-900 dark:text-white truncate mt-0.5" title={materia}>
                                 {type === "L" ? formatShortSubject(materia) : type === "D" ? (materia || "Disponible / Guardia") : "Sin clase lectiva"}
                               </div>
+                              {supportList.length > 0 && (
+                                <div
+                                  className="text-[9.5px] font-bold text-amber-800 dark:text-amber-200 truncate flex items-center gap-1 mt-0.5 pt-0.5 border-t border-slate-100 dark:border-slate-800/80"
+                                  title={`Apoyo en el aula: ${formatSupportText(supportList)}`}
+                                >
+                                  <span>🤝</span>
+                                  <span className="truncate">{formatSupportText(supportList)}</span>
+                                </div>
+                              )}
                             </button>
                           );
                         })}
@@ -3779,39 +3800,50 @@ export function App() {
             </div>
 
             {/* Selector de Pestañas */}
-            <div className="grid grid-cols-3 gap-1.5 p-2 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-xs font-extrabold">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-2 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-xs font-extrabold">
               <button
                 type="button"
                 onClick={() => setScheduleCenterTab("radar")}
-                className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition ${
+                className={`py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
                   scheduleCenterTab === "radar"
                     ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs border border-indigo-200/60 dark:border-indigo-500/30"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <span>📡 Radar del Centro Ahora</span>
+                <span>📡 Radar en Vivo</span>
               </button>
               <button
                 type="button"
                 onClick={() => setScheduleCenterTab("teacher")}
-                className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition ${
+                className={`py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
                   scheduleCenterTab === "teacher"
                     ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs border border-indigo-200/60 dark:border-indigo-500/30"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <span>👨‍🏫 Horario por Profesor (26)</span>
+                <span>👨‍🏫 Por Profesor</span>
               </button>
               <button
                 type="button"
                 onClick={() => setScheduleCenterTab("classroom")}
-                className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition ${
+                className={`py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
                   scheduleCenterTab === "classroom"
                     ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs border border-indigo-200/60 dark:border-indigo-500/30"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <span>🎓 Horario por Curso / Aula (18)</span>
+                <span>🎓 Por Curso / Aula</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setScheduleCenterTab("support")}
+                className={`py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                  scheduleCenterTab === "support"
+                    ? "bg-white dark:bg-slate-900 text-amber-700 dark:text-amber-400 shadow-xs border border-amber-300 dark:border-amber-500/40"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>🤝 Horario de Apoyo</span>
               </button>
             </div>
 
@@ -3989,6 +4021,16 @@ export function App() {
                                       <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                                         {item.teacher.name}
                                       </p>
+                                      {(() => {
+                                        const aulaSupports = getSupportForSession(selectedRadarDay, selectedRadarPeriod, aula);
+                                        if (aulaSupports.length === 0) return null;
+                                        return (
+                                          <p className="text-[9.5px] text-amber-700 dark:text-amber-400 font-bold truncate flex items-center gap-0.5 mt-0.5">
+                                            <span>🤝</span>
+                                            <span className="truncate">{formatSupportText(aulaSupports)}</span>
+                                          </p>
+                                        );
+                                      })()}
                                     </div>
                                   ))}
                                 </div>
@@ -4842,23 +4884,45 @@ export function App() {
                                                 isLectiva
                                                   ? "bg-indigo-600 text-white cursor-pointer hover:bg-indigo-500"
                                                   : isDisp
-                                                  ? "bg-emerald-600 text-white"
+                                                  ? "bg-emerald-600 text-white cursor-pointer hover:bg-emerald-500"
                                                   : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                                               }`}
                                               onClick={() => {
-                                                if (isLectiva && SCHOOL_CLASSROOMS.includes(aula)) {
-                                                  setSelectedViewClassroom(aula);
+                                                if (aula && SCHOOL_CLASSROOMS.some(c => aula.includes(c))) {
+                                                  const targetAula = SCHOOL_CLASSROOMS.find(c => aula.includes(c)) || aula;
+                                                  setSelectedViewClassroom(targetAula);
                                                   setScheduleCenterTab("classroom");
                                                 }
                                               }}
-                                              title={isLectiva && SCHOOL_CLASSROOMS.includes(aula) ? `Ver horario de ${aula}` : ""}
+                                              title={aula ? `Ver horario de ${aula}` : ""}
                                             >
-                                              {isLectiva ? (aula !== "Sin Aula" ? formatShortAula(aula) : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
+                                              {isLectiva
+                                                ? (aula !== "Sin Aula" ? formatShortAula(aula) : "Aula")
+                                                : isDisp
+                                                ? (aula ? `🟢 ${formatShortAula(aula)}` : "🟢 Apoyo")
+                                                : "Libre"}
                                             </span>
                                           </div>
-                                          <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
-                                            {isLectiva ? materia : isDisp ? "Disponibilidad / Sustitución" : "Sin sesión lectiva"}
+                                          <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug" title={materia}>
+                                            {isLectiva ? formatShortSubject(materia) : isDisp ? (materia || "Disponibilidad / Sustitución") : "Sin sesión lectiva"}
                                           </p>
+                                          {(() => {
+                                            const supportList = isLectiva && currentTeacher && aula
+                                              ? getSupportForSession(dIdx, col.id, aula, currentTeacher.id)
+                                              : [];
+                                            if (supportList.length === 0) return null;
+                                            return (
+                                              <div className="mt-1">
+                                                <span
+                                                  className="inline-flex items-center gap-1 text-[9.5px] font-bold text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-700/50 px-1.5 py-0.5 rounded-md leading-tight"
+                                                  title={`Docente(s) de apoyo: ${formatSupportText(supportList)}`}
+                                                >
+                                                  <span>🤝</span>
+                                                  <span className="truncate max-w-[130px]">Apoyo: {formatSupportText(supportList)}</span>
+                                                </span>
+                                              </div>
+                                            );
+                                          })()}
                                         </div>
                                       </td>
                                     );
@@ -5057,6 +5121,21 @@ export function App() {
                                                 }`}>
                                                   👩‍🏫 {m.teacher.name}
                                                 </p>
+                                                {(() => {
+                                                  const supportList = getSupportForSession(dIdx, col.id, selectedViewClassroom);
+                                                  if (supportList.length === 0) return null;
+                                                  return (
+                                                    <div className="mt-1">
+                                                      <span
+                                                        className="inline-flex items-center gap-1 text-[9.5px] font-bold text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-700/50 px-1.5 py-0.5 rounded-md leading-tight"
+                                                        title={`Docente(s) de apoyo asignado(s): ${formatSupportText(supportList)}`}
+                                                      >
+                                                        <span>🤝</span>
+                                                        <span className="truncate max-w-[130px]">Apoyo: {formatSupportText(supportList)}</span>
+                                                      </span>
+                                                    </div>
+                                                  );
+                                                })()}
                                               </button>
                                             ))}
                                           </div>
@@ -5068,6 +5147,174 @@ export function App() {
                               </React.Fragment>
                             ));
                           })()}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* TAB 4: HORARIO DE APOYO · PROFESORADO (PRIMARIA) */}
+              {scheduleCenterTab === "support" && (() => {
+                const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+                const supportTeachersList = [
+                  { id: "all", name: "Todos los Docentes" },
+                  { id: "m654", name: "Carmen Ibáñez" },
+                  { id: "p740", name: "Pilar Fuentes" },
+                  { id: "ipena", name: "Isabel Peña" },
+                  { id: "pgonzalez", name: "Paula González" },
+                  { id: "mar1", name: "Pilar Pérez" },
+                  { id: "colivares", name: "Casandra Olivares" },
+                  { id: "cduerto", name: "Cristina Duerto" }
+                ];
+
+                return (
+                  <div className="space-y-4">
+                    {/* Cabecera y Filtro por Docente */}
+                    <div className="bg-amber-50/70 dark:bg-amber-950/25 p-4 rounded-2xl border border-amber-200 dark:border-amber-700/40 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2.5">
+                          <span className="p-2 rounded-xl bg-amber-500 text-slate-950 font-black text-sm shrink-0">🤝</span>
+                          <div>
+                            <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                              Horario de Apoyo · Profesorado
+                            </h3>
+                            <p className="text-xs text-amber-900 dark:text-amber-200 font-medium">
+                              Distribución semanal por cursos, asignaturas y docentes de apoyo (Primaria)
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                          Filtrar Docente:
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {supportTeachersList.map(st => (
+                            <button
+                              key={st.id}
+                              type="button"
+                              onClick={() => setSupportFilterTeacher(st.id)}
+                              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                                supportFilterTeacher === st.id
+                                  ? "bg-amber-500 text-slate-950 shadow-xs scale-105"
+                                  : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-amber-400"
+                              }`}
+                            >
+                              {st.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tabla Oficial Matriz de Apoyo */}
+                    <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                      <table className="w-full text-left border-collapse min-w-[760px]">
+                        <thead>
+                          <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                            <th className="p-3 w-40">Hora / Tramo</th>
+                            {dayNames.map((dName, idx) => (
+                              <th key={dName} className={`p-3 ${currentTime.getDay() - 1 === idx ? "text-amber-700 dark:text-amber-400 bg-amber-50/60 dark:bg-amber-950/30" : ""}`}>
+                                {dName} {currentTime.getDay() - 1 === idx && " (Hoy)"}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                          {SCHEDULE_PERIOD_COLUMNS.map((col, rowIdx) => {
+                            const pId = col.id;
+
+                            if (rowIdx === 2) {
+                              return (
+                                <tr key="recreo-support-row" className="bg-amber-50/80 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200 font-extrabold text-[11px] text-center">
+                                  <td colSpan={6} className="py-2 px-3 tracking-widest uppercase">
+                                    ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
+                                  </td>
+                                </tr>
+                              );
+                            }
+                            if (rowIdx === 4) {
+                              return (
+                                <tr key="comedor-support-row" className="bg-orange-50/80 dark:bg-orange-950/30 text-orange-900 dark:text-orange-200 font-extrabold text-[11px] text-center">
+                                  <td colSpan={6} className="py-2 px-3 tracking-widest uppercase">
+                                    🍽️ 12:30 - 14:15 · Comedor Escolar y Mediodía
+                                  </td>
+                                </tr>
+                              );
+                            }
+
+                            return (
+                              <tr key={pId} className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                                <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                                  <span className="block text-xs font-black text-amber-700 dark:text-amber-400">{col.label}</span>
+                                  <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
+                                </td>
+                                {[0, 1, 2, 3, 4].map(dIdx => {
+                                  const rawList = SCHOOL_SUPPORT_ASSIGNMENTS.filter(a => a.day === dIdx && a.period === pId);
+                                  const filteredList = supportFilterTeacher === "all"
+                                    ? rawList
+                                    : rawList.filter(a => a.teacherId === supportFilterTeacher);
+
+                                  return (
+                                    <td key={dIdx} className="p-2 align-top">
+                                      {filteredList.length === 0 ? (
+                                        <div className="p-2 rounded-xl bg-slate-50/50 dark:bg-slate-950/40 text-slate-400 italic text-[11px]">
+                                          —
+                                        </div>
+                                      ) : (
+                                        <div className="space-y-1.5">
+                                          {filteredList.map((sup, sIdx) => (
+                                            <div
+                                              key={sIdx}
+                                              className="p-2 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-700/40 text-xs transition hover:shadow-xs"
+                                            >
+                                              <div className="flex items-center justify-between gap-1 mb-1">
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    const firstAula = sup.aulas[0];
+                                                    if (firstAula) {
+                                                      setSelectedViewClassroom(firstAula);
+                                                      setScheduleCenterTab("classroom");
+                                                    }
+                                                  }}
+                                                  className="px-1.5 py-0.5 rounded text-[10px] font-black bg-indigo-600 text-white hover:bg-indigo-500 transition"
+                                                  title={`Ver horario del grupo ${sup.aulas.join(" / ")}`}
+                                                >
+                                                  {formatShortAula(sup.aulas.join(" / "))}
+                                                </button>
+                                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                                                  {formatShortSubject(sup.materia)}
+                                                </span>
+                                              </div>
+                                              <button
+                                                type="button"
+                                                onClick={() => {
+                                                  setSelectedViewTeacherId(sup.teacherId);
+                                                  setScheduleCenterTab("teacher");
+                                                }}
+                                                className="font-extrabold text-amber-950 dark:text-amber-200 hover:text-amber-600 dark:hover:text-amber-400 text-[11px] block text-left transition"
+                                                title={`Ver horario completo de ${sup.teacherName}`}
+                                              >
+                                                👩‍🏫 {sup.teacherName}
+                                                {sup.note && (
+                                                  <span className="ml-1 text-[10px] font-semibold text-amber-700 dark:text-amber-400">
+                                                    ({sup.note})
+                                                  </span>
+                                                )}
+                                              </button>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </td>
+                                  );
+                                })}
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
