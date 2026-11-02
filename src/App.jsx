@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import IconRenderer from './components/IconHelper';
+import { DUA_CATEGORIES, DUA_PROMPTS } from './data/duaPrompts';
 import {
   SCHOOL_TEACHERS,
   SCHOOL_CLASSROOMS,
@@ -258,6 +259,344 @@ function renderEditorialEmail(fullText) {
       })}
     </div>
   );
+}
+
+
+// WIDGET INTELIGENTE: EN DIRECTO / PRÓXIMA SESIÓN DOCENTE (PROPUESTA 1)
+function LiveTeacherNextClassBanner({
+  myTeacherObj,
+  activeDayForSchedule,
+  currentWeekdayIdx,
+  onOpenSchedule,
+  onOpenClassroomKit,
+  onOpenDuaAssistant
+}) {
+  const [nowDate, setNowDate] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNowDate(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  if (!myTeacherObj) return null;
+
+  const dayOfWeek = nowDate.getDay(); // 0 Sun, 6 Sat
+  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  const nowMins = nowDate.getHours() * 60 + nowDate.getMinutes();
+  const nowSecs = nowDate.getSeconds();
+
+  const isInf = myTeacherObj.stage === "Infantil";
+  const periodCols = (isInf ? SCHEDULE_PERIOD_COLUMNS_INFANTIL : SCHEDULE_PERIOD_COLUMNS).filter(c => !c.isBreak);
+
+  // Obtain today schedule slots
+  const todaySched = TEACHER_SCHEDULES[myTeacherObj.id]?.[String(activeDayForSchedule)] || {};
+
+  // For Daniel Asenjo custom sessions
+  if (myTeacherObj.id === "dasenjo") {
+    const daySessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[String(activeDayForSchedule)] || [];
+    let activeSes = null;
+    let nextSes = null;
+    let minsRemaining = 0;
+
+    for (let i = 0; i < daySessions.length; i++) {
+      const ses = daySessions[i];
+      const [sH, sM] = ses.start.split(":").map(Number);
+      const [eH, eM] = ses.end.split(":").map(Number);
+      const sTotal = sH * 60 + sM;
+      const eTotal = eH * 60 + eM;
+
+      if (!isWeekend && nowMins >= sTotal && nowMins < eTotal) {
+        activeSes = ses;
+        minsRemaining = eTotal - nowMins;
+        nextSes = daySessions[i + 1] || null;
+        break;
+      } else if (!isWeekend && nowMins < sTotal && !nextSes) {
+        nextSes = ses;
+      }
+    }
+
+    if (activeSes) {
+      return (
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 animate-fade-in border border-emerald-400/30">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg font-black shrink-0 border border-white/20">
+              ⚡
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-400/30 text-white px-2 py-0.5 rounded-full border border-white/30 animate-pulse">
+                  🟢 Sesión en Curso · Faltan {minsRemaining} min
+                </span>
+                <span className="text-xs font-mono opacity-80 font-bold">({activeSes.time})</span>
+              </div>
+              <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
+                {formatShortAula(activeSes.aula)} · {formatShortSubject(activeSes.materia)}
+              </h3>
+              <p className="text-xs text-emerald-100 font-medium truncate flex items-center gap-1.5">
+                <span>👥 {activeSes.students}</span>
+                {nextSes && <span className="opacity-75">· Siguiente: {formatShortAula(nextSes.aula)} ({nextSes.time})</span>}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            <button
+              type="button"
+              onClick={onOpenClassroomKit}
+              className="px-3 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-extrabold transition backdrop-blur-sm flex items-center gap-1.5 border border-white/20"
+              title="Abrir temporizador o semáforo de aula"
+            >
+              <IconRenderer name="Timer" className="w-3.5 h-3.5 text-amber-300" />
+              <span>Temporizador</span>
+            </button>
+            <button
+              type="button"
+              onClick={onOpenDuaAssistant}
+              className="px-3 py-1.5 rounded-xl bg-purple-500/80 hover:bg-purple-500 text-white text-xs font-extrabold transition shadow-sm flex items-center gap-1.5"
+              title="Generar adaptación o dinámicas DUA para esta sesión"
+            >
+              <IconRenderer name="Sparkles" className="w-3.5 h-3.5 text-amber-200" />
+              <span>Asistente DUA</span>
+            </button>
+            <button
+              type="button"
+              onClick={onOpenSchedule}
+              className="px-2.5 py-1.5 rounded-xl bg-white text-slate-900 text-xs font-black transition hover:bg-slate-100 shadow-sm"
+              title="Ver cuadrante completo"
+            >
+              Cuadrante →
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (nextSes && !isWeekend && nowMins < 16 * 60 + 15) {
+      const [nsH, nsM] = nextSes.start.split(":").map(Number);
+      const nextStartTotal = nsH * 60 + nsM;
+      const minsToNext = Math.max(0, nextStartTotal - nowMins);
+
+      return (
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 text-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 border border-indigo-400/30">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-sm flex items-center justify-center text-lg font-black shrink-0">
+              ⏳
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 text-white px-2 py-0.5 rounded-full border border-white/20">
+                👉 Próxima Sesión {minsToNext > 0 ? `(en ${minsToNext} min)` : "preparada"}
+              </span>
+              <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
+                {formatShortAula(nextSes.aula)} · {formatShortSubject(nextSes.materia)} <span className="text-xs font-mono opacity-80">({nextSes.time})</span>
+              </h3>
+              <p className="text-xs text-indigo-100 font-medium truncate">
+                👥 {nextSes.students}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={onOpenDuaAssistant}
+              className="px-3 py-1.5 rounded-xl bg-purple-500/80 hover:bg-purple-500 text-white text-xs font-extrabold transition shadow-sm flex items-center gap-1.5"
+            >
+              <IconRenderer name="Sparkles" className="w-3.5 h-3.5 text-amber-200" />
+              <span>Preparar con DUA</span>
+            </button>
+            <button
+              type="button"
+              onClick={onOpenSchedule}
+              className="px-3 py-1.5 rounded-xl bg-white text-indigo-900 text-xs font-black transition hover:bg-slate-100 shadow-sm"
+            >
+              Ver Horario →
+            </button>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  // General teachers schedule
+  // Parse periods
+  const periodRanges = periodCols.map(col => {
+    const [startStr, endStr] = col.time.split(" - ");
+    const [sH, sM] = startStr.split(":").map(Number);
+    const [eH, eM] = endStr.split(":").map(Number);
+    return {
+      col,
+      pId: col.id,
+      startMins: sH * 60 + sM,
+      endMins: eH * 60 + eM,
+      slot: todaySched[col.id] || null
+    };
+  });
+
+  let activePeriodObj = null;
+  let nextPeriodObj = null;
+  let minsRemaining = 0;
+
+  if (!isWeekend) {
+    for (let i = 0; i < periodRanges.length; i++) {
+      const pr = periodRanges[i];
+      if (nowMins >= pr.startMins && nowMins < pr.endMins) {
+        activePeriodObj = pr;
+        minsRemaining = pr.endMins - nowMins;
+        nextPeriodObj = periodRanges[i + 1] || null;
+        break;
+      } else if (nowMins < pr.startMins && !nextPeriodObj) {
+        nextPeriodObj = pr;
+      }
+    }
+  }
+
+  // If currently in class
+  if (activePeriodObj && activePeriodObj.slot) {
+    const [typeCode, aula, materia] = activePeriodObj.slot;
+    const isLectiva = typeCode === "L";
+    const isDisp = typeCode === "D";
+    const supportList = (isLectiva && aula)
+      ? getSupportForSession(activeDayForSchedule, activePeriodObj.pId, aula, myTeacherObj.id)
+      : [];
+
+    const isUrgentSwitch = minsRemaining <= 5;
+
+    return (
+      <div className={`p-3.5 rounded-2xl text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 animate-fade-in border ${
+        isUrgentSwitch
+          ? "bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 border-amber-300/40 ring-2 ring-amber-400"
+          : isLectiva
+          ? "bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-800 border-indigo-400/30"
+          : isDisp
+          ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 border-emerald-400/30"
+          : "bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 border-slate-600/30"
+      }`}>
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg font-black shrink-0 border border-white/20">
+            {isUrgentSwitch ? "🔔" : isLectiva ? "🎒" : isDisp ? "🟢" : "☕"}
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-white/30 ${
+                isUrgentSwitch ? "bg-amber-300 text-slate-950 font-black animate-bounce" : "bg-white/20 text-white animate-pulse"
+              }`}>
+                {isUrgentSwitch ? `⚠️ ¡Fin de hora! Faltan ${minsRemaining} min` : `⚡ En curso · Faltan ${minsRemaining} min`}
+              </span>
+              <span className="text-xs font-mono opacity-80 font-bold">({activePeriodObj.col.time})</span>
+            </div>
+            <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
+              {isLectiva
+                ? `${formatShortAula(aula)} · ${formatShortSubject(materia)}`
+                : isDisp
+                ? (aula ? `Apoyo en ${formatShortAula(aula)} (${materia || "Disponibilidad"})` : `🟢 ${materia || "Disponibilidad / Guardia"}`)
+                : "Sin clase lectiva en este tramo"}
+            </h3>
+            <p className="text-xs text-indigo-100 font-medium truncate flex items-center gap-1.5">
+              {supportList.length > 0 && (
+                <span className="bg-amber-400/25 text-amber-200 px-1.5 py-0.2 rounded font-bold">
+                  🤝 Apoyo: {formatSupportText(supportList)}
+                </span>
+              )}
+              {nextPeriodObj && (
+                <span className="opacity-80">
+                  · A continuación: {nextPeriodObj.col.label} {nextPeriodObj.slot && nextPeriodObj.slot[0] === "L" ? `(${formatShortAula(nextPeriodObj.slot[1])} · ${formatShortSubject(nextPeriodObj.slot[2])})` : ""}
+                </span>
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          <a
+            href="https://educamos.smconectados.com/"
+            target="_blank"
+            rel="noreferrer"
+            className="px-2.5 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold transition flex items-center gap-1 border border-white/20"
+            title="Abrir Educamos para pasar lista"
+          >
+            <span>📋 Pasar Lista</span>
+          </a>
+          <button
+            type="button"
+            onClick={onOpenClassroomKit}
+            className="px-2.5 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold transition flex items-center gap-1 border border-white/20"
+            title="Abrir Kit de Aula (Temporizador y Semáforo)"
+          >
+            <IconRenderer name="Timer" className="w-3.5 h-3.5 text-amber-300" />
+            <span>Temporizador</span>
+          </button>
+          <button
+            type="button"
+            onClick={onOpenDuaAssistant}
+            className="px-2.5 py-1.5 rounded-xl bg-purple-500/80 hover:bg-purple-500 text-white text-xs font-extrabold transition shadow-sm flex items-center gap-1"
+            title="Generar adaptación o dinámicas DUA para esta sesión"
+          >
+            <IconRenderer name="Sparkles" className="w-3.5 h-3.5 text-amber-200" />
+            <span>Asistente DUA</span>
+          </button>
+          <button
+            type="button"
+            onClick={onOpenSchedule}
+            className="px-2.5 py-1.5 rounded-xl bg-white text-slate-900 text-xs font-black transition hover:bg-slate-100 shadow-sm"
+            title="Ver cuadrante completo"
+          >
+            Horario →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // If between classes or before next class
+  if (nextPeriodObj && !isWeekend && nowMins < 16 * 60 + 15) {
+    const minsToNext = Math.max(0, nextPeriodObj.startMins - nowMins);
+    const nextSlot = nextPeriodObj.slot;
+
+    return (
+      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 border border-indigo-500/30">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-lg font-black shrink-0 border border-white/10">
+            ⏳
+          </div>
+          <div className="min-w-0">
+            <span className="text-[10px] font-black uppercase tracking-wider bg-indigo-500/30 text-indigo-200 px-2 py-0.5 rounded-full border border-indigo-400/30">
+              👉 Próxima Clase {minsToNext > 0 ? `en ${minsToNext} min` : "a continuación"} · {nextPeriodObj.col.label} ({nextPeriodObj.col.time})
+            </span>
+            <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
+              {nextSlot && nextSlot[0] === "L"
+                ? `${formatShortAula(nextSlot[1])} · ${formatShortSubject(nextSlot[2])}`
+                : nextSlot && nextSlot[0] === "D"
+                ? (nextSlot[1] ? `Apoyo en ${formatShortAula(nextSlot[1])} (${nextSlot[2]})` : `🟢 ${nextSlot[2] || "Disponibilidad / Apoyo"}`)
+                : "Sin sesión lectiva"}
+            </h3>
+            <p className="text-xs text-slate-400 font-medium">
+              Todo preparado para la siguiente hora escolar.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={onOpenDuaAssistant}
+            className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-extrabold transition shadow-sm flex items-center gap-1.5"
+            title="Generar actividades o recursos adaptados para esta clase"
+          >
+            <IconRenderer name="Sparkles" className="w-3.5 h-3.5 text-amber-200" />
+            <span>Asistente DUA</span>
+          </button>
+          <button
+            type="button"
+            onClick={onOpenSchedule}
+            className="px-3 py-1.5 rounded-xl bg-white text-slate-900 text-xs font-black transition hover:bg-slate-100 shadow-sm"
+          >
+            Ver Horario →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 const PeriodBellTracker = React.memo(function PeriodBellTracker({ onOpenClassroomKit }) {
@@ -1570,7 +1909,11 @@ export function App() {
 
   // KIT DE AULA INTERACTIVO (TEMPORIZADOR, SEMÁFORO, SORTEO, NOTAS DOCENTES)
   const [isClassroomKitOpen, setIsClassroomKitOpen] = useState(false);
-  const [activeKitTab, setActiveKitTab] = useState("timer"); // "timer" | "traffic" | "random" | "notes"
+  const [activeKitTab, setActiveKitTab] = useState("timer"); // "timer" | "traffic" | "random" | "notes" | "dua"
+  const [duaSelectedCat, setDuaSelectedCat] = useState("all");
+  const [duaActivePrompt, setDuaActivePrompt] = useState(DUA_PROMPTS[0]);
+  const [duaVariables, setDuaVariables] = useState({});
+  const [isDuaCopied, setIsDuaCopied] = useState(false);
 
   // 1. Temporizador de Aula
   const [timerTotalSeconds, setTimerTotalSeconds] = useState(300); // 5 min default
@@ -2641,6 +2984,19 @@ export function App() {
               <span className="hidden sm:inline">Horarios & Radar</span>
             </button>
 
+            {/* BOTÓN ASISTENTE DUA & IA PEDAGÓGICA */}
+            <button
+              onClick={() => {
+                setActiveKitTab("dua");
+                setIsClassroomKitOpen(true);
+              }}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 dark:bg-purple-950/50 dark:hover:bg-purple-900/60 dark:text-purple-200 border border-purple-300 dark:border-purple-700/60 text-xs font-extrabold transition shadow-2xs active:scale-95"
+              title="Abrir Asistente DUA: Generador de adaptaciones multinivel, rúbricas y dinámicas"
+            >
+              <IconRenderer name="Sparkles" className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+              <span className="hidden md:inline">Asistente DUA</span>
+            </button>
+
             {/* BOTÓN KIT DE AULA INTERACTIVO */}
             <button
               onClick={() => setIsClassroomKitOpen(true)}
@@ -3059,6 +3415,28 @@ export function App() {
                 </button>
               </div>
             </div>
+
+            {/* WIDGET INTELIGENTE: EN DIRECTO / PRÓXIMA SESIÓN DOCENTE (PROPUESTA 1) */}
+            <LiveTeacherNextClassBanner
+              myTeacherObj={myTeacherObj}
+              activeDayForSchedule={activeDayForSchedule}
+              currentWeekdayIdx={currentWeekdayIdx}
+              onOpenSchedule={() => {
+                if (myTeacherObj) {
+                  setSelectedViewTeacherId(myTeacherObj.id);
+                  setScheduleCenterTab("teacher");
+                  setIsScheduleCenterOpen(true);
+                }
+              }}
+              onOpenClassroomKit={() => {
+                setActiveKitTab("timer");
+                setIsClassroomKitOpen(true);
+              }}
+              onOpenDuaAssistant={() => {
+                setActiveKitTab("dua");
+                setIsClassroomKitOpen(true);
+              }}
+            />
 
             {/* TIRA EN VIVO DEL HORARIO DE HOY SI EL DOCENTE HA ELEGIDO SU PERFIL */}
             {myTeacherObj && (
@@ -5484,7 +5862,7 @@ export function App() {
             </div>
 
             {/* Pestañas del Kit */}
-            <div className="grid grid-cols-4 gap-1 p-2 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-xs font-extrabold">
+            <div className="grid grid-cols-5 gap-1 p-2 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-xs font-extrabold">
               <button
                 type="button"
                 onClick={() => setActiveKitTab("timer")}
@@ -5531,7 +5909,20 @@ export function App() {
                 }`}
               >
                 <IconRenderer name="StickyNote" className="w-4 h-4" />
-                <span>Mis Notas</span>
+                <span>Notas</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveKitTab("dua")}
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                  activeKitTab === "dua"
+                    ? "bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400 shadow-xs border border-purple-200/60 dark:border-purple-500/30"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+                title="Asistente Pedagógico DUA: Adaptaciones curriculares, rúbricas y dinámicas"
+              >
+                <IconRenderer name="Sparkles" className="w-4 h-4 text-purple-500" />
+                <span>Asistente DUA</span>
               </button>
             </div>
 
@@ -5775,6 +6166,168 @@ export function App() {
                   </div>
                 </div>
               )}
+
+              {/* TAB 5: ASISTENTE DUA & ADAPTACIONES PEDAGÓGICAS */}
+              {activeKitTab === "dua" && (() => {
+                const filteredPrompts = duaSelectedCat === "all"
+                  ? DUA_PROMPTS
+                  : DUA_PROMPTS.filter(p => p.category === duaSelectedCat);
+
+                // Build the prompt text replacing variables
+                let finalPromptText = duaActivePrompt.template;
+                (duaActivePrompt.variables || []).forEach(v => {
+                  const val = duaVariables[v.key] || v.key;
+                  finalPromptText = finalPromptText.split(v.key).join(val);
+                });
+
+                const handleCopyPrompt = () => {
+                  navigator.clipboard.writeText(finalPromptText);
+                  setIsDuaCopied(true);
+                  setToastMessage("✨ ¡Prompt DUA copiado al portapapeles!");
+                  setTimeout(() => setIsDuaCopied(false), 2500);
+                  setTimeout(() => setToastMessage(null), 3000);
+                };
+
+                return (
+                  <div className="space-y-4">
+                    {/* Filtro por Categorías DUA */}
+                    <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800">
+                      {DUA_CATEGORIES.map(cat => (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => setDuaSelectedCat(cat.id)}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                            duaSelectedCat === cat.id
+                              ? "bg-purple-600 text-white shadow-xs"
+                              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                          }`}
+                        >
+                          <IconRenderer name={cat.icon} className="w-3.5 h-3.5" />
+                          <span>{cat.label}</span>
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5">
+                      {/* Lista de Plantillas DUA Disponibles */}
+                      <div className="md:col-span-5 space-y-1.5 max-h-[360px] overflow-y-auto pr-1">
+                        {filteredPrompts.map(p => (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => {
+                              setDuaActivePrompt(p);
+                              setIsDuaCopied(false);
+                            }}
+                            className={`w-full text-left p-2.5 rounded-xl border transition ${
+                              duaActivePrompt.id === p.id
+                                ? "bg-purple-50 dark:bg-purple-950/40 border-purple-300 dark:border-purple-600 shadow-xs ring-1 ring-purple-400"
+                                : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-purple-300"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-1 mb-0.5">
+                              <span className="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/40 px-2 py-0.2 rounded-md">
+                                {p.stage}
+                              </span>
+                            </div>
+                            <h4 className="font-extrabold text-xs text-slate-900 dark:text-white leading-tight">
+                              {p.title}
+                            </h4>
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-1">
+                              {p.description}
+                            </p>
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Generador y Personalizador del Prompt */}
+                      <div className="md:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-3">
+                        <div className="space-y-3">
+                          <div className="border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center justify-between">
+                            <h4 className="font-extrabold text-xs text-slate-900 dark:text-white flex items-center gap-1.5">
+                              <span>🪄 {duaActivePrompt.title}</span>
+                            </h4>
+                            <span className="text-[10px] text-slate-400">Personaliza y copia</span>
+                          </div>
+
+                          {/* Campos a rellenar */}
+                          <div className="space-y-2">
+                            {(duaActivePrompt.variables || []).map(v => (
+                              <div key={v.key} className="space-y-1">
+                                <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                                  {v.label}:
+                                </label>
+                                {v.key === "[TEXTO_ORIGINAL]" ? (
+                                  <textarea
+                                    rows={3}
+                                    value={duaVariables[v.key] || ""}
+                                    onChange={(e) => setDuaVariables(prev => ({ ...prev, [v.key]: e.target.value }))}
+                                    placeholder={v.placeholder}
+                                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white outline-none focus:border-purple-500 leading-normal resize-none"
+                                  />
+                                ) : (
+                                  <input
+                                    type="text"
+                                    value={duaVariables[v.key] || ""}
+                                    onChange={(e) => setDuaVariables(prev => ({ ...prev, [v.key]: e.target.value }))}
+                                    placeholder={v.placeholder}
+                                    className="w-full px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white outline-none focus:border-purple-500"
+                                  />
+                                )}
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Vista Previa del Prompt */}
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">
+                              Prompt listo para Gemini / ChatGPT:
+                            </label>
+                            <div className="p-2.5 rounded-xl bg-slate-950 text-slate-200 font-mono text-[11px] leading-relaxed max-h-36 overflow-y-auto border border-slate-800 select-all whitespace-pre-wrap">
+                              {finalPromptText}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Botones de Acción */}
+                        <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setDuaVariables({})}
+                            className="text-[11px] font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                          >
+                            Limpiar campos
+                          </button>
+                          <div className="flex items-center gap-2">
+                            <a
+                              href="https://gemini.google.com/"
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5"
+                              title="Abrir Google Gemini para pegar el prompt"
+                            >
+                              <span>Abrir Gemini ↗</span>
+                            </a>
+                            <button
+                              type="button"
+                              onClick={handleCopyPrompt}
+                              className={`px-4 py-1.5 rounded-xl text-xs font-extrabold transition shadow-sm flex items-center gap-1.5 ${
+                                isDuaCopied
+                                  ? "bg-emerald-600 text-white scale-105"
+                                  : "bg-purple-600 hover:bg-purple-500 text-white"
+                              }`}
+                            >
+                              <IconRenderer name={isDuaCopied ? "Check" : "Copy"} className="w-3.5 h-3.5" />
+                              <span>{isDuaCopied ? "¡Copiado!" : "Copiar Prompt DUA"}</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
