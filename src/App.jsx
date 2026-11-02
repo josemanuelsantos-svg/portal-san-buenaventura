@@ -1156,6 +1156,7 @@ Un abrazo a todos.`
 
 const CALENDAR_ACTIVIDADES_ID = "sanbuenaventura.org_ov4v5dqkv5cn5gvh8sqkv8ljbk@group.calendar.google.com";
 const CALENDAR_SUSTITUCIONES_ID = "sanbuenaventura.org_a3l1eg1rpu9a4si7ihp48gqjns@group.calendar.google.com";
+const CALENDAR_SALON_ACTOS_ID = "talleraudiovisual@sanbuenaventura.org";
 
 const SIDEBAR_SECTIONS = [
   {
@@ -2503,9 +2504,11 @@ export function App() {
 
   let activeCalendarSrc = "";
   if (activeCalTab === "unificados") {
-    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}&color=%234285F4&src=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}&color=%23E67C73&ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showPrint=0&showTabs=1&showCalendars=1`;
+    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}&color=%234285F4&src=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}&color=%23E67C73&src=${encodeURIComponent(CALENDAR_SALON_ACTOS_ID)}&color=%239C27B0&ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showPrint=0&showTabs=1&showCalendars=1`;
   } else if (activeCalTab === "actividades") {
     activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}&color=%234285F4&ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showPrint=0&showTabs=1&showCalendars=0`;
+  } else if (activeCalTab === "salon") {
+    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_SALON_ACTOS_ID)}&color=%239C27B0&ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showPrint=0&showTabs=1&showCalendars=0`;
   } else {
     activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}&color=%23E67C73&ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showPrint=0&showTabs=1&showCalendars=0`;
   }
@@ -3680,6 +3683,8 @@ export function App() {
                           ? `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}`
                           : activeCalTab === "sustituciones"
                           ? `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}`
+                          : activeCalTab === "salon"
+                          ? `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(CALENDAR_SALON_ACTOS_ID)}`
                           : `https://calendar.google.com/calendar/u/0/r`
                       }
                       target="_blank"
@@ -3691,7 +3696,7 @@ export function App() {
                       <span>Abrir</span>
                     </a>
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Infantil y Primaria · Actividades y Sustituciones</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Infantil y Primaria · Actividades, Salón de Actos y Sustituciones</p>
                 </div>
               </div>
 
@@ -3728,7 +3733,7 @@ export function App() {
                         ? "bg-indigo-600 text-white shadow-sm"
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     }`}
-                    title="Ver Actividades y Sustituciones unificadas"
+                    title="Ver Actividades, Salón de Actos y Sustituciones unificadas"
                   >
                     🗓️ Unificado
                   </button>
@@ -3736,11 +3741,22 @@ export function App() {
                     onClick={() => setActiveCalTab("actividades")}
                     className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
                       activeCalTab === "actividades"
-                        ? "bg-indigo-600 text-white shadow-sm"
+                        ? "bg-blue-600 text-white shadow-sm"
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >
                     🔵 Actividades
+                  </button>
+                  <button
+                    onClick={() => setActiveCalTab("salon")}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
+                      activeCalTab === "salon"
+                        ? "bg-purple-600 text-white shadow-sm"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    }`}
+                    title="Reservas del Salón de Actos (ensayos festivales, musical, talleres)"
+                  >
+                    🟣 Salón de Actos
                   </button>
                   <button
                     onClick={() => setActiveCalTab("sustituciones")}
