@@ -127,6 +127,13 @@ export const SCHOOL_TEACHERS = [
     "stage": "Primaria"
   },
   {
+    "id": "feli",
+    "name": "Feli (Sustitución Isabel)",
+    "dept": "Religión y Horario de Apoyo",
+    "email": "feli@sanbuenaventura.org",
+    "stage": "Primaria"
+  },
+  {
     "id": "j414",
     "name": "Jose Antonio Utrillas Sánchez",
     "dept": "Tutoría / General",
@@ -2851,6 +2858,168 @@ export const TEACHER_SCHEDULES = {
     }
   },
   "ipena": {
+    "0": {
+      "1H": [
+        "L",
+        "6ºEP-A",
+        "Religión"
+      ],
+      "2H": [
+        "L",
+        "6ºEP-C",
+        "Religión"
+      ],
+      "5H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "6H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "3H": [
+        "D",
+        "4ºEP-C",
+        "Apoyo: Matemáticas"
+      ],
+      "4H": [
+        "D",
+        "2ºEP-C",
+        "Apoyo: Lengua"
+      ]
+    },
+    "1": {
+      "5H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "6H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "1H": [
+        "D",
+        "3ºEP-B",
+        "Apoyo: Lengua"
+      ],
+      "2H": [
+        "D",
+        "2ºEP-C",
+        "Apoyo: Speaking (Carlos)"
+      ],
+      "3H": [
+        "D",
+        "1ºEP-B",
+        "Apoyo: Lengua"
+      ],
+      "4H": [
+        "D",
+        "2ºEP-C",
+        "Apoyo: Lengua"
+      ]
+    },
+    "2": {
+      "5H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "6H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "1H": [
+        "D",
+        "2ºEP-C",
+        "Apoyo: Matemáticas (Carlos)"
+      ],
+      "2H": [
+        "D",
+        "2ºEP-A",
+        "Apoyo: Lengua"
+      ],
+      "3H": [
+        "D",
+        "3ºEP-B",
+        "Apoyo: Matemáticas"
+      ],
+      "4H": [
+        "D",
+        "1ºEP-B",
+        "Apoyo: Lengua"
+      ]
+    },
+    "3": {
+      "1H": [
+        "L",
+        "6ºEP-C",
+        "Religión"
+      ],
+      "2H": [
+        "L",
+        "6ºEP-A",
+        "Religión"
+      ],
+      "5H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "6H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "3H": [
+        "D",
+        "1ºEP-A",
+        "Apoyo: Lengua"
+      ],
+      "4H": [
+        "D",
+        "2ºEP-A",
+        "Apoyo: Lengua"
+      ]
+    },
+    "4": {
+      "5H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "6H": [
+        "N",
+        "",
+        "No disponible (Solo mañanas)"
+      ],
+      "1H": [
+        "D",
+        "2ºEP-C",
+        "Apoyo: Matemáticas (Carlos)"
+      ],
+      "2H": [
+        "D",
+        "2ºEP-B / 2ºEP-C",
+        "Apoyo: Lengua"
+      ],
+      "3H": [
+        "D",
+        "2ºEP-C",
+        "Apoyo: Ciencias de la Naturaleza (Carlos)"
+      ],
+      "4H": [
+        "D",
+        "1ºEP-C",
+        "Apoyo: Matemáticas"
+      ]
+    }
+  },
+  "feli": {
     "0": {
       "1H": [
         "L",
@@ -7593,5 +7762,10 @@ export function getSupportForSession(dayIdx, periodId, aula, currentTeacherId = 
 
 export function formatSupportText(list) {
   if (!list || list.length === 0) return "";
-  return list.map(s => `${s.teacherName}${s.note ? ` (${s.note})` : ""}`).join(" · ");
+  return list.map(s => {
+    const displayName = (s.teacherId === "ipena" || s.teacherId === "feli")
+      ? "Feli"
+      : s.teacherName;
+    return `${displayName}${s.note ? ` (${s.note})` : ""}`;
+  }).join(" · ");
 }

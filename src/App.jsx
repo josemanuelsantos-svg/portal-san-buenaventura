@@ -404,13 +404,113 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-2-6-nov-2026",
+    weekTitle: "Semana del 2 al 6 de Noviembre: Talleres Cruz Roja, Ofrenda Almudena, Musical e Incorporación de Feli",
+    academicYear: "2026/2027",
+    summary: "Semana de 4 días (festivo el lunes). Talleres de AyS con Cruz Roja (miércoles 3.º-4.º en aulas y jueves 5.º en aula / 6.º en salón de actos), ofrendas florales en el colegio (viernes 6), reunión de Pastoral (jueves 16:30h) y equipos docentes, preparativos y estreno del musical de San Francisco (sábado 7), inicio de ensayos de Navidad e incorporación de Feli.",
+    publishedAt: "2026-11-02",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1793577600000,
+    days: [
+      {
+        day: "Lunes",
+        date: "2 Nov",
+        items: [
+          "🍂 Festivo escolar (Puente de Todos los Santos).",
+          "🕯️ Comienza Noviembre: mes dedicado a recordar y rezar por los fieles difuntos."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "3 Nov",
+        items: [
+          "👩‍🏫 Incorporación de Feli: asume el horario y las sesiones lectivas y de apoyo de Isabel.",
+          "🤝 Normalidad y acompañamiento: escucha activa y seguimiento en tutorías tras el incidente del jueves (coordinado con Belén y Orientación)."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "4 Nov",
+        items: [
+          "🚑 Talleres AyS Cruz Roja (3.º y 4.º Primaria): por la mañana en sus propias aulas (el profesor titular permanece con su grupo).",
+          "🎭 Salón de Actos: consultar reservas en el calendario para ensayos de Navidad (Infantil, 1.º y 2.º)."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "5 Nov",
+        items: [
+          "🚑 Talleres AyS Cruz Roja (5.º y 6.º Primaria): 5.º en aula y 6.º en Salón de Actos.",
+          "⛪ 16:30h Reunión de Pastoral (resto de profesores: trabajo por equipos docentes).",
+          "📦 Tarde: despeje de caja escénica y montaje de bar/decorados del musical en gimnasio."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "6 Nov",
+        items: [
+          "💐 Ofrenda Floral a la Virgen de la Almudena: celebración directa en el colegio.",
+          "📦 11:00h Retirada de colchonetas y sillas del gimnasio hacia el oratorio.",
+          "✨ Sábado 7: Estreno oficial del musical de San Francisco (respetar numeración de sillas)."
+        ]
+      }
+    ],
+    generalNotes: "Miércoles 4: Talleres Cruz Roja en 3.º y 4.º EP (aulas). Jueves 5: Talleres Cruz Roja en 5.º (aula) y 6.º (salón de actos); Reunión de Pastoral a las 16:30h y trabajo de equipos docentes. Viernes 6: Ofrendas florales a la Virgen de la Almudena en el colegio; retirada de sillas y colchonetas a las 11:00h al oratorio. Sábado 7: Estreno del musical (no mover pegatinas de numeración del salón de actos). Feli: Se incorpora asumiendo las sesiones y apoyos de Isabel. Acompañamiento: Mantener clima de serenidad, escucha natural con los alumnos y apoyo del Dpto. de Orientación.",
+    fullEmailText: `Hola a todos, comenzamos una semana un poquito más corta de lo habitual, que seguro que también nos viene bien después de estos primeros meses de curso.
+
+TALLERES DE APRENDIZAJE Y SERVICIO – CRUZ ROJA
+Esta semana los alumnos de 3.º a 6.º de Primaria participarán en los talleres de Aprendizaje y Servicio impartidos por Cruz Roja.
+Se organizarán de la siguiente manera:
+• Miércoles 4: 3.º y 4.º de Primaria.
+• Jueves 5: 5.º y 6.º de Primaria.
+Los talleres se desarrollarán durante la mañana, en las aulas de cada grupo, salvo en el caso de 6.º de Primaria, que los realizará en el salón de actos.
+Como hacemos habitualmente en actividades como Educación Vial, el profesor que tenga clase con el grupo en ese momento permanecerá con sus alumnos.
+
+OFRENDA FLORAL A LA VIRGEN DE LA ALMUDENA
+Esta semana comenzamos también las ofrendas florales a la Virgen de la Almudena, que se realizarán mayoritariamente el viernes 6.
+Como ya sabemos, este año no tendremos ninguna salida para esta celebración, por lo que todos los cursos realizarán su ofrenda directamente en el colegio, siguiendo la organización prevista.
+
+REUNIÓN DEL JUEVES
+Este jueves, los miembros de Pastoral se reunirán con el equipo de Pastoral a las 16:30h. El resto de profesores aprovecharemos el tiempo de reunión para trabajar por equipos docentes y avanzar en las cuestiones pendientes de cada curso.
+
+SALÓN DE ACTOS, ENSAYOS DE NAVIDAD Y ESTRENO DEL MUSICAL
+Os he dejado ya incorporadas en el calendario las reservas del salón de actos para los ensayos de los festivales de Navidad, especialmente para Infantil y 1.º y 2.º de Primaria, que son los cursos que reciben a las familias: https://calendar.google.com/calendar/u/0?cid=dGFsbGVyYXVkaW92aXN1YWxAc2FuYnVlbmF2ZW50dXJhLm9yZw
+Por otro lado, como sabéis, este sábado se estrena el musical de San Francisco, por lo que durante estos días se realizarán algunos preparativos que debemos tener en cuenta:
+• Las sillas del salón de actos ya están numeradas con sus correspondientes pegatinas. Si bajamos con algún grupo, es importante que las dejemos exactamente como están.
+• El jueves 5 por la tarde se despejarán los laterales de la caja escénica, retirando algunos muebles que se guardarán en el piso situado encima del escenario.
+• En el gimnasio previo al salón de actos se instalarán el bar y parte de la decoración del musical. Podremos seguir utilizando únicamente el espacio que quede libre.
+• El viernes 6, a partir de las 11:00 h, se retirarán del gimnasio las colchonetas y las sillas para evitar que se utilicen durante las entradas y salidas del público. Se guardarán en el oratorio.
+Todo volverá a quedar colocado para que el martes 10, cuando regresemos al colegio, podamos utilizar los espacios con normalidad.
+
+NOVIEMBRE, MES DE ORACIÓN POR LOS DIFUNTOS
+Como nos recordó ayer Susana en su correo, comenzamos noviembre, un mes especialmente dedicado a recordar y rezar por nuestros familiares, amigos y todas aquellas personas que ya no están con nosotros.
+
+COMIENZO DE FELI
+Desde mañana se incorpora Feli haciendo las mismas sesiones y horas que hasta ahora ha estado haciendo Isabel, por lo que desde mañana volvemos a tener a Feli en nuestras filas.
+
+SEGUIMIENTO DE LO OCURRIDO EL PASADO JUEVES
+Por último, quería recordaros brevemente algunas cuestiones relacionadas con el grave incidente que vivimos el jueves pasado.
+Como ya comentamos, el viernes transcurrió, en general, con bastante normalidad, algo que agradecemos especialmente después de lo sucedido.
+Tal y como nos trasladó Javi, lo importante ahora es mantener la normalidad en nuestras aulas, sin dejar de estar atentos a las posibles reacciones de los alumnos.
+No se trata de dar al acontecimiento más protagonismo del que los propios niños necesiten darle, pero tampoco de cerrar la puerta a que puedan expresar cualquier preocupación, duda o sentimiento. Escuchar con naturalidad, acompañar y observar será nuestra mejor manera de actuar.
+Ante cualquier situación que nos genere dudas o consideremos especialmente delicada, contamos, como siempre, con Belén y el Departamento de Orientación.
+Además, Belén realizará un seguimiento especialmente cuidadoso de aquellos alumnos que, por sus circunstancias personales o por tener algún protocolo específico abierto, puedan necesitar una atención adicional tras lo sucedido.
+Muchas gracias a todos por la prudencia, el cariño y la profesionalidad con los que habéis afrontado estos días.
+
+Ayer, en la solemnidad de Todos los Santos, escuchábamos el Evangelio de las Bienaventuranzas. Jesús nos habla de los misericordiosos, de los que trabajan por la paz, de los limpios de corazón… Y creo que pocas cosas encajan mejor con nuestra vocación como educadores.
+Porque muchas veces pensamos que nuestra misión consiste únicamente en cuidar, enseñar y acompañar a nuestros alumnos. Y, por supuesto, esa es una parte fundamental de lo que hacemos. Pero también tenemos la responsabilidad de cuidarnos entre nosotros.
+Ser misericordiosos puede ser tener paciencia con un compañero que no está pasando por su mejor momento. Trabajar por la paz puede significar evitar una discusión innecesaria, escuchar antes de juzgar o tender la mano cuando alguien la necesita. Y tener un corazón limpio quizá consista, sencillamente, en mirar con cariño a quienes tenemos cerca: alumnos, familias y compañeros.
+No siempre sabemos lo que está viviendo la persona que tenemos al lado, y precisamente por eso merece la pena que nuestro colegio sea un lugar donde todos podamos sentirnos acompañados y queridos.`
+  },
+  {
     id: "plan-semana-26-30-oct-2026",
     weekTitle: "Semana del 26 al 30 de Octubre: Jubilación de Isabel, Parque Europa y Oración",
     academicYear: "2026/2027",
     summary: "Jubilación de Isabel (jueves 16:15h), salida de 5 años a Parque Europa (jueves), 10 min de oración (miércoles), revisión visual en 6.º EP (viernes) y bienvenida a Casandra Olivares (6.º B).",
     publishedAt: "2026-10-25",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1792972800000,
     days: [
       {
@@ -5083,6 +5183,14 @@ export function App() {
                                             materia: m.materia
                                           });
                                         }
+                                      } else if (m.teacher.id === "ipena" || m.teacher.id === "feli") {
+                                        if (!seen.has("ipena_group")) {
+                                          seen.add("ipena_group");
+                                          matches.push({
+                                            teacher: { ...m.teacher, name: "Feli / Isabel Peña" },
+                                            materia: m.materia
+                                          });
+                                        }
                                       } else if (!seen.has(m.teacher.id)) {
                                         seen.add(m.teacher.id);
                                         matches.push(m);
@@ -5159,9 +5267,9 @@ export function App() {
                 const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
                 const supportTeachersList = [
                   { id: "all", name: "Todos los Docentes" },
+                  { id: "feli", name: "Feli (Isabel)" },
                   { id: "m654", name: "Carmen Ibáñez" },
                   { id: "p740", name: "Pilar Fuentes" },
-                  { id: "ipena", name: "Isabel Peña" },
                   { id: "pgonzalez", name: "Paula González" },
                   { id: "mar1", name: "Pilar Pérez" },
                   { id: "colivares", name: "Casandra Olivares" },
@@ -5255,7 +5363,12 @@ export function App() {
                                   const rawList = SCHOOL_SUPPORT_ASSIGNMENTS.filter(a => a.day === dIdx && a.period === pId);
                                   const filteredList = supportFilterTeacher === "all"
                                     ? rawList
-                                    : rawList.filter(a => a.teacherId === supportFilterTeacher);
+                                    : rawList.filter(a => {
+                                        if (supportFilterTeacher === "feli" || supportFilterTeacher === "ipena") {
+                                          return a.teacherId === "ipena" || a.teacherId === "feli";
+                                        }
+                                        return a.teacherId === supportFilterTeacher;
+                                      });
 
                                   return (
                                     <td key={dIdx} className="p-2 align-top">
@@ -5292,13 +5405,13 @@ export function App() {
                                               <button
                                                 type="button"
                                                 onClick={() => {
-                                                  setSelectedViewTeacherId(sup.teacherId);
+                                                  setSelectedViewTeacherId(sup.teacherId === "ipena" ? "feli" : sup.teacherId);
                                                   setScheduleCenterTab("teacher");
                                                 }}
                                                 className="font-extrabold text-amber-950 dark:text-amber-200 hover:text-amber-600 dark:hover:text-amber-400 text-[11px] block text-left transition"
-                                                title={`Ver horario completo de ${sup.teacherName}`}
+                                                title={`Ver horario completo de ${(sup.teacherId === "ipena" || sup.teacherId === "feli") ? "Feli (Sustitución Isabel)" : sup.teacherName}`}
                                               >
-                                                👩‍🏫 {sup.teacherName}
+                                                👩‍🏫 {(sup.teacherId === "ipena" || sup.teacherId === "feli") ? "Feli" : sup.teacherName}
                                                 {sup.note && (
                                                   <span className="ml-1 text-[10px] font-semibold text-amber-700 dark:text-amber-400">
                                                     ({sup.note})
