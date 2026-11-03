@@ -5072,87 +5072,75 @@ export function App() {
                                   </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
-                                  {(() => {
-                                    const isInfTeacher = currentTeacher?.stage === "Infantil";
-                                    const periodCols = (isInfTeacher ? SCHEDULE_PERIOD_COLUMNS_INFANTIL : SCHEDULE_PERIOD_COLUMNS).filter(c => !c.isBreak);
+                                  {ptMatrixSlots.map((row, rowIdx) => {
+                                    const isRecreoRow = row.id === "M4" || row.time.includes("10:30");
+                                    const isComedorRow = row.id === "COM" || Object.keys(row.days || {}).length === 0;
 
-                                    return periodCols.map((col, rowIdx) => (
-                                      <React.Fragment key={col.id}>
-                                        {rowIdx === 2 && (
+                                    if (isComedorRow) {
+                                      return (
+                                        <tr key={row.id || rowIdx} className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center border-y border-orange-200/50 dark:border-orange-900/30">
+                                          <td colSpan={6} className="py-2 px-3 tracking-widest uppercase">
+                                            {row.label || "🍽️ 12:30 - 14:15 · Comedor Escolar y Descanso Mediodía"}
+                                          </td>
+                                        </tr>
+                                      );
+                                    }
+
+                                    return (
+                                      <React.Fragment key={row.id || rowIdx}>
+                                        {/* Separador de Recreo */}
+                                        {rowIdx === (isDanielAsenjo ? 3 : 3) && (
                                           <tr className="bg-amber-100/90 dark:bg-amber-950/40 text-amber-950 dark:text-amber-200 font-extrabold text-[11px] text-center border-y-2 border-amber-300 dark:border-amber-700">
                                             <td colSpan={6} className="py-2 px-3 tracking-widest uppercase animate-pulse">
-                                              ☕ 10:30 - 11:00 · Recreo de Mañana · 🛝 Patio a diario por pesado
-                                            </td>
-                                          </tr>
-                                        )}
-                                        {rowIdx === 4 && (
-                                          <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
-                                            <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                              {isInfTeacher
-                                                ? "🍽️ 12:15 - 14:00 · Comedor Infantil y Descanso"
-                                                : "🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía"}
+                                              ☕ 10:30 - 11:00 · Recreo de Mañana · {isDanielAsenjo ? "🛝 Patio a diario por pesado" : "🛝 Patio a diario por CULPA de Dani"}
                                             </td>
                                           </tr>
                                         )}
                                         <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
                                           <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
-                                            <span className={`block text-xs font-black ${isInfTeacher ? "text-emerald-600 dark:text-emerald-400" : "text-indigo-600 dark:text-indigo-400"}`}>
-                                              {col.label}
+                                            <span className="block text-xs font-black text-indigo-600 dark:text-indigo-400">
+                                              {row.time}
                                             </span>
-                                            <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
+                                            <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{row.label}</span>
                                           </td>
                                           {[0, 1, 2, 3, 4].map((dIdx) => {
-                                            const slot = teacherSched[String(dIdx)]?.[col.id];
+                                            const slot = row.days?.[String(dIdx)];
                                             if (!slot) {
                                               return <td key={dIdx} className="p-2.5 text-slate-400 italic text-center">—</td>;
                                             }
-                                            const [typeCode, aula, materia] = slot;
-                                            const isLectiva = typeCode === "L";
-                                            const isDisp = typeCode === "D";
+                                            const stageColor = slot.stage === "Infantil"
+                                              ? "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border-pink-200 dark:border-pink-800"
+                                              : slot.stage === "Secundaria"
+                                              ? "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 border-purple-200 dark:border-purple-800"
+                                              : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800";
+
                                             return (
                                               <td key={dIdx} className="p-2 align-top">
-                                                <div
-                                                  className={`p-2.5 rounded-xl border h-full transition ${
-                                                    isLectiva
-                                                      ? isInfTeacher
-                                                        ? "bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200/70 dark:border-emerald-500/30"
-                                                        : "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-200/80 dark:border-indigo-500/30"
-                                                      : isDisp
-                                                      ? "bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-500/30"
-                                                      : "bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800 opacity-60"
-                                                  }`}
-                                                >
+                                                <div className="p-2.5 rounded-xl border h-full transition bg-slate-50/80 dark:bg-slate-950/50 border-slate-200/80 dark:border-slate-800 hover:border-indigo-300">
                                                   <div className="flex items-center justify-between gap-1 mb-1">
-                                                    <span
-                                                      className={`px-1.5 py-0.5 rounded text-[10px] font-black cursor-pointer ${
-                                                        isLectiva
-                                                          ? isInfTeacher ? "bg-emerald-600 text-white" : "bg-indigo-600 text-white"
-                                                          : isDisp
-                                                          ? "bg-emerald-600 text-white"
-                                                          : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                                                      }`}
-                                                      onClick={() => {
-                                                        if (isLectiva && SCHOOL_CLASSROOMS.includes(aula)) {
-                                                          setSelectedViewClassroom(aula);
-                                                          setScheduleCenterTab("classroom");
-                                                        }
-                                                      }}
-                                                      title={isLectiva && SCHOOL_CLASSROOMS.includes(aula) ? `Ver horario de ${aula}` : ""}
-                                                    >
-                                                      {isLectiva ? (aula !== "Sin Aula" ? formatShortAula(aula) : "Aula") : isDisp ? "🟢 Apoyo" : "Libre"}
+                                                    <span className="font-black text-xs text-indigo-950 dark:text-indigo-200">
+                                                      {formatShortAula(slot.aula)}
+                                                    </span>
+                                                    <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${stageColor}`}>
+                                                      {slot.stage || "PT"}
                                                     </span>
                                                   </div>
-                                                  <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug" title={materia}>
-                                                    {isLectiva ? formatShortSubject(materia) : isDisp ? (materia || "Disponibilidad / Sustitución") : "Sin sesión lectiva"}
-                                                  </p>
+                                                  <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-1 leading-snug">
+                                                    {slot.materia}
+                                                  </div>
+                                                  {slot.studentsShort && (
+                                                    <div className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 truncate">
+                                                      👤 {slot.studentsShort}
+                                                    </div>
+                                                  )}
                                                 </div>
                                               </td>
                                             );
                                           })}
                                         </tr>
                                       </React.Fragment>
-                                    ));
-                                  })()}
+                                    );
+                                  })}
                                 </tbody>
                               </table>
                             </div>
@@ -5179,7 +5167,7 @@ export function App() {
                                 🗓️ Todos los Días (L - V)
                               </button>
                               {dayNames.map((dName, dIdx) => {
-                                const count = (DANIEL_ASENJO_CUSTOM_TIMETABLE[String(dIdx)] || []).length;
+                                const count = (ptCustomTimetable[String(dIdx)] || []).length;
                                 const isCurrent = currentTime.getDay() - 1 === dIdx;
                                 return (
                                   <button
@@ -5204,7 +5192,7 @@ export function App() {
                             {/* Contenido según filtro (Todos o Día Específico) */}
                             {asenjoDayFilter !== "all" ? (() => {
                               const dayIdx = parseInt(asenjoDayFilter);
-                              const daySessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[String(dayIdx)] || [];
+                              const daySessions = ptCustomTimetable[String(dayIdx)] || [];
                               const morningSessions = daySessions.filter(s => s.turn === "mañana");
                               const afternoonSessions = daySessions.filter(s => s.turn === "tarde");
                               const isToday = currentTime.getDay() - 1 === dayIdx;
@@ -5356,7 +5344,7 @@ export function App() {
                               /* Vista 5 Columnas con separación Mañana/Tarde */
                               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3">
                                 {dayNames.map((dName, dIdx) => {
-                                  const sessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[String(dIdx)] || [];
+                                  const sessions = ptCustomTimetable[String(dIdx)] || [];
                                   const morningSessions = sessions.filter(s => s.turn === "mañana");
                                   const afternoonSessions = sessions.filter(s => s.turn === "tarde");
                                   const isToday = currentTime.getDay() - 1 === dIdx;
@@ -5502,11 +5490,11 @@ export function App() {
                           </div>
                         )}
 
-                        {/* SUB-TAB 3: ALUMNOS E INTERVENCIONES POR ETAPA */}
+{/* SUB-TAB 3: ALUMNOS E INTERVENCIONES POR ETAPA */}
                         {asenjoScheduleTab === "alumnos" && (
                           <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              {DANIEL_ASENJO_STUDENTS.map((stageGroup, stIdx) => (
+                              {ptStudents.map((stageGroup, stIdx) => (
                                 <div key={stIdx} className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
                                   <div>
                                     <div className="flex items-center justify-between mb-3">
@@ -5521,13 +5509,20 @@ export function App() {
                                       {stageGroup.groups.map((grp, gIdx) => (
                                         <div key={gIdx} className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200/80 dark:border-slate-800 text-xs">
                                           <div className="flex items-center justify-between gap-1 font-bold text-slate-800 dark:text-slate-200">
-                                            <span>🎒 {grp.curso}</span>
+                                            <span>🎒 {grp.curso || grp.aula}</span>
                                             <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">Tut: {grp.tutor}</span>
                                           </div>
-                                          <ul className="mt-1.5 space-y-0.5 text-[11px] text-slate-600 dark:text-slate-300 font-medium list-disc list-inside">
-                                            {grp.alumnos.map((alum, aIdx) => (
-                                              <li key={aIdx}>{alum}</li>
-                                            ))}
+                                          <ul className="mt-1.5 space-y-1 text-[11px] text-slate-600 dark:text-slate-300 font-medium list-disc list-inside">
+                                            {(grp.alumnos || grp.students || []).map((alum, aIdx) => {
+                                              const name = typeof alum === "string" ? alum : alum.name;
+                                              const details = typeof alum === "object" ? alum.details : null;
+                                              return (
+                                                <li key={aIdx} className="leading-snug">
+                                                  <span className="font-semibold text-slate-800 dark:text-slate-200">{name}</span>
+                                                  {details && <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-normal pl-4">• {details}</span>}
+                                                </li>
+                                              );
+                                            })}
                                           </ul>
                                         </div>
                                       ))}
@@ -5543,7 +5538,7 @@ export function App() {
                                 <span>⚠️ Observaciones de Horarios y Asistencia de Alumnos:</span>
                               </h5>
                               <ul className="space-y-1.5 text-amber-800 dark:text-amber-300 font-medium">
-                                {DANIEL_ASENJO_OBSERVATIONS.map((obsItem, oIdx) => (
+                                {ptObservations.map((obsItem, oIdx) => (
                                   <li key={oIdx} className="flex items-start gap-1.5">
                                     <span className="font-bold">• {obsItem.student}:</span>
                                     <span>{obsItem.obs}</span>
@@ -5558,7 +5553,7 @@ export function App() {
                         {asenjoScheduleTab === "cuadricula" && (
                           <div className="space-y-3">
                             <div className="p-3 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 flex items-center justify-between">
-                              <span>ℹ️ Esta vista muestra el mapeo aproximado de Daniel Asenjo a los 6 periodos lectivos generales del centro escolar.</span>
+                              <span>ℹ️ Esta vista muestra el mapeo aproximado de {currentTeacher.name} a los 6 periodos lectivos generales del centro escolar.</span>
                               <button
                                 type="button"
                                 onClick={() => setAsenjoScheduleTab("matriz")}

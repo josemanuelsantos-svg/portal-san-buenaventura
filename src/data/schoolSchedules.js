@@ -185,7 +185,7 @@ export const SCHOOL_TEACHERS = [
   {
     "id": "mvazquez",
     "name": "María Vázquez",
-    "dept": "Primaria",
+    "dept": "Apoyo AL / PT",
     "email": "mariavazquez@sanbuenaventura.org",
     "stage": "Primaria"
   },
@@ -315,6 +315,48 @@ export const SCHEDULE_PERIOD_COLUMNS = [
 ];
 
 export const TEACHER_SCHEDULES = {
+  "mvazquez": {
+    "0": {
+      "1H": ["L", "5 años A", "AL/PT Ainari (09:10 - 10:00)"],
+      "2H": ["D", "", "Preparación AL / Materiales"],
+      "3H": ["L", "1ºA", "AL/PT Daryel (11:10 - 11:45)"],
+      "4H": ["L", "3ºC", "AL/PT Rodri y Alexander (11:45 - 12:25)"],
+      "5H": ["L", "4 años B", "AL/PT Dylan y André (14:15 - 15:15)"],
+      "6H": ["L", "2ºB", "AL/PT Diego (15:15 - 16:15)"]
+    },
+    "1": {
+      "1H": ["L", "4 años B", "AL/PT Dylan y André con desayuno (08:45 - 10:00)"],
+      "2H": ["L", "4 años B", "AL/PT Dylan y André (hasta 10:00)"],
+      "3H": ["L", "5ºB", "AL/PT Manuel (11:00 - 11:45)"],
+      "4H": ["L", "2ºB", "Lengua AL/PT Diego (11:45 - 12:30)"],
+      "5H": ["L", "4 años B", "AL/PT Pauli y Valeria (14:00) / Dylan y André (14:45)"],
+      "6H": ["L", "6ºA", "AL/PT Darío (15:30 - 16:15)"]
+    },
+    "2": {
+      "1H": ["L", "3ºC", "AL/PT Rodri y Alexander (09:15 - 10:00)"],
+      "2H": ["D", "", "Atención y Planificación AL/PT"],
+      "3H": ["L", "5 años A", "AL/PT Ainari (10:30 - 11:30)"],
+      "4H": ["L", "1ºA", "AL/PT Daryel (11:45 - 12:30)"],
+      "5H": ["L", "5 años B", "AL/PT Pauli y Valeria (14:00 - 15:00)"],
+      "6H": ["L", "4 años B", "AL/PT Solo con André (15:00 - 15:30)"]
+    },
+    "3": {
+      "1H": ["L", "Oratorio", "Oratorio 1ºA / 2ºA (09:00 - 09:45)"],
+      "2H": ["L", "Oratorio", "Oratorio 1ºB / 2ºB (09:45 - 10:30)"],
+      "3H": ["L", "Oratorio", "Oratorio 1ºC / 2ºC (11:00 - 11:45)"],
+      "4H": ["L", "3ºC", "AL/PT Rodri y Alexander (11:45 - 12:30)"],
+      "5H": ["L", "5ºB", "AL/PT Manuel (y Darío 6ºA) (14:15 - 15:00)"],
+      "6H": ["L", "4 años C", "AL/PT Andrés (15:00 - 16:00)"]
+    },
+    "4": {
+      "1H": ["L", "2ºB / 1ºA", "AL/PT Diego (09:00-09:30) / Daryel (09:30-10:05)"],
+      "2H": ["L", "1º ESO C", "Inglés AL/PT Miguel (10:05 - 11:00)"],
+      "3H": ["L", "4 años C", "AL/PT Andrés (11:00 - 11:45)"],
+      "4H": ["L", "6ºA", "AL/PT Darío (11:45 - 12:30)"],
+      "5H": ["D", "", "Coordinación y Registro AL/PT"],
+      "6H": ["D", "", "Coordinación y Registro AL/PT"]
+    }
+  },
   "dasenjo": {
     "0": {
       "1H": [
@@ -6893,6 +6935,881 @@ export const DANIEL_ASENJO_MATRIX_SLOTS = [
 // ============================================================================
 // HORARIO DE APOYO OFICIAL · PROFESORADO (Primaria - San Buenaventura)
 // ============================================================================
+
+// ============================================================================
+// DATOS OFICIALES: MARÍA VÁZQUEZ (APOYO AL / PT)
+// Horario completo con franjas individualizadas, grupos y alumnos asignados
+// ============================================================================
+export const MARIA_VAZQUEZ_CUSTOM_TIMETABLE = {
+  "0": [
+    {
+      "start": "08:15",
+      "end": "09:10",
+      "time": "08:15 - 09:10",
+      "aula": "1º ESO C",
+      "stage": "Secundaria",
+      "materia": "Lengua (Apoyo con Miguel)",
+      "students": "Miguel Martínez",
+      "turn": "mañana",
+      "studentsShort": "Miguel Martínez"
+    },
+    {
+      "start": "09:10",
+      "end": "10:00",
+      "time": "09:10 - 10:00",
+      "aula": "5 años A",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Ainari)",
+      "students": "Ainara Vaquero Pisa",
+      "turn": "mañana",
+      "studentsShort": "Ainara Vaquero"
+    },
+    {
+      "start": "10:30",
+      "end": "11:10",
+      "time": "10:30 - 11:10",
+      "aula": "5 años B",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Pauli y Valeria)",
+      "students": "Paula Colmenares Camacho, Valeria Almansa Luquero",
+      "turn": "mañana",
+      "studentsShort": "Paula y Valeria"
+    },
+    {
+      "start": "11:10",
+      "end": "11:45",
+      "time": "11:10 - 11:45",
+      "aula": "1º EP A",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Daryel)",
+      "students": "Daryel Augusto",
+      "turn": "mañana",
+      "studentsShort": "Daryel Augusto"
+    },
+    {
+      "start": "11:45",
+      "end": "12:25",
+      "time": "11:45 - 12:25",
+      "aula": "3º EP C",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Rodri y Alexander)",
+      "students": "Rodrigo Quiroz, Alexander Hristov",
+      "turn": "mañana",
+      "studentsShort": "Rodri y Alexander"
+    },
+    {
+      "start": "12:25",
+      "end": "13:20",
+      "time": "12:25 - 13:20",
+      "aula": "1º ESO C",
+      "stage": "Secundaria",
+      "materia": "Geografía e Historia (con Leisa)",
+      "students": "Fernanda Leysa Villalba",
+      "turn": "mañana",
+      "studentsShort": "Fernanda Leysa"
+    },
+    {
+      "start": "14:15",
+      "end": "15:15",
+      "time": "14:15 - 15:15",
+      "aula": "4 años B",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Dylan y André)",
+      "students": "Dylan Alvarenga Martínez, André Carballo Guzmán",
+      "turn": "tarde",
+      "studentsShort": "Dylan y André"
+    },
+    {
+      "start": "15:15",
+      "end": "16:15",
+      "time": "15:15 - 16:15",
+      "aula": "2º EP B",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Diego)",
+      "students": "Diego Andrade",
+      "turn": "tarde",
+      "studentsShort": "Diego Andrade"
+    }
+  ],
+  "1": [
+    {
+      "start": "08:45",
+      "end": "10:00",
+      "time": "08:45 - 10:00",
+      "aula": "4 años B",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT y Desayuno (con Dylan y André)",
+      "students": "Dylan Alvarenga Martínez, André Carballo Guzmán",
+      "turn": "mañana",
+      "studentsShort": "Dylan y André"
+    },
+    {
+      "start": "10:30",
+      "end": "11:00",
+      "time": "10:30 - 11:00",
+      "aula": "4 años C",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Andrés)",
+      "students": "Andrés de las Heras Alonso",
+      "turn": "mañana",
+      "studentsShort": "Andrés de las Heras"
+    },
+    {
+      "start": "11:00",
+      "end": "11:45",
+      "time": "11:00 - 11:45",
+      "aula": "5º EP B",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (sesión con Manuel)",
+      "students": "Manuel Aranda",
+      "turn": "mañana",
+      "studentsShort": "Manuel Aranda"
+    },
+    {
+      "start": "11:45",
+      "end": "12:30",
+      "time": "11:45 - 12:30",
+      "aula": "2º EP B",
+      "stage": "Primaria",
+      "materia": "Lengua (Apoyo con Diego)",
+      "students": "Diego Andrade",
+      "turn": "mañana",
+      "studentsShort": "Diego Andrade"
+    },
+    {
+      "start": "14:00",
+      "end": "14:45",
+      "time": "14:00 - 14:45",
+      "aula": "5 años B",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Pauli y Valeria)",
+      "students": "Paula Colmenares Camacho, Valeria Almansa Luquero",
+      "turn": "tarde",
+      "studentsShort": "Paula y Valeria"
+    },
+    {
+      "start": "14:45",
+      "end": "15:30",
+      "time": "14:45 - 15:30",
+      "aula": "4 años B",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Dylan y André)",
+      "students": "Dylan Alvarenga Martínez, André Carballo Guzmán",
+      "turn": "tarde",
+      "studentsShort": "Dylan y André"
+    },
+    {
+      "start": "15:30",
+      "end": "16:15",
+      "time": "15:30 - 16:15",
+      "aula": "6º EP A",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Darío)",
+      "students": "Darío Gómez Verdasco",
+      "turn": "tarde",
+      "studentsShort": "Darío Gómez"
+    }
+  ],
+  "2": [
+    {
+      "start": "08:15",
+      "end": "09:10",
+      "time": "08:15 - 09:10",
+      "aula": "1º ESO C",
+      "stage": "Secundaria",
+      "materia": "Geografía e Historia (con Leisa)",
+      "students": "Fernanda Leysa Villalba",
+      "turn": "mañana",
+      "studentsShort": "Fernanda Leysa"
+    },
+    {
+      "start": "09:15",
+      "end": "10:00",
+      "time": "09:15 - 10:00",
+      "aula": "3º EP C",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Rodri y Alexander)",
+      "students": "Rodrigo Quiroz, Alexander Hristov",
+      "turn": "mañana",
+      "studentsShort": "Rodri y Alexander"
+    },
+    {
+      "start": "10:30",
+      "end": "11:30",
+      "time": "10:30 - 11:30",
+      "aula": "5 años A",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Ainari)",
+      "students": "Ainara Vaquero Pisa",
+      "turn": "mañana",
+      "studentsShort": "Ainara Vaquero"
+    },
+    {
+      "start": "11:45",
+      "end": "12:30",
+      "time": "11:45 - 12:30",
+      "aula": "1º EP A",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Daryel)",
+      "students": "Daryel Augusto",
+      "turn": "mañana",
+      "studentsShort": "Daryel Augusto"
+    },
+    {
+      "start": "14:00",
+      "end": "15:00",
+      "time": "14:00 - 15:00",
+      "aula": "5 años B",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Pauli y Valeria)",
+      "students": "Paula Colmenares Camacho, Valeria Almansa Luquero",
+      "turn": "tarde",
+      "studentsShort": "Paula y Valeria"
+    },
+    {
+      "start": "15:00",
+      "end": "15:30",
+      "time": "15:00 - 15:30",
+      "aula": "4 años B",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (Solo con André)",
+      "students": "André Carballo Guzmán",
+      "turn": "tarde",
+      "studentsShort": "André Carballo"
+    }
+  ],
+  "3": [
+    {
+      "start": "09:00",
+      "end": "09:45",
+      "time": "09:00 - 09:45",
+      "aula": "Oratorio",
+      "stage": "Primaria",
+      "materia": "Oratorio 1ºA / 2ºA",
+      "students": "Grupos 1º EP A y 2º EP A",
+      "turn": "mañana",
+      "studentsShort": "1ºA / 2ºA"
+    },
+    {
+      "start": "09:45",
+      "end": "10:30",
+      "time": "09:45 - 10:30",
+      "aula": "Oratorio",
+      "stage": "Primaria",
+      "materia": "Oratorio 1ºB / 2ºB",
+      "students": "Grupos 1º EP B y 2º EP B",
+      "turn": "mañana",
+      "studentsShort": "1ºB / 2ºB"
+    },
+    {
+      "start": "10:30",
+      "end": "11:00",
+      "time": "10:30 - 11:00",
+      "aula": "Patio Primaria",
+      "stage": "Primaria",
+      "materia": "Recreo Primaria (por CULPA de Dani)",
+      "students": "Supervisión de Patio",
+      "turn": "mañana",
+      "studentsShort": "Patio x CULPA de Dani"
+    },
+    {
+      "start": "11:00",
+      "end": "11:45",
+      "time": "11:00 - 11:45",
+      "aula": "Oratorio",
+      "stage": "Primaria",
+      "materia": "Oratorio 1ºC / 2ºC",
+      "students": "Grupos 1º EP C y 2º EP C",
+      "turn": "mañana",
+      "studentsShort": "1ºC / 2ºC"
+    },
+    {
+      "start": "11:45",
+      "end": "12:30",
+      "time": "11:45 - 12:30",
+      "aula": "3º EP C",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Rodri y Alexander)",
+      "students": "Rodrigo Quiroz, Alexander Hristov",
+      "turn": "mañana",
+      "studentsShort": "Rodri y Alexander"
+    },
+    {
+      "start": "14:15",
+      "end": "15:00",
+      "time": "14:15 - 15:00",
+      "aula": "5º EP B",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Manuel · Extensión/doble Darío 6ºA)",
+      "students": "Manuel Aranda, Darío Gómez Verdasco",
+      "turn": "tarde",
+      "studentsShort": "Manuel Aranda (y Darío)"
+    },
+    {
+      "start": "15:00",
+      "end": "16:00",
+      "time": "15:00 - 16:00",
+      "aula": "4 años C",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Andrés)",
+      "students": "Andrés de las Heras Alonso",
+      "turn": "tarde",
+      "studentsShort": "Andrés de las Heras"
+    }
+  ],
+  "4": [
+    {
+      "start": "09:00",
+      "end": "09:30",
+      "time": "09:00 - 09:30",
+      "aula": "2º EP B",
+      "stage": "Primaria",
+      "materia": "Lengua / Lectura (con Diego)",
+      "students": "Diego Andrade",
+      "turn": "mañana",
+      "studentsShort": "Diego Andrade"
+    },
+    {
+      "start": "09:30",
+      "end": "10:05",
+      "time": "09:30 - 10:05",
+      "aula": "1º EP A",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Daryel)",
+      "students": "Daryel Augusto",
+      "turn": "mañana",
+      "studentsShort": "Daryel Augusto"
+    },
+    {
+      "start": "10:05",
+      "end": "11:00",
+      "time": "10:05 - 11:00",
+      "aula": "1º ESO C",
+      "stage": "Secundaria",
+      "materia": "Inglés (Apoyo con Miguel)",
+      "students": "Miguel Martínez",
+      "turn": "mañana",
+      "studentsShort": "Miguel Martínez"
+    },
+    {
+      "start": "11:00",
+      "end": "11:45",
+      "time": "11:00 - 11:45",
+      "aula": "4 años C",
+      "stage": "Infantil",
+      "materia": "Apoyo AL / PT (con Andrés)",
+      "students": "Andrés de las Heras Alonso",
+      "turn": "mañana",
+      "studentsShort": "Andrés de las Heras"
+    },
+    {
+      "start": "11:45",
+      "end": "12:30",
+      "time": "11:45 - 12:30",
+      "aula": "6º EP A",
+      "stage": "Primaria",
+      "materia": "Apoyo AL / PT (con Darío)",
+      "students": "Darío Gómez Verdasco",
+      "turn": "mañana",
+      "studentsShort": "Darío Gómez"
+    }
+  ]
+};
+
+export const MARIA_VAZQUEZ_STUDENTS = [
+  {
+    "stage": "Educación Infantil",
+    "badge": "Infantil (4 aulas)",
+    "badgeColor": "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 border-pink-200 dark:border-pink-800",
+    "groups": [
+      {
+        "aula": "4 años B",
+        "tutor": "Nuria",
+        "students": [
+          { "name": "André Carballo Guzmán", "details": "Terapia fuera del cole (miércoles y jueves)" },
+          { "name": "Dylan Alvarenga Martínez", "details": "Atención temprana y dos días por semana a Crecovi" }
+        ]
+      },
+      {
+        "aula": "4 años C",
+        "tutor": "Gema",
+        "students": [
+          { "name": "Andrés de las Heras Alonso", "details": "Terapia: Lunes se va y no vuelve; Martes y Miércoles sólo mañanas; Jueves y Viernes día completo" }
+        ]
+      },
+      {
+        "aula": "5 años A",
+        "tutor": "Mamen",
+        "students": [
+          { "name": "Ainara Vaquero Pisa", "details": "Apoyo individualizado de lenguaje y comunicación" }
+        ]
+      },
+      {
+        "aula": "5 años B",
+        "tutor": "Paula",
+        "students": [
+          { "name": "Paula Colmenares Camacho", "details": "Apoyo de lenguaje y audición" },
+          { "name": "Valeria Almansa Luquero", "details": "Apoyo de lenguaje y audición" }
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "Educación Primaria",
+    "badge": "Primaria (5 aulas)",
+    "badgeColor": "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800",
+    "groups": [
+      {
+        "aula": "1º EP A",
+        "tutor": "Pilar F.",
+        "students": [
+          { "name": "Daryel Augusto", "details": "Apoyo curricular y lectoescritura" }
+        ]
+      },
+      {
+        "aula": "2º EP B",
+        "tutor": "Óscar",
+        "students": [
+          { "name": "Diego Andrade", "details": "Lengua y lectura comprensiva" }
+        ]
+      },
+      {
+        "aula": "3º EP C",
+        "tutor": "Pili",
+        "students": [
+          { "name": "Alexander Hristov", "details": "Apoyo grupal AL/PT" },
+          { "name": "Rodrigo Quiroz", "details": "Apoyo grupal AL/PT" }
+        ]
+      },
+      {
+        "aula": "5º EP B",
+        "tutor": "Lorena",
+        "students": [
+          { "name": "Manuel Aranda", "details": "Apoyo AL/PT individualizado" }
+        ]
+      },
+      {
+        "aula": "6º EP A",
+        "tutor": "Pedro Vega",
+        "students": [
+          { "name": "Darío Gómez Verdasco", "details": "Apoyo curricular específico" }
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "Educación Secundaria (ESO)",
+    "badge": "Secundaria (1 aula)",
+    "badgeColor": "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 border-violet-200 dark:border-violet-800",
+    "groups": [
+      {
+        "aula": "1º ESO C",
+        "tutor": "Miguel / Leisa",
+        "students": [
+          { "name": "Miguel Martínez", "details": "Apoyo en Lengua e Inglés" },
+          { "name": "Fernanda Leysa Villalba", "details": "Apoyo en Geografía e Historia" }
+        ]
+      }
+    ]
+  }
+];
+
+export const MARIA_VAZQUEZ_OBSERVATIONS = [
+  {
+    "student": "André Carballo Guzmán (4 años B)",
+    "obs": "Miércoles y jueves acude a terapia fuera del colegio."
+  },
+  {
+    "student": "Dylan Alvarenga Martínez (4 años B)",
+    "obs": "Acude a Atención Temprana y dos días por semana a Crecovi."
+  },
+  {
+    "student": "Andrés de las Heras Alonso (4 años C)",
+    "obs": "Va a terapia: los lunes se marcha y ya no asiste. Martes y miércoles sólo acude por la mañana. Jueves y viernes asiste el día completo al colegio."
+  },
+  {
+    "student": "Manuel Aranda y Darío Gómez (5ºB y 6ºA)",
+    "obs": "Jueves de 14:15 a 15:00 en 5ºB con Manuel con posibilidad de extensión y sesión doble compartida con Darío de 6ºA."
+  }
+];
+
+export const MARIA_VAZQUEZ_MATRIX_SLOTS = [
+  {
+    "id": "MV1",
+    "time": "08:15 - 09:10",
+    "turn": "mañana",
+    "label": "Tramo Inicial (Secundaria)",
+    "days": {
+      "0": {
+        "time": "08:15 - 09:10",
+        "start": "08:15",
+        "end": "09:10",
+        "aula": "1º ESO C",
+        "stage": "Secundaria",
+        "materia": "Lengua con Miguel",
+        "students": "Miguel Martínez",
+        "studentsShort": "Miguel Martínez"
+      },
+      "2": {
+        "time": "08:15 - 09:10",
+        "start": "08:15",
+        "end": "09:10",
+        "aula": "1º ESO C",
+        "stage": "Secundaria",
+        "materia": "GeH con Leisa",
+        "students": "Fernanda Leysa Villalba",
+        "studentsShort": "Fernanda Leysa"
+      }
+    }
+  },
+  {
+    "id": "MV2",
+    "time": "08:45 - 10:05",
+    "turn": "mañana",
+    "label": "1.ª Franja de Mañana",
+    "days": {
+      "0": {
+        "time": "09:10 - 10:00",
+        "start": "09:10",
+        "end": "10:00",
+        "aula": "5 años A",
+        "stage": "Infantil",
+        "materia": "Apoyo con Ainari",
+        "students": "Ainara Vaquero Pisa",
+        "studentsShort": "Ainara Vaquero"
+      },
+      "1": {
+        "time": "08:45 - 10:00",
+        "start": "08:45",
+        "end": "10:00",
+        "aula": "4 años B",
+        "stage": "Infantil",
+        "materia": "Dylan y André (con desayuno)",
+        "students": "Dylan Alvarenga, André Carballo",
+        "studentsShort": "Dylan y André"
+      },
+      "2": {
+        "time": "09:15 - 10:00",
+        "start": "09:15",
+        "end": "10:00",
+        "aula": "3º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo con Rodri y Alexander",
+        "students": "Rodrigo Quiroz, Alexander Hristov",
+        "studentsShort": "Rodri y Alexander"
+      },
+      "3": {
+        "time": "09:00 - 09:45",
+        "start": "09:00",
+        "end": "09:45",
+        "aula": "Oratorio",
+        "stage": "Primaria",
+        "materia": "Oratorio 1ºA / 2ºA",
+        "students": "Grupos 1ºA y 2ºA",
+        "studentsShort": "1ºA / 2ºA"
+      },
+      "4": {
+        "time": "09:00 - 09:30",
+        "start": "09:00",
+        "end": "09:30",
+        "aula": "2º EP B",
+        "stage": "Primaria",
+        "materia": "Lengua / Lectura con Diego",
+        "students": "Diego Andrade",
+        "studentsShort": "Diego Andrade"
+      }
+    }
+  },
+  {
+    "id": "MV3",
+    "time": "09:30 - 10:30",
+    "turn": "mañana",
+    "label": "2.ª Franja de Mañana",
+    "days": {
+      "3": {
+        "time": "09:45 - 10:30",
+        "start": "09:45",
+        "end": "10:30",
+        "aula": "Oratorio",
+        "stage": "Primaria",
+        "materia": "Oratorio 1ºB / 2ºB",
+        "students": "Grupos 1ºB y 2ºB",
+        "studentsShort": "1ºB / 2ºB"
+      },
+      "4": {
+        "time": "09:30 - 10:05",
+        "start": "09:30",
+        "end": "10:05",
+        "aula": "1º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo con Daryel",
+        "students": "Daryel Augusto",
+        "studentsShort": "Daryel Augusto"
+      }
+    }
+  },
+  {
+    "id": "MV4",
+    "time": "10:05 - 11:30",
+    "turn": "mañana",
+    "label": "Franja Central / Recreo",
+    "days": {
+      "0": {
+        "time": "10:30 - 11:10",
+        "start": "10:30",
+        "end": "11:10",
+        "aula": "5 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo con Pauli y Valeria",
+        "students": "Paula Colmenares, Valeria Almansa",
+        "studentsShort": "Paula y Valeria"
+      },
+      "1": {
+        "time": "10:30 - 11:00",
+        "start": "10:30",
+        "end": "11:00",
+        "aula": "4 años C",
+        "stage": "Infantil",
+        "materia": "Apoyo con Andrés",
+        "students": "Andrés de las Heras Alonso",
+        "studentsShort": "Andrés de las Heras"
+      },
+      "2": {
+        "time": "10:30 - 11:30",
+        "start": "10:30",
+        "end": "11:30",
+        "aula": "5 años A",
+        "stage": "Infantil",
+        "materia": "Apoyo con Ainari",
+        "students": "Ainara Vaquero Pisa",
+        "studentsShort": "Ainara Vaquero"
+      },
+      "3": {
+        "time": "10:30 - 11:00",
+        "start": "10:30",
+        "end": "11:00",
+        "aula": "Patio Primaria",
+        "stage": "Primaria",
+        "materia": "Recreo Primaria (por CULPA de Dani)",
+        "students": "Supervisión Recreo",
+        "studentsShort": "Patio x CULPA de Dani"
+      },
+      "4": {
+        "time": "10:05 - 11:00",
+        "start": "10:05",
+        "end": "11:00",
+        "aula": "1º ESO C",
+        "stage": "Secundaria",
+        "materia": "Inglés con Miguel",
+        "students": "Miguel Martínez",
+        "studentsShort": "Miguel Martínez"
+      }
+    }
+  },
+  {
+    "id": "MV5",
+    "time": "11:00 - 11:45",
+    "turn": "mañana",
+    "label": "3.ª Franja de Mañana",
+    "days": {
+      "0": {
+        "time": "11:10 - 11:45",
+        "start": "11:10",
+        "end": "11:45",
+        "aula": "1º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo con Daryel",
+        "students": "Daryel Augusto",
+        "studentsShort": "Daryel Augusto"
+      },
+      "1": {
+        "time": "11:00 - 11:45",
+        "start": "11:00",
+        "end": "11:45",
+        "aula": "5º EP B",
+        "stage": "Primaria",
+        "materia": "Sesión con Manuel",
+        "students": "Manuel Aranda",
+        "studentsShort": "Manuel Aranda"
+      },
+      "3": {
+        "time": "11:00 - 11:45",
+        "start": "11:00",
+        "end": "11:45",
+        "aula": "Oratorio",
+        "stage": "Primaria",
+        "materia": "Oratorio 1ºC / 2ºC",
+        "students": "Grupos 1ºC y 2ºC",
+        "studentsShort": "1ºC / 2ºC"
+      },
+      "4": {
+        "time": "11:00 - 11:45",
+        "start": "11:00",
+        "end": "11:45",
+        "aula": "4 años C",
+        "stage": "Infantil",
+        "materia": "Apoyo con Andrés",
+        "students": "Andrés de las Heras Alonso",
+        "studentsShort": "Andrés de las Heras"
+      }
+    }
+  },
+  {
+    "id": "MV6",
+    "time": "11:45 - 13:20",
+    "turn": "mañana",
+    "label": "Última Franja de Mañana",
+    "days": {
+      "0": {
+        "time": "11:45 - 12:25 / 12:25 - 13:20",
+        "start": "11:45",
+        "end": "13:20",
+        "aula": "3º EP C / 1º ESO C",
+        "stage": "Primaria",
+        "materia": "Rodri y Alex (hasta 12:25) / GeH Leisa 1ºESO (hasta 13:20)",
+        "students": "Rodri, Alexander, Fernanda Leysa",
+        "studentsShort": "3ºC y 1º ESO C"
+      },
+      "1": {
+        "time": "11:45 - 12:30",
+        "start": "11:45",
+        "end": "12:30",
+        "aula": "2º EP B",
+        "stage": "Primaria",
+        "materia": "Lengua con Diego",
+        "students": "Diego Andrade",
+        "studentsShort": "Diego Andrade"
+      },
+      "2": {
+        "time": "11:45 - 12:30",
+        "start": "11:45",
+        "end": "12:30",
+        "aula": "1º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo con Daryel",
+        "students": "Daryel Augusto",
+        "studentsShort": "Daryel Augusto"
+      },
+      "3": {
+        "time": "11:45 - 12:30",
+        "start": "11:45",
+        "end": "12:30",
+        "aula": "3º EP C",
+        "stage": "Primaria",
+        "materia": "Apoyo con Rodri y Alexander",
+        "students": "Rodrigo Quiroz, Alexander Hristov",
+        "studentsShort": "Rodri y Alexander"
+      },
+      "4": {
+        "time": "11:45 - 12:30",
+        "start": "11:45",
+        "end": "12:30",
+        "aula": "6º EP A",
+        "stage": "Primaria",
+        "materia": "Apoyo con Darío",
+        "students": "Darío Gómez Verdasco",
+        "studentsShort": "Darío Gómez"
+      }
+    }
+  },
+  {
+    "id": "MV7",
+    "time": "14:00 - 15:15",
+    "turn": "tarde",
+    "label": "1.ª Franja de Tarde",
+    "days": {
+      "0": {
+        "time": "14:15 - 15:15",
+        "start": "14:15",
+        "end": "15:15",
+        "aula": "4 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo con Dylan y André",
+        "students": "Dylan Alvarenga, André Carballo",
+        "studentsShort": "Dylan y André"
+      },
+      "1": {
+        "time": "14:00 - 14:45",
+        "start": "14:00",
+        "end": "14:45",
+        "aula": "5 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo con Pauli y Valeria",
+        "students": "Paula Colmenares, Valeria Almansa",
+        "studentsShort": "Paula y Valeria"
+      },
+      "2": {
+        "time": "14:00 - 15:00",
+        "start": "14:00",
+        "end": "15:00",
+        "aula": "5 años B",
+        "stage": "Infantil",
+        "materia": "Apoyo con Pauli y Valeria",
+        "students": "Paula Colmenares, Valeria Almansa",
+        "studentsShort": "Paula y Valeria"
+      },
+      "3": {
+        "time": "14:15 - 15:00",
+        "start": "14:15",
+        "end": "15:00",
+        "aula": "5º EP B",
+        "stage": "Primaria",
+        "materia": "Sesión con Manuel (y Darío de 6ºA)",
+        "students": "Manuel Aranda, Darío Gómez",
+        "studentsShort": "Manuel Aranda (y Darío)"
+      }
+    }
+  },
+  {
+    "id": "MV8",
+    "time": "14:45 - 16:15",
+    "turn": "tarde",
+    "label": "2.ª Franja de Tarde",
+    "days": {
+      "0": {
+        "time": "15:15 - 16:15",
+        "start": "15:15",
+        "end": "16:15",
+        "aula": "2º EP B",
+        "stage": "Primaria",
+        "materia": "Apoyo con Diego",
+        "students": "Diego Andrade",
+        "studentsShort": "Diego Andrade"
+      },
+      "1": {
+        "time": "14:45 - 15:30 / 15:30 - 16:15",
+        "start": "14:45",
+        "end": "16:15",
+        "aula": "4 años B / 6º EP A",
+        "stage": "Primaria",
+        "materia": "Dylan y André (hasta 15:30) / Darío 6ºA (hasta 16:15)",
+        "students": "Dylan, André, Darío Gómez",
+        "studentsShort": "Dylan, André, Darío"
+      },
+      "2": {
+        "time": "15:00 - 15:30",
+        "start": "15:00",
+        "end": "15:30",
+        "aula": "4 años B",
+        "stage": "Infantil",
+        "materia": "Solo con André",
+        "students": "André Carballo Guzmán",
+        "studentsShort": "André Carballo"
+      },
+      "3": {
+        "time": "15:00 - 16:00",
+        "start": "15:00",
+        "end": "16:00",
+        "aula": "4 años C",
+        "stage": "Infantil",
+        "materia": "Apoyo con Andrés",
+        "students": "Andrés de las Heras Alonso",
+        "studentsShort": "Andrés de las Heras"
+      }
+    }
+  }
+];
+
 export const SCHOOL_SUPPORT_ASSIGNMENTS = [
   {
     "day": 0,
