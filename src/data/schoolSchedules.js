@@ -7769,3 +7769,129 @@ export function formatSupportText(list) {
     return `${displayName}${s.note ? ` (${s.note})` : ""}`;
   }).join(" · ");
 }
+
+
+// ============================================================================
+// TURNOS DE VIGILANCIA DE PATIOS EN EDUCACIÓN INFANTIL (NOVIEMBRE 2026)
+// ============================================================================
+export const INFANTIL_TUTOR_LETTERS = {
+  "ediaz": "A",       // Elena Díaz (3 años A)
+  "slopez": "A",      // Susana López (4 años A)
+  "aperez": "A",      // Alejandra Pérez (5 años A)
+  "njimenez": "B",    // Nieves Jiménez (3 años B)
+  "nromero": "B",     // Nuria Romero (4 años B)
+  "tespejo": "B",     // Teresa Espejo (5 años B)
+  "acalvo": "C",      // Alejandra Calvo (3 años C)
+  "gdelpozo": "C",    // Gema del Pozo (4 años C)
+  "mrodriguezc": "C"  // Marta Rodríguez (5 años C)
+};
+
+export const INFANTIL_PATIO_NOVEMBER_2026 = {
+  2: null,  // Lunes 2 (Festivo)
+  3: "A",   // Martes 3
+  4: "B",   // Miércoles 4
+  5: "C",   // Jueves 5
+  6: "A",   // Viernes 6
+  9: null,  // Lunes 9 (Festivo Almudena)
+  10: "B",  // Martes 10
+  11: "C",  // Miércoles 11
+  12: "A",  // Jueves 12
+  13: "B",  // Viernes 13
+  16: "C",  // Lunes 16
+  17: "A",  // Martes 17
+  18: "B",  // Miércoles 18
+  19: "C",  // Jueves 19
+  20: "A",  // Viernes 20
+  23: "B",  // Lunes 23
+  24: "C",  // Martes 24
+  25: "A",  // Miércoles 25
+  26: "B",  // Jueves 26
+  27: "C",  // Viernes 27
+  30: "A"   // Lunes 30
+};
+
+export function getInfantilPatioInfo(teacherId, targetDate = new Date()) {
+  const teacherLetter = INFANTIL_TUTOR_LETTERS[teacherId] || null;
+  const dayOfMonth = targetDate.getDate();
+  const month = targetDate.getMonth(); // 10 = Noviembre (0-indexed)
+  
+  // Turno asignado para el día en noviembre
+  const activeLetter = (month === 10) ? (INFANTIL_PATIO_NOVEMBER_2026[dayOfMonth] || null) : null;
+  const hasDutyToday = Boolean(teacherLetter && activeLetter && teacherLetter === activeLetter);
+
+  return {
+    teacherLetter,
+    activeLetter,
+    hasDutyToday,
+    isInfantilTutor: Boolean(teacherLetter)
+  };
+}
+
+export function getInfantilPatioLetterForDate(targetDate) {
+  if (!targetDate) return null;
+  const dayOfMonth = targetDate.getDate();
+  const month = targetDate.getMonth();
+  if (month === 10) {
+    return INFANTIL_PATIO_NOVEMBER_2026[dayOfMonth] || null;
+  }
+  return null;
+}
+
+export const INFANTIL_PATIO_WEEKS_NOVEMBER_2026 = [
+  {
+    id: 1,
+    label: "Semana 1 · 2 al 6 Nov",
+    days: [
+      { dayIdx: 0, dayName: "Lunes", date: 2, turno: null, festivo: true, note: "Todos los Santos" },
+      { dayIdx: 1, dayName: "Martes", date: 3, turno: "A" },
+      { dayIdx: 2, dayName: "Miércoles", date: 4, turno: "B" },
+      { dayIdx: 3, dayName: "Jueves", date: 5, turno: "C" },
+      { dayIdx: 4, dayName: "Viernes", date: 6, turno: "A" }
+    ]
+  },
+  {
+    id: 2,
+    label: "Semana 2 · 9 al 13 Nov",
+    days: [
+      { dayIdx: 0, dayName: "Lunes", date: 9, turno: null, festivo: true, note: "La Almudena" },
+      { dayIdx: 1, dayName: "Martes", date: 10, turno: "B" },
+      { dayIdx: 2, dayName: "Miércoles", date: 11, turno: "C" },
+      { dayIdx: 3, dayName: "Jueves", date: 12, turno: "A" },
+      { dayIdx: 4, dayName: "Viernes", date: 13, turno: "B" }
+    ]
+  },
+  {
+    id: 3,
+    label: "Semana 3 · 16 al 20 Nov",
+    days: [
+      { dayIdx: 0, dayName: "Lunes", date: 16, turno: "C" },
+      { dayIdx: 1, dayName: "Martes", date: 17, turno: "A" },
+      { dayIdx: 2, dayName: "Miércoles", date: 18, turno: "B" },
+      { dayIdx: 3, dayName: "Jueves", date: 19, turno: "C" },
+      { dayIdx: 4, dayName: "Viernes", date: 20, turno: "A" }
+    ]
+  },
+  {
+    id: 4,
+    label: "Semana 4 · 23 al 27 Nov",
+    days: [
+      { dayIdx: 0, dayName: "Lunes", date: 23, turno: "B" },
+      { dayIdx: 1, dayName: "Martes", date: 24, turno: "C" },
+      { dayIdx: 2, dayName: "Miércoles", date: 25, turno: "A" },
+      { dayIdx: 3, dayName: "Jueves", date: 26, turno: "B" },
+      { dayIdx: 4, dayName: "Viernes", date: 27, turno: "C" }
+    ]
+  },
+  {
+    id: 5,
+    label: "Semana 5 · 30 Nov",
+    days: [
+      { dayIdx: 0, dayName: "Lunes", date: 30, turno: "A" },
+      { dayIdx: 1, dayName: "Martes", date: null, turno: null },
+      { dayIdx: 2, dayName: "Miércoles", date: null, turno: null },
+      { dayIdx: 3, dayName: "Jueves", date: null, turno: null },
+      { dayIdx: 4, dayName: "Viernes", date: null, turno: null }
+    ]
+  }
+];
+

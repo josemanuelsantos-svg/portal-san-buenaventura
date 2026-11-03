@@ -16,7 +16,12 @@ import {
   DANIEL_ASENJO_MATRIX_SLOTS,
   SCHOOL_SUPPORT_ASSIGNMENTS,
   getSupportForSession,
-  formatSupportText
+  formatSupportText,
+  INFANTIL_TUTOR_LETTERS,
+  INFANTIL_PATIO_NOVEMBER_2026,
+  INFANTIL_PATIO_WEEKS_NOVEMBER_2026,
+  getInfantilPatioInfo,
+  getInfantilPatioLetterForDate
 } from './data/schoolSchedules';
 
 function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
@@ -286,6 +291,7 @@ function LiveTeacherNextClassBanner({
   const nowSecs = nowDate.getSeconds();
 
   const isInf = myTeacherObj.stage === "Infantil";
+  const patioInfo = isInf ? getInfantilPatioInfo(myTeacherObj.id, nowDate) : null;
   const periodCols = (isInf ? SCHEDULE_PERIOD_COLUMNS_INFANTIL : SCHEDULE_PERIOD_COLUMNS).filter(c => !c.isBreak);
 
   // Obtain today schedule slots
@@ -416,6 +422,58 @@ function LiveTeacherNextClassBanner({
     }
   }
 
+  // Comprobación específica para Recreo de Educación Infantil (10:00 - 10:30)
+  if (isInf && !isWeekend && nowMins >= 600 && nowMins < 630) {
+    const minsLeftRecreo = 630 - nowMins;
+    const hasDuty = patioInfo?.hasDutyToday;
+
+    return (
+      <div className={`p-3.5 rounded-2xl text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 animate-fade-in border ${
+        hasDuty
+          ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 border-emerald-300 ring-2 ring-emerald-400"
+          : "bg-gradient-to-r from-amber-700 via-amber-800 to-slate-900 border-amber-500/40"
+      }`}>
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg font-black shrink-0 border border-white/20">
+            {hasDuty ? "🛝" : "☕"}
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-white/30 ${
+                hasDuty ? "bg-amber-300 text-slate-950 font-black animate-pulse" : "bg-white/20 text-white"
+              }`}>
+                {hasDuty ? "⭐ ¡Te toca vigilancia de patio!" : "☕ Recreo Infantil en curso"}
+              </span>
+              <span className="text-xs font-mono opacity-80 font-bold">(10:00 - 10:30 · Faltan {minsLeftRecreo} min)</span>
+            </div>
+            <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
+              {hasDuty
+                ? `Supervisión de Patio Infantil · Turno Grupo ${patioInfo.teacherLetter}`
+                : `Recreo Infantil · Turno de patio hoy: ${patioInfo.activeLetter ? `Grupo ${patioInfo.activeLetter}` : "Sin turno asignado"}`}
+            </h3>
+            <p className="text-xs text-amber-100 font-medium truncate">
+              {hasDuty
+                ? "Te corresponde la atención y vigilancia de patio en el turno de hoy."
+                : patioInfo.teacherLetter
+                ? `Hoy no te toca patio (tu turno habitual es el Grupo ${patioInfo.teacherLetter}). ¡Disfruta del descanso!`
+                : "Tiempo de descanso y preparación para la 3.ª hora (10:30)."}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          <button
+            type="button"
+            onClick={onOpenSchedule}
+            className="px-3 py-1.5 rounded-xl bg-white text-slate-900 text-xs font-black transition hover:bg-slate-100 shadow-sm"
+          >
+            Ver Turnos de Patio →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // General teachers schedule
   // Parse periods
   const periodRanges = periodCols.map(col => {
@@ -482,6 +540,11 @@ function LiveTeacherNextClassBanner({
                 {isUrgentSwitch ? `⚠️ ¡Fin de hora! Faltan ${minsRemaining} min` : `⚡ En curso · Faltan ${minsRemaining} min`}
               </span>
               <span className="text-xs font-mono opacity-80 font-bold">({activePeriodObj.col.time})</span>
+              {patioInfo?.hasDutyToday && (
+                <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-400/30 text-white px-2 py-0.5 rounded-full border border-white/30">
+                  🛝 Hoy te toca patio (Turno {patioInfo.teacherLetter})
+                </span>
+              )}
             </div>
             <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
               {isLectiva
@@ -558,9 +621,16 @@ function LiveTeacherNextClassBanner({
             ⏳
           </div>
           <div className="min-w-0">
-            <span className="text-[10px] font-black uppercase tracking-wider bg-indigo-500/30 text-indigo-200 px-2 py-0.5 rounded-full border border-indigo-400/30">
-              👉 Próxima Clase {minsToNext > 0 ? `en ${minsToNext} min` : "a continuación"} · {nextPeriodObj.col.label} ({nextPeriodObj.col.time})
-            </span>
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-indigo-500/30 text-indigo-200 px-2 py-0.5 rounded-full border border-indigo-400/30">
+                👉 Próxima Clase {minsToNext > 0 ? `en ${minsToNext} min` : "a continuación"} · {nextPeriodObj.col.label} ({nextPeriodObj.col.time})
+              </span>
+              {patioInfo?.hasDutyToday && (
+                <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-500/30 text-emerald-200 px-2 py-0.5 rounded-full border border-emerald-400/30">
+                  🛝 Hoy te toca patio (Turno {patioInfo.teacherLetter})
+                </span>
+              )}
+            </div>
             <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
               {nextSlot && nextSlot[0] === "L"
                 ? `${formatShortAula(nextSlot[1])} · ${formatShortSubject(nextSlot[2])}`
@@ -3441,11 +3511,46 @@ export function App() {
             {/* TIRA EN VIVO DEL HORARIO DE HOY SI EL DOCENTE HA ELEGIDO SU PERFIL */}
             {myTeacherObj && (
               <div className="p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-950/70 border border-slate-200/90 dark:border-slate-800 flex flex-col xl:flex-row xl:items-center justify-between gap-2.5">
-                <div className="flex items-center justify-between xl:justify-start gap-2 shrink-0">
+                <div className="flex items-center justify-between xl:justify-start gap-2 shrink-0 flex-wrap">
                   <span className="text-[11px] font-extrabold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                     <IconRenderer name="Clock" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span>Tu jornada ({["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"][activeDayForSchedule]}):</span>
                   </span>
+                  {(() => {
+                    if (myTeacherObj?.stage === "Infantil") {
+                      const patio = getInfantilPatioInfo(myTeacherObj.id, nowDateObj);
+                      if (patio.isInfantilTutor) {
+                        return patio.hasDutyToday ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedViewTeacherId(myTeacherObj.id);
+                              setScheduleCenterTab("teacher");
+                              setIsScheduleCenterOpen(true);
+                            }}
+                            className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs animate-pulse flex items-center gap-1 transition"
+                            title="Ver cuadrante y turnos de patio de noviembre"
+                          >
+                            🛝 ¡Hoy te toca Patio! (Turno {patio.teacherLetter})
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedViewTeacherId(myTeacherObj.id);
+                              setScheduleCenterTab("teacher");
+                              setIsScheduleCenterOpen(true);
+                            }}
+                            className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-200/90 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 flex items-center gap-1 transition"
+                            title="Ver cuadrante y turnos de patio de noviembre"
+                          >
+                            🛝 Patio hoy: Turno {patio.activeLetter || "—"} (Tú: {patio.teacherLetter})
+                          </button>
+                        );
+                      }
+                    }
+                    return null;
+                  })()}
                   <button
                     type="button"
                     onClick={() => {
@@ -4649,6 +4754,17 @@ export function App() {
                                 🏫 Grupos: {Array.from(aulasImpartidas).join(", ")}
                               </span>
                             )}
+                            {currentTeacher.stage === "Infantil" && (
+                              <span className={`px-2.5 py-1 rounded-xl text-xs font-black flex items-center gap-1.5 border ${
+                                INFANTIL_TUTOR_LETTERS[currentTeacher.id]
+                                  ? "bg-amber-100 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border-amber-300 dark:border-amber-700 shadow-xs"
+                                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700"
+                              }`}>
+                                🛝 {INFANTIL_TUTOR_LETTERS[currentTeacher.id]
+                                  ? `Turno de Patio: Letra ${INFANTIL_TUTOR_LETTERS[currentTeacher.id]}`
+                                  : "Especialista Infantil (Sin turno asignado)"}
+                              </span>
+                            )}
                           </>
                         )}
                       </div>
@@ -5318,116 +5434,305 @@ export function App() {
                           </div>
                         )}
                       </div>
-                    ) : (
-                      <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
-                        <table className="w-full text-left border-collapse min-w-[720px]">
-                          <thead>
-                            <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
-                              <th className="p-3 w-36">Hora / Tramo</th>
-                              {dayNames.map((dName, idx) => (
-                                <th key={dName} className={`p-3 ${currentTime.getDay() - 1 === idx ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/30" : ""}`}>
-                                  {dName} {currentTime.getDay() - 1 === idx && " (Hoy)"}
-                                </th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
-                            {SCHEDULE_PERIOD_COLUMNS.map((col, rowIdx) => (
-                              <React.Fragment key={col.id}>
-                                {rowIdx === 2 && (
-                                  <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
-                                    <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                      ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
-                                    </td>
-                                  </tr>
-                                )}
-                                {rowIdx === 4 && (
-                                  <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
-                                    <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                      🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía
-                                    </td>
-                                  </tr>
-                                )}
-                                <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
-                                  <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
-                                    <span className="block text-xs text-indigo-600 dark:text-indigo-400">{col.label}</span>
-                                    <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
-                                  </td>
-                                  {[0, 1, 2, 3, 4].map((dIdx) => {
-                                    const slot = teacherSched[String(dIdx)]?.[col.id];
-                                    if (!slot) {
-                                      return <td key={dIdx} className="p-2.5 text-slate-400 italic">—</td>;
-                                    }
-                                    const [typeCode, aula, materia] = slot;
-                                    const isLectiva = typeCode === "L";
-                                    const isDisp = typeCode === "D";
-                                    return (
-                                      <td key={dIdx} className="p-2 align-top">
-                                        <div
-                                          className={`p-2.5 rounded-xl border h-full transition ${
-                                            isLectiva
-                                              ? "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-200/80 dark:border-indigo-500/30"
-                                              : isDisp
-                                              ? "bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-500/30"
-                                              : "bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800 opacity-60"
-                                          }`}
-                                        >
-                                          <div className="flex items-center justify-between gap-1 mb-1">
-                                            <span
-                                              className={`px-1.5 py-0.5 rounded text-[10px] font-black ${
-                                                isLectiva
-                                                  ? "bg-indigo-600 text-white cursor-pointer hover:bg-indigo-500"
-                                                  : isDisp
-                                                  ? "bg-emerald-600 text-white cursor-pointer hover:bg-emerald-500"
-                                                  : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                                              }`}
-                                              onClick={() => {
-                                                if (aula && SCHOOL_CLASSROOMS.some(c => aula.includes(c))) {
-                                                  const targetAula = SCHOOL_CLASSROOMS.find(c => aula.includes(c)) || aula;
-                                                  setSelectedViewClassroom(targetAula);
-                                                  setScheduleCenterTab("classroom");
+                    ) : (() => {
+                      const isInfTeacher = currentTeacher?.stage === "Infantil";
+                      const teacherLetter = INFANTIL_TUTOR_LETTERS[currentTeacher?.id] || null;
+                      const periodCols = (isInfTeacher ? SCHEDULE_PERIOD_COLUMNS_INFANTIL : SCHEDULE_PERIOD_COLUMNS).filter(c => !c.isBreak);
+                      const activeWeekObj = INFANTIL_PATIO_WEEKS_NOVEMBER_2026.find(w => w.id === selectedInfantilPatioWeek) || INFANTIL_PATIO_WEEKS_NOVEMBER_2026[0];
+
+                      return (
+                        <div className="space-y-4">
+                          {isInfTeacher && (
+                            <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 dark:from-amber-950/30 dark:via-orange-950/20 dark:to-amber-950/30 p-3.5 sm:p-4 rounded-2xl border border-amber-200 dark:border-amber-800/60 shadow-xs space-y-3">
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xl">🛝</span>
+                                  <div>
+                                    <h4 className="text-xs sm:text-sm font-black text-amber-950 dark:text-amber-200">
+                                      Turnos de Patio Infantil · Mes Noviembre
+                                    </h4>
+                                    <p className="text-[11px] text-amber-800/80 dark:text-amber-300/80 font-medium">
+                                      {teacherLetter
+                                        ? `Docente con Turno Letra ${teacherLetter} (${currentTeacher.dept}). El horario resalta con ⭐ los días que te corresponde patio.`
+                                        : "Docente especialista: consulta la rotación de turnos A, B y C de las tutoras de Infantil."}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => setShowInfantilPatioMonthGrid(!showInfantilPatioMonthGrid)}
+                                  className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black transition shadow-xs flex items-center gap-1.5 shrink-0"
+                                >
+                                  <span>{showInfantilPatioMonthGrid ? "▲ Ocultar Cuadrante Mensual" : "📅 Ver Cuadrante Mensual (Noviembre)"}</span>
+                                </button>
+                              </div>
+
+                              {/* Selector de semana de noviembre para la fila de recreo */}
+                              <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-amber-200/60 dark:border-amber-800/40">
+                                <span className="text-[10px] font-black uppercase tracking-wider text-amber-900/70 dark:text-amber-400 mr-1">
+                                  Semana mostrada en el recreo:
+                                </span>
+                                {INFANTIL_PATIO_WEEKS_NOVEMBER_2026.map(w => (
+                                  <button
+                                    key={w.id}
+                                    type="button"
+                                    onClick={() => setSelectedInfantilPatioWeek(w.id)}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-black transition ${
+                                      selectedInfantilPatioWeek === w.id
+                                        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs"
+                                        : "bg-white/80 dark:bg-slate-900/80 text-amber-950 dark:text-amber-200 border border-amber-200 dark:border-amber-800 hover:bg-white"
+                                    }`}
+                                  >
+                                    {w.label}
+                                  </button>
+                                ))}
+                              </div>
+
+                              {/* Cuadrante mensual completo idéntico al documento/foto de Noviembre */}
+                              {showInfantilPatioMonthGrid && (
+                                <div className="mt-3 pt-3 border-t border-amber-200/80 dark:border-amber-800/60 animate-fade-in space-y-2">
+                                  <div className="flex items-center justify-between text-xs font-black text-amber-950 dark:text-amber-200 flex-wrap gap-2">
+                                    <span>📋 Cuadrante Oficial · Mes Noviembre (Infantil)</span>
+                                    <span className="text-[10px] font-bold text-amber-800 dark:text-amber-400">
+                                      Letra A: 3A, 4A, 5A · Letra B: 3B, 4B, 5B · Letra C: 3C, 4C, 5C
+                                    </span>
+                                  </div>
+                                  <div className="overflow-x-auto rounded-xl border border-slate-300 dark:border-slate-700 shadow-xs">
+                                    <table className="w-full text-center border-collapse text-xs font-black">
+                                      <thead>
+                                        <tr className="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-b border-slate-300 dark:border-slate-700">
+                                          <th colSpan={5} className="py-1.5 uppercase tracking-wider text-sm font-extrabold bg-slate-300 dark:bg-slate-700 text-slate-900 dark:text-white">
+                                            Mes Noviembre
+                                          </th>
+                                        </tr>
+                                      </thead>
+                                      <tbody className="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900">
+                                        {INFANTIL_PATIO_WEEKS_NOVEMBER_2026.map(w => (
+                                          <React.Fragment key={w.id}>
+                                            <tr className="bg-slate-50 dark:bg-slate-950/80 text-slate-700 dark:text-slate-300 text-[11px] font-extrabold border-t border-slate-300 dark:border-slate-700">
+                                              {w.days.map((d, dIdx) => (
+                                                <td key={dIdx} className="py-1.5 px-2 border-r border-slate-200 dark:border-slate-800 last:border-r-0">
+                                                  {d.date ? `${d.dayName} ${d.date}` : "—"}
+                                                </td>
+                                              ))}
+                                            </tr>
+                                            <tr className="border-b border-slate-300 dark:border-slate-700">
+                                              {w.days.map((d, dIdx) => {
+                                                if (!d.date) {
+                                                  return <td key={dIdx} className="py-2.5 px-2 bg-slate-50 dark:bg-slate-950/40 text-slate-400 border-r border-slate-200 dark:border-slate-800 last:border-r-0">—</td>;
                                                 }
-                                              }}
-                                              title={aula ? `Ver horario de ${aula}` : ""}
-                                            >
-                                              {isLectiva
-                                                ? (aula !== "Sin Aula" ? formatShortAula(aula) : "Aula")
-                                                : isDisp
-                                                ? (aula ? `🟢 ${formatShortAula(aula)}` : "🟢 Apoyo")
-                                                : "Libre"}
-                                            </span>
-                                          </div>
-                                          <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug" title={materia}>
-                                            {isLectiva ? formatShortSubject(materia) : isDisp ? (materia || "Disponibilidad / Sustitución") : "Sin sesión lectiva"}
-                                          </p>
-                                          {(() => {
-                                            const supportList = isLectiva && currentTeacher && aula
-                                              ? getSupportForSession(dIdx, col.id, aula, currentTeacher.id)
-                                              : [];
-                                            if (supportList.length === 0) return null;
+                                                if (d.festivo) {
+                                                  return (
+                                                    <td key={dIdx} className="py-2.5 px-2 bg-rose-200 dark:bg-rose-950/70 text-rose-900 dark:text-rose-200 font-extrabold border-r border-slate-200 dark:border-slate-800 last:border-r-0">
+                                                      Festivo
+                                                    </td>
+                                                  );
+                                                }
+                                                const isTeacherTurn = teacherLetter && d.turno === teacherLetter;
+                                                const bgClass = d.turno === "A"
+                                                  ? "bg-blue-500 text-white"
+                                                  : d.turno === "B"
+                                                  ? "bg-yellow-400 text-slate-950"
+                                                  : "bg-emerald-500 text-white";
+
+                                                return (
+                                                  <td key={dIdx} className={`py-2.5 px-2 border-r border-slate-200 dark:border-slate-800 last:border-r-0 font-black ${bgClass} ${isTeacherTurn ? "ring-3 ring-inset ring-amber-400 relative" : ""}`}>
+                                                    <div className="flex items-center justify-center gap-1">
+                                                      <span>{d.turno}</span>
+                                                      {isTeacherTurn && <span title="¡Tu turno de patio!">⭐</span>}
+                                                    </div>
+                                                  </td>
+                                                );
+                                              })}
+                                            </tr>
+                                          </React.Fragment>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                            <table className="w-full text-left border-collapse min-w-[720px]">
+                              <thead>
+                                <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                                  <th className="p-3 w-36">Hora / Tramo</th>
+                                  {dayNames.map((dName, idx) => (
+                                    <th key={dName} className={`p-3 ${currentTime.getDay() - 1 === idx ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/30" : ""}`}>
+                                      {dName} {currentTime.getDay() - 1 === idx && " (Hoy)"}
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                                {periodCols.map((col, rowIdx) => (
+                                  <React.Fragment key={col.id}>
+                                    {rowIdx === 2 && (
+                                      isInfTeacher ? (
+                                        <tr className="bg-amber-50/70 dark:bg-amber-950/30 border-y-2 border-amber-300 dark:border-amber-700">
+                                          <td className="p-3 font-extrabold text-amber-950 dark:text-amber-200 bg-amber-100/60 dark:bg-amber-950/60 border-r border-slate-200 dark:border-slate-800">
+                                            <span className="block text-xs font-black text-amber-800 dark:text-amber-300">☕ 10:00 - 10:30</span>
+                                            <span className="block text-[10px] font-bold text-amber-700 dark:text-amber-400">Recreo · Patio</span>
+                                            <span className="block text-[9px] font-mono text-amber-600 dark:text-amber-500 opacity-90 mt-0.5">{activeWeekObj.label.split(" · ")[1]}</span>
+                                          </td>
+                                          {activeWeekObj.days.map((dayInfo, dIdx) => {
+                                            if (!dayInfo.date) {
+                                              return <td key={dIdx} className="p-2 text-center text-slate-400 italic">—</td>;
+                                            }
+                                            if (dayInfo.festivo) {
+                                              return (
+                                                <td key={dIdx} className="p-2 text-center">
+                                                  <div className="py-2 px-1 rounded-xl bg-rose-100/80 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900/60 text-rose-800 dark:text-rose-300 text-[11px] font-extrabold">
+                                                    <span>🛑 Festivo</span>
+                                                    <span className="block text-[9px] font-mono opacity-80">Día {dayInfo.date}</span>
+                                                  </div>
+                                                </td>
+                                              );
+                                            }
+                                            const isDuty = teacherLetter && dayInfo.turno === teacherLetter;
+                                            const bgBadge = dayInfo.turno === "A"
+                                              ? "bg-blue-600 text-white"
+                                              : dayInfo.turno === "B"
+                                              ? "bg-amber-400 text-slate-950"
+                                              : "bg-emerald-600 text-white";
+
                                             return (
-                                              <div className="mt-1">
+                                              <td key={dIdx} className="p-2 align-middle text-center">
+                                                {isDuty ? (
+                                                  <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-black shadow-sm border border-emerald-400 ring-2 ring-emerald-300 flex flex-col items-center justify-center gap-0.5 animate-pulse">
+                                                    <span className="text-[10px] uppercase tracking-wider font-extrabold bg-white/20 px-1.5 py-0.2 rounded-full">
+                                                      Día {dayInfo.date} · Turno {dayInfo.turno}
+                                                    </span>
+                                                    <span className="text-xs font-black flex items-center gap-1 mt-0.5">
+                                                      ⭐ ¡Te toca Patio!
+                                                    </span>
+                                                  </div>
+                                                ) : (
+                                                  <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-0.5">
+                                                    <div className="flex items-center gap-1">
+                                                      <span className={`px-1.5 py-0.2 rounded text-[10px] font-black ${bgBadge}`}>
+                                                        Turno {dayInfo.turno}
+                                                      </span>
+                                                      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                                                        Día {dayInfo.date}
+                                                      </span>
+                                                    </div>
+                                                    <span className="text-[9px] text-slate-400 dark:text-slate-500 mt-0.5">
+                                                      {teacherLetter ? "No te toca" : "Sin turno asignado"}
+                                                    </span>
+                                                  </div>
+                                                )}
+                                              </td>
+                                            );
+                                          })}
+                                        </tr>
+                                      ) : (
+                                        <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
+                                          <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                            ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
+                                          </td>
+                                        </tr>
+                                      )
+                                    )}
+                                    {rowIdx === 4 && (
+                                      <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
+                                        <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                          {isInfTeacher
+                                            ? "🍽️ 12:15 - 14:00 · Comedor Infantil y Descanso"
+                                            : "🍽️ 12:30 - 14:15 · Comedor Escolar, Catequesis y Descanso Mediodía"}
+                                        </td>
+                                      </tr>
+                                    )}
+                                    <tr className="bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                                      <td className="p-3 font-extrabold text-slate-800 dark:text-slate-200 bg-slate-50/60 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                                        <span className={`block text-xs font-black ${isInfTeacher ? "text-emerald-600 dark:text-emerald-400" : "text-indigo-600 dark:text-indigo-400"}`}>
+                                          {col.label}
+                                        </span>
+                                        <span className="block text-[10px] font-mono text-slate-500 dark:text-slate-400">{col.time}</span>
+                                      </td>
+                                      {[0, 1, 2, 3, 4].map((dIdx) => {
+                                        const slot = teacherSched[String(dIdx)]?.[col.id];
+                                        if (!slot) {
+                                          return <td key={dIdx} className="p-2.5 text-slate-400 italic text-center">—</td>;
+                                        }
+                                        const [typeCode, aula, materia] = slot;
+                                        const isLectiva = typeCode === "L";
+                                        const isDisp = typeCode === "D";
+                                        return (
+                                          <td key={dIdx} className="p-2 align-top">
+                                            <div
+                                              className={`p-2.5 rounded-xl border h-full transition ${
+                                                isLectiva
+                                                  ? isInfTeacher
+                                                    ? "bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200/70 dark:border-emerald-500/30"
+                                                    : "bg-indigo-50/50 dark:bg-indigo-950/25 border-indigo-200/80 dark:border-indigo-500/30"
+                                                  : isDisp
+                                                  ? "bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-500/30"
+                                                  : "bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800 opacity-60"
+                                              }`}
+                                            >
+                                              <div className="flex items-center justify-between gap-1 mb-1">
                                                 <span
-                                                  className="inline-flex items-center gap-1 text-[9.5px] font-bold text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-700/50 px-1.5 py-0.5 rounded-md leading-tight"
-                                                  title={`Docente(s) de apoyo: ${formatSupportText(supportList)}`}
+                                                  className={`px-1.5 py-0.5 rounded text-[10px] font-black ${
+                                                    isLectiva
+                                                      ? isInfTeacher ? "bg-emerald-600 text-white cursor-pointer hover:bg-emerald-500" : "bg-indigo-600 text-white cursor-pointer hover:bg-indigo-500"
+                                                      : isDisp
+                                                      ? "bg-emerald-600 text-white cursor-pointer hover:bg-emerald-500"
+                                                      : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                                                  }`}
+                                                  onClick={() => {
+                                                    if (aula && SCHOOL_CLASSROOMS.some(c => aula.includes(c))) {
+                                                      const targetAula = SCHOOL_CLASSROOMS.find(c => aula.includes(c)) || aula;
+                                                      setSelectedViewClassroom(targetAula);
+                                                      setScheduleCenterTab("classroom");
+                                                    }
+                                                  }}
+                                                  title={aula ? `Ver horario de ${aula}` : ""}
                                                 >
-                                                  <span>🤝</span>
-                                                  <span className="truncate max-w-[130px]">Apoyo: {formatSupportText(supportList)}</span>
+                                                  {isLectiva
+                                                    ? (aula !== "Sin Aula" ? formatShortAula(aula) : "Aula")
+                                                    : isDisp
+                                                    ? (aula ? `🟢 ${formatShortAula(aula)}` : "🟢 Apoyo")
+                                                    : "Libre"}
                                                 </span>
                                               </div>
-                                            );
-                                          })()}
-                                        </div>
-                                      </td>
-                                    );
-                                  })}
-                                </tr>
-                              </React.Fragment>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
+                                              <p className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug" title={materia}>
+                                                {isLectiva ? formatShortSubject(materia) : isDisp ? (materia || "Disponibilidad / Sustitución") : "Sin sesión lectiva"}
+                                              </p>
+                                              {(() => {
+                                                const supportList = isLectiva && currentTeacher && aula
+                                                  ? getSupportForSession(dIdx, col.id, aula, currentTeacher.id)
+                                                  : [];
+                                                if (supportList.length === 0) return null;
+                                                return (
+                                                  <div className="mt-1">
+                                                    <span
+                                                      className="inline-flex items-center gap-1 text-[9.5px] font-bold text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-700/50 px-1.5 py-0.5 rounded-md leading-tight"
+                                                      title={`Docente(s) de apoyo: ${formatSupportText(supportList)}`}
+                                                    >
+                                                      <span>🤝</span>
+                                                      <span className="truncate max-w-[130px]">Apoyo: {formatSupportText(supportList)}</span>
+                                                    </span>
+                                                  </div>
+                                                );
+                                              })()}
+                                            </div>
+                                          </td>
+                                        );
+                                      })}
+                                    </tr>
+                                  </React.Fragment>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 );
               })()}
@@ -5525,13 +5830,76 @@ export function App() {
                             return periodCols.map((col, rowIdx) => (
                               <React.Fragment key={col.id}>
                                 {rowIdx === 2 && (
-                                  <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
-                                    <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                      {isInfAula
-                                        ? "☕ 10:00 - 10:30 · Recreo Infantil (Patio)"
-                                        : "☕ 10:30 - 11:00 · Recreo de Mañana (Patio)"}
-                                    </td>
-                                  </tr>
+                                  isInfAula ? (() => {
+                                    const aulaLetter = selectedViewClassroom.trim().slice(-1);
+                                    const activeWeekObj = INFANTIL_PATIO_WEEKS_NOVEMBER_2026.find(w => w.id === selectedInfantilPatioWeek) || INFANTIL_PATIO_WEEKS_NOVEMBER_2026[0];
+
+                                    return (
+                                      <tr className="bg-amber-50/70 dark:bg-amber-950/30 border-y-2 border-amber-300 dark:border-amber-700">
+                                        <td className="p-3 font-extrabold text-amber-950 dark:text-amber-200 bg-amber-100/60 dark:bg-amber-950/60 border-r border-slate-200 dark:border-slate-800">
+                                          <span className="block text-xs font-black text-amber-800 dark:text-amber-300">☕ 10:00 - 10:30</span>
+                                          <span className="block text-[10px] font-bold text-amber-700 dark:text-amber-400">Recreo · Patio</span>
+                                          <span className="block text-[9px] font-mono text-amber-600 dark:text-amber-500 opacity-90 mt-0.5">{activeWeekObj.label.split(" · ")[1]}</span>
+                                        </td>
+                                        {activeWeekObj.days.map((dayInfo, dIdx) => {
+                                          if (!dayInfo.date) {
+                                            return <td key={dIdx} className="p-2 text-center text-slate-400 italic">—</td>;
+                                          }
+                                          if (dayInfo.festivo) {
+                                            return (
+                                              <td key={dIdx} className="p-2 text-center">
+                                                <div className="py-2 px-1 rounded-xl bg-rose-100/80 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900/60 text-rose-800 dark:text-rose-300 text-[11px] font-extrabold">
+                                                  <span>🛑 Festivo</span>
+                                                  <span className="block text-[9px] font-mono opacity-80">Día {dayInfo.date}</span>
+                                                </div>
+                                              </td>
+                                            );
+                                          }
+                                          const isTutoraDuty = aulaLetter && dayInfo.turno === aulaLetter;
+                                          const bgBadge = dayInfo.turno === "A"
+                                            ? "bg-blue-600 text-white"
+                                            : dayInfo.turno === "B"
+                                            ? "bg-amber-400 text-slate-950"
+                                            : "bg-emerald-600 text-white";
+
+                                          return (
+                                            <td key={dIdx} className="p-2 align-middle text-center">
+                                              {isTutoraDuty ? (
+                                                <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-black shadow-sm border border-emerald-400 ring-2 ring-emerald-300 flex flex-col items-center justify-center gap-0.5 animate-pulse">
+                                                  <span className="text-[10px] uppercase tracking-wider font-extrabold bg-white/20 px-1.5 py-0.2 rounded-full">
+                                                    Día {dayInfo.date} · Turno {dayInfo.turno}
+                                                  </span>
+                                                  <span className="text-xs font-black flex items-center gap-1 mt-0.5">
+                                                    ⭐ Patio Tutora ({aulaLetter})
+                                                  </span>
+                                                </div>
+                                              ) : (
+                                                <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-0.5">
+                                                  <div className="flex items-center gap-1">
+                                                    <span className={`px-1.5 py-0.2 rounded text-[10px] font-black ${bgBadge}`}>
+                                                      Turno {dayInfo.turno}
+                                                    </span>
+                                                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                                                      Día {dayInfo.date}
+                                                    </span>
+                                                  </div>
+                                                  <span className="text-[9px] text-slate-400 dark:text-slate-500 mt-0.5">
+                                                    Patio otra tutora
+                                                  </span>
+                                                </div>
+                                              )}
+                                            </td>
+                                          );
+                                        })}
+                                      </tr>
+                                    );
+                                  })() : (
+                                    <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
+                                      <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
+                                        ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
+                                      </td>
+                                    </tr>
+                                  )
                                 )}
                                 {rowIdx === 4 && (
                                   <tr className="bg-orange-50/70 dark:bg-orange-950/20 text-orange-800 dark:text-orange-300 font-extrabold text-[11px] text-center">
