@@ -321,6 +321,43 @@ function LiveTeacherNextClassBanner({
       }
     }
 
+    // Recreo de Daniel Asenjo (10:30 - 11:00)
+    if (!isWeekend && nowMins >= 630 && nowMins < 660) {
+      const minsLeftRecreo = 660 - nowMins;
+      return (
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 animate-fade-in border border-amber-300 ring-2 ring-amber-400">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg font-black shrink-0 border border-white/20">
+              🛝
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] font-black uppercase tracking-wider bg-white/30 text-white px-2 py-0.5 rounded-full border border-white/30 animate-pulse">
+                  ⭐ ¡Te toca patio a diario por pesado!
+                </span>
+                <span className="text-xs font-mono opacity-80 font-bold">(10:30 - 11:00 · Faltan {minsLeftRecreo} min)</span>
+              </div>
+              <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
+                Vigilancia de Patio · Daniel Asenjo
+              </h3>
+              <p className="text-xs text-amber-100 font-medium truncate">
+                Supervisión obligatoria de recreo asignada a diario por pesado.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={onOpenSchedule}
+              className="px-3 py-1.5 rounded-xl bg-white text-slate-900 text-xs font-black transition hover:bg-slate-100 shadow-sm"
+            >
+              Cuadrante →
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     if (activeSes) {
       return (
         <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 animate-fade-in border border-emerald-400/30">
@@ -334,6 +371,9 @@ function LiveTeacherNextClassBanner({
                   🟢 Sesión en Curso · Faltan {minsRemaining} min
                 </span>
                 <span className="text-xs font-mono opacity-80 font-bold">({activeSes.time})</span>
+                <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400/30 text-amber-200 px-2 py-0.5 rounded-full border border-amber-300/40">
+                  🛝 Patio a diario por pesado
+                </span>
               </div>
               <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
                 {formatShortAula(activeSes.aula)} · {formatShortSubject(activeSes.materia)}
@@ -389,9 +429,14 @@ function LiveTeacherNextClassBanner({
               ⏳
             </div>
             <div className="min-w-0">
-              <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 text-white px-2 py-0.5 rounded-full border border-white/20">
-                👉 Próxima Sesión {minsToNext > 0 ? `(en ${minsToNext} min)` : "preparada"}
-              </span>
+              <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 text-white px-2 py-0.5 rounded-full border border-white/20">
+                  👉 Próxima Sesión {minsToNext > 0 ? `(en ${minsToNext} min)` : "preparada"}
+                </span>
+                <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400/30 text-amber-200 px-2 py-0.5 rounded-full border border-amber-300/40">
+                  🛝 Patio a diario por pesado
+                </span>
+              </div>
               <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
                 {formatShortAula(nextSes.aula)} · {formatShortSubject(nextSes.materia)} <span className="text-xs font-mono opacity-80">({nextSes.time})</span>
               </h3>
@@ -474,6 +519,44 @@ function LiveTeacherNextClassBanner({
     );
   }
 
+  // Comprobación específica para Recreo de María Vázquez (10:30 - 11:00)
+  if (myTeacherObj.id === "mvazquez" && !isWeekend && nowMins >= 630 && nowMins < 660) {
+    const minsLeftRecreo = 660 - nowMins;
+    return (
+      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 animate-fade-in border border-rose-300 ring-2 ring-rose-400">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg font-black shrink-0 border border-white/20">
+            🛝
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-white/25 text-white px-2 py-0.5 rounded-full border border-white/30 animate-pulse">
+                ⭐ ¡Te toca vigilancia de patio a diario!
+              </span>
+              <span className="text-xs font-mono opacity-80 font-bold">(10:30 - 11:00 · Faltan {minsLeftRecreo} min)</span>
+            </div>
+            <h3 className="text-sm sm:text-base font-extrabold truncate text-white mt-0.5">
+              Supervisión de Patio · María Vázquez
+            </h3>
+            <p className="text-xs text-rose-100 font-medium truncate">
+              Vigilancia obligatoria de recreo asignada a diario por culpa de Dani.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          <button
+            type="button"
+            onClick={onOpenSchedule}
+            className="px-3 py-1.5 rounded-xl bg-white text-slate-900 text-xs font-black transition hover:bg-slate-100 shadow-sm"
+          >
+            Ver Horario →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // General teachers schedule
   // Parse periods
   const periodRanges = periodCols.map(col => {
@@ -543,6 +626,11 @@ function LiveTeacherNextClassBanner({
               {patioInfo?.hasDutyToday && (
                 <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-400/30 text-white px-2 py-0.5 rounded-full border border-white/30">
                   🛝 Hoy te toca patio (Turno {patioInfo.teacherLetter})
+                </span>
+              )}
+              {myTeacherObj.id === "mvazquez" && (
+                <span className="text-[10px] font-black uppercase tracking-wider bg-rose-400/30 text-rose-100 px-2 py-0.5 rounded-full border border-rose-300/40">
+                  🛝 Patio a diario por culpa de Dani
                 </span>
               )}
             </div>
@@ -628,6 +716,11 @@ function LiveTeacherNextClassBanner({
               {patioInfo?.hasDutyToday && (
                 <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-500/30 text-emerald-200 px-2 py-0.5 rounded-full border border-emerald-400/30">
                   🛝 Hoy te toca patio (Turno {patioInfo.teacherLetter})
+                </span>
+              )}
+              {myTeacherObj.id === "mvazquez" && (
+                <span className="text-[10px] font-black uppercase tracking-wider bg-rose-500/30 text-rose-200 px-2 py-0.5 rounded-full border border-rose-400/30">
+                  🛝 Patio a diario por culpa de Dani
                 </span>
               )}
             </div>
@@ -3517,6 +3610,38 @@ export function App() {
                     <span>Tu jornada ({["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"][activeDayForSchedule]}):</span>
                   </span>
                   {(() => {
+                    if (myTeacherObj?.id === "dasenjo") {
+                      return (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedViewTeacherId("dasenjo");
+                            setScheduleCenterTab("teacher");
+                            setIsScheduleCenterOpen(true);
+                          }}
+                          className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-xs animate-pulse flex items-center gap-1 transition border border-amber-500"
+                          title="Ver horario y cuadrante de patio"
+                        >
+                          🛝 Patio a diario por pesado
+                        </button>
+                      );
+                    }
+                    if (myTeacherObj?.id === "mvazquez") {
+                      return (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedViewTeacherId("mvazquez");
+                            setScheduleCenterTab("teacher");
+                            setIsScheduleCenterOpen(true);
+                          }}
+                          className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-500 hover:bg-rose-600 text-white shadow-xs animate-pulse flex items-center gap-1 transition border border-rose-600"
+                          title="Ver horario y cuadrante de patio"
+                        >
+                          🛝 Patio a diario por culpa de Dani
+                        </button>
+                      );
+                    }
                     if (myTeacherObj?.stage === "Infantil") {
                       const patio = getInfantilPatioInfo(myTeacherObj.id, nowDateObj);
                       if (patio.isInfantilTutor) {
@@ -4740,6 +4865,9 @@ export function App() {
                             <span className="px-2.5 py-1 rounded-xl bg-violet-100 dark:bg-violet-500/20 text-violet-800 dark:text-violet-300">
                               🎓 Secundaria (3 gr.)
                             </span>
+                            <span className="px-2.5 py-1 rounded-xl text-xs font-black bg-amber-400 text-slate-950 border border-amber-500 shadow-xs animate-pulse flex items-center gap-1">
+                              🛝 Patio: A diario por pesado
+                            </span>
                           </>
                         ) : (
                           <>
@@ -4763,6 +4891,11 @@ export function App() {
                                 🛝 {INFANTIL_TUTOR_LETTERS[currentTeacher.id]
                                   ? `Turno de Patio: Letra ${INFANTIL_TUTOR_LETTERS[currentTeacher.id]}`
                                   : "Especialista Infantil (Sin turno asignado)"}
+                              </span>
+                            )}
+                            {currentTeacher.id === "mvazquez" && (
+                              <span className="px-2.5 py-1 rounded-xl text-xs font-black bg-rose-500 text-white border border-rose-600 shadow-xs animate-pulse flex items-center gap-1">
+                                🛝 Patio: A diario por culpa de Dani
                               </span>
                             )}
                           </>
@@ -4866,11 +4999,9 @@ export function App() {
                                     return periodCols.map((col, rowIdx) => (
                                       <React.Fragment key={col.id}>
                                         {rowIdx === 2 && (
-                                          <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
-                                            <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                              {isInfTeacher
-                                                ? "☕ 10:00 - 10:30 · Recreo Infantil (Patio)"
-                                                : "☕ 10:30 - 11:00 · Recreo de Mañana (Patio)"}
+                                          <tr className="bg-amber-100/90 dark:bg-amber-950/40 text-amber-950 dark:text-amber-200 font-extrabold text-[11px] text-center border-y-2 border-amber-300 dark:border-amber-700">
+                                            <td colSpan={6} className="py-2 px-3 tracking-widest uppercase animate-pulse">
+                                              ☕ 10:30 - 11:00 · Recreo de Mañana · 🛝 Patio a diario por pesado
                                             </td>
                                           </tr>
                                         )}
@@ -5066,6 +5197,11 @@ export function App() {
                                         );
                                       })}
                                     </div>
+                                  </div>
+
+                                  {/* Recreo y Patio a diario */}
+                                  <div className="p-3 bg-amber-100/90 dark:bg-amber-950/40 rounded-2xl border border-amber-300 dark:border-amber-700/60 text-xs font-black text-amber-950 dark:text-amber-200 flex items-center justify-center gap-2 animate-pulse shadow-xs">
+                                    <span>☕ 10:30 - 11:00 · Recreo de Mañana · 🛝 Patio a diario por pesado</span>
                                   </div>
 
                                   {/* Pausa de Mediodía */}
@@ -5368,9 +5504,9 @@ export function App() {
                                   {SCHEDULE_PERIOD_COLUMNS.map((col, rowIdx) => (
                                     <React.Fragment key={col.id}>
                                       {rowIdx === 2 && (
-                                        <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
-                                          <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                            ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
+                                        <tr className="bg-amber-100/90 dark:bg-amber-950/40 text-amber-950 dark:text-amber-200 font-extrabold text-[11px] text-center border-y-2 border-amber-300 dark:border-amber-700">
+                                          <td colSpan={6} className="py-2 px-3 tracking-widest uppercase animate-pulse">
+                                            ☕ 10:30 - 11:00 · Recreo de Mañana · 🛝 Patio a diario por pesado
                                           </td>
                                         </tr>
                                       )}
@@ -5629,6 +5765,26 @@ export function App() {
                                               </td>
                                             );
                                           })}
+                                        </tr>
+                                      ) : currentTeacher?.id === "mvazquez" ? (
+                                        <tr className="bg-rose-50/70 dark:bg-rose-950/30 border-y-2 border-rose-300 dark:border-rose-700">
+                                          <td className="p-3 font-extrabold text-rose-950 dark:text-rose-200 bg-rose-100/60 dark:bg-rose-950/60 border-r border-slate-200 dark:border-slate-800">
+                                            <span className="block text-xs font-black text-rose-800 dark:text-rose-300">☕ 10:30 - 11:00</span>
+                                            <span className="block text-[10px] font-bold text-rose-700 dark:text-rose-400">Recreo · Patio</span>
+                                            <span className="block text-[9px] font-mono text-rose-600 dark:text-rose-500 opacity-90 mt-0.5">Todos los días</span>
+                                          </td>
+                                          {[0, 1, 2, 3, 4].map((dIdx) => (
+                                            <td key={dIdx} className="p-2 align-middle text-center">
+                                              <div className="p-2 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-black shadow-sm border border-rose-400 ring-2 ring-rose-300 flex flex-col items-center justify-center gap-0.5 animate-pulse">
+                                                <span className="text-[10px] uppercase tracking-wider font-extrabold bg-white/20 px-1.5 py-0.2 rounded-full">
+                                                  Lunes a Viernes
+                                                </span>
+                                                <span className="text-xs font-black flex items-center gap-1 mt-0.5">
+                                                  🛝 Patio por culpa de Dani
+                                                </span>
+                                              </div>
+                                            </td>
+                                          ))}
                                         </tr>
                                       ) : (
                                         <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
