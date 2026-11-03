@@ -543,7 +543,7 @@ function LiveTeacherNextClassBanner({
               Supervisión de Patio · María Vázquez
             </h3>
             <p className="text-xs text-rose-100 font-medium truncate">
-              Vigilancia obligatoria de recreo asignada a diario por culpa de Dani.
+              Vigilancia obligatoria de recreo asignada a diario por CULPA de Dani.
             </p>
           </div>
         </div>
@@ -672,7 +672,7 @@ function LiveTeacherNextClassBanner({
               )}
               {myTeacherObj.id === "mvazquez" && (
                 <span className="text-[10px] font-black uppercase tracking-wider bg-rose-400/30 text-rose-100 px-2 py-0.5 rounded-full border border-rose-300/40">
-                  🛝 Patio a diario por culpa de Dani
+                  🛝 Patio a diario por CULPA de Dani
                 </span>
               )}
               {primariaPatio?.hasDutyToday && (
@@ -767,7 +767,7 @@ function LiveTeacherNextClassBanner({
               )}
               {myTeacherObj.id === "mvazquez" && (
                 <span className="text-[10px] font-black uppercase tracking-wider bg-rose-500/30 text-rose-200 px-2 py-0.5 rounded-full border border-rose-400/30">
-                  🛝 Patio a diario por culpa de Dani
+                  🛝 Patio a diario por CULPA de Dani
                 </span>
               )}
               {primariaPatio?.hasDutyToday && (
@@ -3690,7 +3690,7 @@ export function App() {
                       if (myTeacherObj?.id === "mvazquez") {
                         return (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white border border-rose-600 shadow-2xs">
-                            🛝 Patio por Dani
+                            🛝 Patio por CULPA de Dani
                           </span>
                         );
                       }
@@ -4975,7 +4975,7 @@ export function App() {
                             })()}
                             {currentTeacher.id === "mvazquez" && (
                               <span className="px-2.5 py-1 rounded-xl text-xs font-black bg-rose-500 text-white border border-rose-600 shadow-xs animate-pulse flex items-center gap-1">
-                                🛝 Patio: A diario por culpa de Dani
+                                🛝 Patio: A diario por CULPA de Dani
                               </span>
                             )}
                           </>
@@ -5726,7 +5726,7 @@ export function App() {
                                           {[0, 1, 2, 3, 4].map((dIdx) => (
                                             <td key={dIdx} className="py-1 px-2 text-center align-middle">
                                               <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-rose-500 text-white shadow-xs">
-                                                🛝 Patio (x culpa de Dani)
+                                                🛝 Patio por CULPA de Dani
                                               </span>
                                             </td>
                                           ))}
