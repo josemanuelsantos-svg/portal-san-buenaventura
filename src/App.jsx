@@ -3076,14 +3076,15 @@ export function App() {
   const livePeriodIdNow = getLivePeriodId(nowDateObj, myTeacherObj?.stage === "Infantil");
 
   let activeCalendarSrc = "";
+  const calBaseParams = `ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0`;
   if (activeCalTab === "unificados") {
-    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}&color=%234285F4&src=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}&color=%23E67C73&src=${encodeURIComponent(CALENDAR_SALON_ACTOS_ID)}&color=%239C27B0&ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showPrint=0&showTabs=1&showCalendars=1`;
+    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}&color=%234285F4&src=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}&color=%23E67C73&src=${encodeURIComponent(CALENDAR_SALON_ACTOS_ID)}&color=%239C27B0&${calBaseParams}`;
   } else if (activeCalTab === "actividades") {
-    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}&color=%234285F4&ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showPrint=0&showTabs=1&showCalendars=0`;
+    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_ACTIVIDADES_ID)}&color=%234285F4&${calBaseParams}`;
   } else if (activeCalTab === "salon") {
-    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_SALON_ACTOS_ID)}&color=%239C27B0&ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showPrint=0&showTabs=1&showCalendars=0`;
+    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_SALON_ACTOS_ID)}&color=%239C27B0&${calBaseParams}`;
   } else {
-    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}&color=%23E67C73&ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showPrint=0&showTabs=1&showCalendars=0`;
+    activeCalendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_SUSTITUCIONES_ID)}&color=%23E67C73&${calBaseParams}`;
   }
 
   return (
@@ -4982,15 +4983,23 @@ export function App() {
                               </span>
                             )}
                             {currentTeacher.stage === "Infantil" && (
-                              <span className={`px-2.5 py-1 rounded-xl text-xs font-black flex items-center gap-1.5 border ${
-                                INFANTIL_TUTOR_LETTERS[currentTeacher.id]
-                                  ? "bg-amber-100 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border-amber-300 dark:border-amber-700 shadow-xs"
-                                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700"
-                              }`}>
-                                🛝 {INFANTIL_TUTOR_LETTERS[currentTeacher.id]
-                                  ? `Turno de Patio: Letra ${INFANTIL_TUTOR_LETTERS[currentTeacher.id]}`
-                                  : "Especialista Infantil (Sin turno asignado)"}
-                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setShowInfantilPatioMonthGrid(true)}
+                                className={`px-2.5 py-1 rounded-xl text-xs font-black flex items-center gap-1.5 border transition cursor-pointer ${
+                                  INFANTIL_TUTOR_LETTERS[currentTeacher.id]
+                                    ? "bg-amber-100 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border-amber-300 dark:border-amber-700 hover:bg-amber-200 shadow-xs"
+                                    : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-200"
+                                }`}
+                                title="Ver cuadrante oficial de patios de Infantil (Mes Noviembre)"
+                              >
+                                <span>🛝 {INFANTIL_TUTOR_LETTERS[currentTeacher.id]
+                                  ? `Patio: Turno Letra ${INFANTIL_TUTOR_LETTERS[currentTeacher.id]}`
+                                  : "Patios Infantil"}</span>
+                                <span className="text-[10px] bg-amber-800/20 dark:bg-amber-300/20 px-1.5 py-0.5 rounded-md font-bold">
+                                  Ver cuadrante ↗
+                                </span>
+                              </button>
                             )}
                             {currentTeacher.stage !== "Infantil" && currentTeacher.id !== "dasenjo" && currentTeacher.id !== "mvazquez" && (() => {
                               const primPatio = getPrimariaPatioInfo(currentTeacher.id, nowDateObj);
@@ -4998,17 +5007,17 @@ export function App() {
                               return (
                                 <button
                                   type="button"
-                                  onClick={() => setShowPrimariaPatioGrid(prev => !prev)}
+                                  onClick={() => setShowPrimariaPatioGrid(true)}
                                   className={`px-2.5 py-1 rounded-xl text-xs font-black flex items-center gap-1.5 border transition cursor-pointer ${
                                     primPatio.hasDutyToday
                                       ? "bg-emerald-600 text-white border-emerald-700 shadow-xs ring-2 ring-emerald-400 animate-pulse"
                                       : "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 border-emerald-300 dark:border-emerald-700 hover:bg-emerald-200"
                                   }`}
-                                  title="Ver cuadrante completo de patios y filas de Primaria"
+                                  title="Ver cuadrante oficial de fila y patio de Primaria"
                                 >
                                   <span>🛝 Fila y Patio: {primPatio.assignment.dayName} · {primPatio.assignment.space}</span>
                                   <span className="text-[10px] bg-emerald-800/20 dark:bg-emerald-300/20 px-1.5 py-0.5 rounded-md font-bold">
-                                    {showPrimariaPatioGrid ? "▲ Ocultar Cuadrante" : "▼ Ver Cuadrante"}
+                                    Ver cuadrante ↗
                                   </span>
                                 </button>
                               );
@@ -5698,205 +5707,6 @@ export function App() {
 
                       return (
                         <div className="space-y-4">
-                          {isInfTeacher && (
-                            <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 dark:from-amber-950/30 dark:via-orange-950/20 dark:to-amber-950/30 p-3.5 sm:p-4 rounded-2xl border border-amber-200 dark:border-amber-800/60 shadow-xs space-y-3">
-                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xl">🛝</span>
-                                  <div>
-                                    <h4 className="text-xs sm:text-sm font-black text-amber-950 dark:text-amber-200">
-                                      Turnos de Patio Infantil · Mes Noviembre
-                                    </h4>
-                                    <p className="text-[11px] text-amber-800/80 dark:text-amber-300/80 font-medium">
-                                      {teacherLetter
-                                        ? `Docente con Turno Letra ${teacherLetter} (${currentTeacher.dept}). El horario resalta con ⭐ los días que te corresponde patio.`
-                                        : "Docente especialista: consulta la rotación de turnos A, B y C de las tutoras de Infantil."}
-                                    </p>
-                                  </div>
-                                </div>
-
-                                <button
-                                  type="button"
-                                  onClick={() => setShowInfantilPatioMonthGrid(!showInfantilPatioMonthGrid)}
-                                  className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black transition shadow-xs flex items-center gap-1.5 shrink-0"
-                                >
-                                  <span>{showInfantilPatioMonthGrid ? "▲ Ocultar Cuadrante Mensual" : "📅 Ver Cuadrante Mensual (Noviembre)"}</span>
-                                </button>
-                              </div>
-
-                              {/* Selector de semana de noviembre para la fila de recreo */}
-                              <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-amber-200/60 dark:border-amber-800/40">
-                                <span className="text-[10px] font-black uppercase tracking-wider text-amber-900/70 dark:text-amber-400 mr-1">
-                                  Semana mostrada en el recreo:
-                                </span>
-                                {INFANTIL_PATIO_WEEKS_NOVEMBER_2026.map(w => (
-                                  <button
-                                    key={w.id}
-                                    type="button"
-                                    onClick={() => setSelectedInfantilPatioWeek(w.id)}
-                                    className={`px-2.5 py-1 rounded-lg text-xs font-black transition ${
-                                      selectedInfantilPatioWeek === w.id
-                                        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs"
-                                        : "bg-white/80 dark:bg-slate-900/80 text-amber-950 dark:text-amber-200 border border-amber-200 dark:border-amber-800 hover:bg-white"
-                                    }`}
-                                  >
-                                    {w.label}
-                                  </button>
-                                ))}
-                              </div>
-
-                              {/* Cuadrante mensual completo idéntico al documento/foto de Noviembre */}
-                              {showInfantilPatioMonthGrid && (
-                                <div className="mt-3 pt-3 border-t border-amber-200/80 dark:border-amber-800/60 animate-fade-in space-y-2">
-                                  <div className="flex items-center justify-between text-xs font-black text-amber-950 dark:text-amber-200 flex-wrap gap-2">
-                                    <span>📋 Cuadrante Oficial · Mes Noviembre (Infantil)</span>
-                                    <span className="text-[10px] font-bold text-amber-800 dark:text-amber-400">
-                                      Letra A: 3A, 4A, 5A · Letra B: 3B, 4B, 5B · Letra C: 3C, 4C, 5C
-                                    </span>
-                                  </div>
-                                  <div className="overflow-x-auto rounded-xl border border-slate-300 dark:border-slate-700 shadow-xs">
-                                    <table className="w-full text-center border-collapse text-xs font-black">
-                                      <thead>
-                                        <tr className="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-b border-slate-300 dark:border-slate-700">
-                                          <th colSpan={5} className="py-1.5 uppercase tracking-wider text-sm font-extrabold bg-slate-300 dark:bg-slate-700 text-slate-900 dark:text-white">
-                                            Mes Noviembre
-                                          </th>
-                                        </tr>
-                                      </thead>
-                                      <tbody className="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900">
-                                        {INFANTIL_PATIO_WEEKS_NOVEMBER_2026.map(w => (
-                                          <React.Fragment key={w.id}>
-                                            <tr className="bg-slate-50 dark:bg-slate-950/80 text-slate-700 dark:text-slate-300 text-[11px] font-extrabold border-t border-slate-300 dark:border-slate-700">
-                                              {w.days.map((d, dIdx) => (
-                                                <td key={dIdx} className="py-1.5 px-2 border-r border-slate-200 dark:border-slate-800 last:border-r-0">
-                                                  {d.date ? `${d.dayName} ${d.date}` : "—"}
-                                                </td>
-                                              ))}
-                                            </tr>
-                                            <tr className="border-b border-slate-300 dark:border-slate-700">
-                                              {w.days.map((d, dIdx) => {
-                                                if (!d.date) {
-                                                  return <td key={dIdx} className="py-2.5 px-2 bg-slate-50 dark:bg-slate-950/40 text-slate-400 border-r border-slate-200 dark:border-slate-800 last:border-r-0">—</td>;
-                                                }
-                                                if (d.festivo) {
-                                                  return (
-                                                    <td key={dIdx} className="py-2.5 px-2 bg-rose-200 dark:bg-rose-950/70 text-rose-900 dark:text-rose-200 font-extrabold border-r border-slate-200 dark:border-slate-800 last:border-r-0">
-                                                      Festivo
-                                                    </td>
-                                                  );
-                                                }
-                                                const isTeacherTurn = teacherLetter && d.turno === teacherLetter;
-                                                const bgClass = d.turno === "A"
-                                                  ? "bg-blue-500 text-white"
-                                                  : d.turno === "B"
-                                                  ? "bg-yellow-400 text-slate-950"
-                                                  : "bg-emerald-500 text-white";
-
-                                                return (
-                                                  <td key={dIdx} className={`py-2.5 px-2 border-r border-slate-200 dark:border-slate-800 last:border-r-0 font-black ${bgClass} ${isTeacherTurn ? "ring-3 ring-inset ring-amber-400 relative" : ""}`}>
-                                                    <div className="flex items-center justify-center gap-1">
-                                                      <span>{d.turno}</span>
-                                                      {isTeacherTurn && <span title="¡Tu turno de patio!">⭐</span>}
-                                                    </div>
-                                                  </td>
-                                                );
-                                              })}
-                                            </tr>
-                                          </React.Fragment>
-                                        ))}
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          )}
-
-                          {!isInfTeacher && currentTeacher.id !== "dasenjo" && currentTeacher.id !== "mvazquez" && (() => {
-                            const primPatio = getPrimariaPatioInfo(currentTeacher.id, nowDateObj);
-                            if (!primPatio.hasPatioAssigned) return null;
-                            return (
-                              <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-emerald-950/30 p-3.5 sm:p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800/60 shadow-xs space-y-3">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-xl">🛝</span>
-                                    <div>
-                                      <h4 className="text-xs sm:text-sm font-black text-emerald-950 dark:text-emerald-200">
-                                        Turno de Fila y Patio · Primaria (10:30 - 11:00)
-                                      </h4>
-                                      <p className="text-[11px] text-emerald-800/80 dark:text-emerald-300/80 font-medium">
-                                        Te corresponde <strong className="font-bold underline">{primPatio.assignment.dayName}</strong> en el espacio <strong className="font-bold underline">{primPatio.assignment.space}</strong> (supervisión del patio y subida de filas).
-                                      </p>
-                                    </div>
-                                  </div>
-
-                                  <button
-                                    type="button"
-                                    onClick={() => setShowPrimariaPatioGrid(!showPrimariaPatioGrid)}
-                                    className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
-                                  >
-                                    <span>{showPrimariaPatioGrid ? "▲ Ocultar Cuadrante General" : "📋 Ver Cuadrante General (Patios y Filas)"}</span>
-                                  </button>
-                                </div>
-
-                                {showPrimariaPatioGrid && (
-                                  <div className="mt-3 pt-3 border-t border-emerald-200/80 dark:border-emerald-800/60 animate-fade-in space-y-2">
-                                    <div className="flex items-center justify-between text-xs font-black text-emerald-950 dark:text-emerald-200 flex-wrap gap-2">
-                                      <span>📋 Cuadrante Oficial · Horario Patios y Filas (10:30 - 11:00) Primaria</span>
-                                      <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-400">
-                                        4 Espacios de vigilancia · Lunes a Viernes
-                                      </span>
-                                    </div>
-                                    <div className="overflow-x-auto rounded-xl border border-slate-300 dark:border-slate-700 shadow-xs">
-                                      <table className="w-full text-center border-collapse text-xs">
-                                        <thead>
-                                          <tr className="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-b border-slate-300 dark:border-slate-700">
-                                            <th className="py-2 px-3 text-left font-black uppercase text-[11px] bg-slate-300 dark:bg-slate-700 text-slate-900 dark:text-white">
-                                              Espacio
-                                            </th>
-                                            {PRIMARIA_PATIO_GRID.days.map((d, dIdx) => (
-                                              <th key={dIdx} className="py-2 px-3 font-black uppercase text-[11px]">
-                                                {d}
-                                              </th>
-                                            ))}
-                                          </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900">
-                                          {PRIMARIA_PATIO_GRID.rows.map((row, rIdx) => (
-                                            <tr key={rIdx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                                              <td className="py-2 px-3 text-left font-black text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-slate-950/60 border-r border-slate-200 dark:border-slate-800">
-                                                {row.space}
-                                              </td>
-                                              {row.teachers.map((tName, cIdx) => {
-                                                const isCurrentTeacherAssigned = 
-                                                  primPatio.assignment.space === row.space && primPatio.assignment.dayIdx === cIdx;
-                                                return (
-                                                  <td
-                                                    key={cIdx}
-                                                    className={`py-2 px-3 border-r border-slate-200 dark:border-slate-800 last:border-r-0 font-bold ${
-                                                      isCurrentTeacherAssigned
-                                                        ? "bg-emerald-500 text-white font-black ring-2 ring-inset ring-emerald-300 shadow-inner"
-                                                        : "text-slate-700 dark:text-slate-300"
-                                                    }`}
-                                                  >
-                                                    <div className="flex items-center justify-center gap-1">
-                                                      <span>{tName}</span>
-                                                      {isCurrentTeacherAssigned && <span>⭐</span>}
-                                                    </div>
-                                                  </td>
-                                                );
-                                              })}
-                                            </tr>
-                                          ))}
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })()}
-
                           <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
                             <table className="w-full text-left border-collapse min-w-[720px]">
                               <thead>
@@ -5914,80 +5724,72 @@ export function App() {
                                   <React.Fragment key={col.id}>
                                     {rowIdx === 2 && (
                                       isInfTeacher ? (
-                                        <tr className="bg-amber-50/70 dark:bg-amber-950/30 border-y-2 border-amber-300 dark:border-amber-700">
-                                          <td className="p-3 font-extrabold text-amber-950 dark:text-amber-200 bg-amber-100/60 dark:bg-amber-950/60 border-r border-slate-200 dark:border-slate-800">
-                                            <span className="block text-xs font-black text-amber-800 dark:text-amber-300">☕ 10:00 - 10:30</span>
-                                            <span className="block text-[10px] font-bold text-amber-700 dark:text-amber-400">Recreo · Patio</span>
-                                            <span className="block text-[9px] font-mono text-amber-600 dark:text-amber-500 opacity-90 mt-0.5">{activeWeekObj.label.split(" · ")[1]}</span>
+                                        <tr className="bg-amber-50/60 dark:bg-amber-950/20 text-center border-y border-amber-200/60 dark:border-amber-900/40">
+                                          <td className="py-1.5 px-2.5 font-bold text-amber-900 dark:text-amber-200 bg-amber-100/40 dark:bg-amber-950/40 border-r border-slate-200 dark:border-slate-800 text-left whitespace-nowrap">
+                                            <div className="flex items-center justify-between gap-1">
+                                              <span className="text-[11px] font-black text-amber-800 dark:text-amber-300">☕ 10:00 - 10:30</span>
+                                              <button
+                                                type="button"
+                                                onClick={() => setShowInfantilPatioMonthGrid(true)}
+                                                className="text-[9px] font-bold text-amber-700 dark:text-amber-400 hover:underline cursor-pointer"
+                                                title="Abrir cuadrante de patios de Infantil"
+                                              >
+                                                Mes ↗
+                                              </button>
+                                            </div>
                                           </td>
                                           {activeWeekObj.days.map((dayInfo, dIdx) => {
                                             if (!dayInfo.date) {
-                                              return <td key={dIdx} className="p-2 text-center text-slate-400 italic">—</td>;
+                                              return <td key={dIdx} className="py-1 px-2 text-center text-slate-400 text-xs">—</td>;
                                             }
                                             if (dayInfo.festivo) {
                                               return (
-                                                <td key={dIdx} className="p-2 text-center">
-                                                  <div className="py-2 px-1 rounded-xl bg-rose-100/80 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900/60 text-rose-800 dark:text-rose-300 text-[11px] font-extrabold">
-                                                    <span>🛑 Festivo</span>
-                                                    <span className="block text-[9px] font-mono opacity-80">Día {dayInfo.date}</span>
-                                                  </div>
+                                                <td key={dIdx} className="py-1 px-2 text-center">
+                                                  <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300">
+                                                    Festivo ({dayInfo.date})
+                                                  </span>
                                                 </td>
                                               );
                                             }
                                             const isDuty = teacherLetter && dayInfo.turno === teacherLetter;
-                                            const bgBadge = dayInfo.turno === "A"
-                                              ? "bg-blue-600 text-white"
-                                              : dayInfo.turno === "B"
-                                              ? "bg-amber-400 text-slate-950"
-                                              : "bg-emerald-600 text-white";
-
                                             return (
-                                              <td key={dIdx} className="p-2 align-middle text-center">
+                                              <td key={dIdx} className="py-1 px-2 text-center align-middle">
                                                 {isDuty ? (
-                                                  <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-black shadow-sm border border-emerald-400 ring-2 ring-emerald-300 flex flex-col items-center justify-center gap-0.5 animate-pulse">
-                                                    <span className="text-[10px] uppercase tracking-wider font-extrabold bg-white/20 px-1.5 py-0.2 rounded-full">
-                                                      Día {dayInfo.date} · Turno {dayInfo.turno}
-                                                    </span>
-                                                    <span className="text-xs font-black flex items-center gap-1 mt-0.5">
-                                                      ⭐ ¡Te toca Patio!
-                                                    </span>
-                                                  </div>
+                                                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black bg-emerald-600 text-white shadow-xs">
+                                                    ⭐ 🛝 Patio (Turno {dayInfo.turno})
+                                                  </span>
                                                 ) : (
-                                                  <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-0.5">
-                                                    <div className="flex items-center gap-1">
-                                                      <span className={`px-1.5 py-0.2 rounded text-[10px] font-black ${bgBadge}`}>
-                                                        Turno {dayInfo.turno}
-                                                      </span>
-                                                      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                                                        Día {dayInfo.date}
-                                                      </span>
-                                                    </div>
-                                                    <span className="text-[9px] text-slate-400 dark:text-slate-500 mt-0.5">
-                                                      {teacherLetter ? "No te toca" : "Sin turno asignado"}
-                                                    </span>
-                                                  </div>
+                                                  <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
+                                                    Recreo ({dayInfo.turno})
+                                                  </span>
                                                 )}
                                               </td>
                                             );
                                           })}
                                         </tr>
                                       ) : currentTeacher?.id === "mvazquez" ? (
-                                        <tr className="bg-rose-50/70 dark:bg-rose-950/30 border-y-2 border-rose-300 dark:border-rose-700">
-                                          <td className="p-3 font-extrabold text-rose-950 dark:text-rose-200 bg-rose-100/60 dark:bg-rose-950/60 border-r border-slate-200 dark:border-slate-800">
-                                            <span className="block text-xs font-black text-rose-800 dark:text-rose-300">☕ 10:30 - 11:00</span>
-                                            <span className="block text-[10px] font-bold text-rose-700 dark:text-rose-400">Recreo · Patio</span>
-                                            <span className="block text-[9px] font-mono text-rose-600 dark:text-rose-500 opacity-90 mt-0.5">Todos los días</span>
+                                        <tr className="bg-rose-50/60 dark:bg-rose-950/20 text-center border-y border-rose-200/60 dark:border-rose-900/40">
+                                          <td className="py-1.5 px-2.5 font-bold text-rose-900 dark:text-rose-200 bg-rose-100/40 dark:bg-rose-950/40 border-r border-slate-200 dark:border-slate-800 text-left whitespace-nowrap">
+                                            <span className="text-[11px] font-black text-rose-800 dark:text-rose-300">☕ 10:30 - 11:00</span>
                                           </td>
                                           {[0, 1, 2, 3, 4].map((dIdx) => (
-                                            <td key={dIdx} className="p-2 align-middle text-center">
-                                              <div className="p-2 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-black shadow-sm border border-rose-400 ring-2 ring-rose-300 flex flex-col items-center justify-center gap-0.5 animate-pulse">
-                                                <span className="text-[10px] uppercase tracking-wider font-extrabold bg-white/20 px-1.5 py-0.2 rounded-full">
-                                                  Lunes a Viernes
-                                                </span>
-                                                <span className="text-xs font-black flex items-center gap-1 mt-0.5">
-                                                  🛝 Patio por culpa de Dani
-                                                </span>
-                                              </div>
+                                            <td key={dIdx} className="py-1 px-2 text-center align-middle">
+                                              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-rose-500 text-white shadow-xs">
+                                                🛝 Patio (x culpa de Dani)
+                                              </span>
+                                            </td>
+                                          ))}
+                                        </tr>
+                                      ) : currentTeacher?.id === "dasenjo" ? (
+                                        <tr className="bg-amber-50/60 dark:bg-amber-950/20 text-center border-y border-amber-200/60 dark:border-amber-900/40">
+                                          <td className="py-1.5 px-2.5 font-bold text-amber-900 dark:text-amber-200 bg-amber-100/40 dark:bg-amber-950/40 border-r border-slate-200 dark:border-slate-800 text-left whitespace-nowrap">
+                                            <span className="text-[11px] font-black text-amber-800 dark:text-amber-300">☕ 10:30 - 11:00</span>
+                                          </td>
+                                          {[0, 1, 2, 3, 4].map((dIdx) => (
+                                            <td key={dIdx} className="py-1 px-2 text-center align-middle">
+                                              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-amber-400 text-slate-950 shadow-xs">
+                                                🛝 Patio (a diario x pesado)
+                                              </span>
                                             </td>
                                           ))}
                                         </tr>
@@ -5995,34 +5797,32 @@ export function App() {
                                         const primPatio = getPrimariaPatioInfo(currentTeacher?.id, nowDateObj);
                                         if (primPatio.hasPatioAssigned) {
                                           return (
-                                            <tr className="bg-emerald-50/70 dark:bg-emerald-950/30 border-y-2 border-emerald-300 dark:border-emerald-700">
-                                              <td className="p-3 font-extrabold text-emerald-950 dark:text-emerald-200 bg-emerald-100/60 dark:bg-emerald-950/60 border-r border-slate-200 dark:border-slate-800">
-                                                <span className="block text-xs font-black text-emerald-800 dark:text-emerald-300">☕ 10:30 - 11:00</span>
-                                                <span className="block text-[10px] font-bold text-emerald-700 dark:text-emerald-400">Recreo · Fila y Patio</span>
-                                                <span className="block text-[9px] font-mono text-emerald-600 dark:text-emerald-500 opacity-90 mt-0.5">{primPatio.assignment.space}</span>
+                                            <tr className="bg-emerald-50/60 dark:bg-emerald-950/20 text-center border-y border-emerald-200/60 dark:border-emerald-900/40">
+                                              <td className="py-1.5 px-2.5 font-bold text-emerald-900 dark:text-emerald-200 bg-emerald-100/40 dark:bg-emerald-950/40 border-r border-slate-200 dark:border-slate-800 text-left whitespace-nowrap">
+                                                <div className="flex items-center justify-between gap-1">
+                                                  <span className="text-[11px] font-black text-emerald-800 dark:text-emerald-300">☕ 10:30 - 11:00</span>
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => setShowPrimariaPatioGrid(true)}
+                                                    className="text-[9px] font-bold text-emerald-700 dark:text-emerald-400 hover:underline cursor-pointer"
+                                                    title="Abrir cuadrante general de Primaria"
+                                                  >
+                                                    General ↗
+                                                  </button>
+                                                </div>
                                               </td>
                                               {[0, 1, 2, 3, 4].map((dIdx) => {
                                                 const isDutyDay = dIdx === primPatio.assignment.dayIdx;
                                                 return (
-                                                  <td key={dIdx} className="p-2 align-middle text-center">
+                                                  <td key={dIdx} className="py-1 px-2 text-center align-middle">
                                                     {isDutyDay ? (
-                                                      <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-black shadow-sm border border-emerald-400 ring-2 ring-emerald-300 flex flex-col items-center justify-center gap-0.5 animate-pulse">
-                                                        <span className="text-[10px] uppercase tracking-wider font-extrabold bg-white/20 px-1.5 py-0.2 rounded-full">
-                                                          {primPatio.assignment.dayName} · {primPatio.assignment.space}
-                                                        </span>
-                                                        <span className="text-xs font-black flex items-center gap-1 mt-0.5">
-                                                          🛝 ⭐ ¡Te toca Fila y Patio!
-                                                        </span>
-                                                      </div>
+                                                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black bg-emerald-600 text-white shadow-xs">
+                                                        ⭐ 🛝 Fila y Patio ({primPatio.assignment.space})
+                                                      </span>
                                                     ) : (
-                                                      <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-0.5">
-                                                        <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                                                          Recreo
-                                                        </span>
-                                                        <span className="text-[9px] text-slate-400 dark:text-slate-500">
-                                                          Sin patio / filas
-                                                        </span>
-                                                      </div>
+                                                      <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
+                                                        Recreo
+                                                      </span>
                                                     )}
                                                   </td>
                                                 );
@@ -6031,9 +5831,9 @@ export function App() {
                                           );
                                         }
                                         return (
-                                          <tr className="bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center">
-                                            <td colSpan={6} className="py-1.5 px-3 tracking-widest uppercase">
-                                              ☕ 10:30 - 11:00 · Recreo de Mañana (Patio)
+                                          <tr className="bg-amber-50/50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 font-extrabold text-[11px] text-center border-y border-amber-200/40 dark:border-amber-900/40">
+                                            <td colSpan={6} className="py-1 px-3 tracking-wider uppercase text-[10px]">
+                                              ☕ 10:30 - 11:00 · Recreo
                                             </td>
                                           </tr>
                                         );
@@ -8106,6 +7906,205 @@ export function App() {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: CUADRANTE COMPLETO PATIOS INFANTIL (MES NOVIEMBRE) */}
+      {showInfantilPatioMonthGrid && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setShowInfantilPatioMonthGrid(false)}
+        >
+          <div
+            className="w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 py-4 bg-gradient-to-r from-amber-600 via-amber-500 to-orange-600 text-white flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <span className="text-2xl">🛝</span>
+                <div>
+                  <h3 className="font-extrabold text-base sm:text-lg leading-tight">
+                    Cuadrante Oficial · Turnos de Patio Infantil (Noviembre)
+                  </h3>
+                  <p className="text-[11px] text-amber-100 font-medium">
+                    Letra A: 3A, 4A, 5A · Letra B: 3B, 4B, 5B · Letra C: 3C, 4C, 5C
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowInfantilPatioMonthGrid(false)}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-bold text-sm transition cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-4">
+              <div className="overflow-x-auto rounded-2xl border border-slate-300 dark:border-slate-700 shadow-sm">
+                <table className="w-full text-center border-collapse text-xs font-black">
+                  <thead>
+                    <tr className="bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white border-b border-slate-300 dark:border-slate-700">
+                      <th colSpan={5} className="py-2 uppercase tracking-wider text-sm font-extrabold bg-slate-300 dark:bg-slate-700">
+                        Mes Noviembre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900">
+                    {INFANTIL_PATIO_WEEKS_NOVEMBER_2026.map(w => (
+                      <React.Fragment key={w.id}>
+                        <tr className="bg-slate-50 dark:bg-slate-950/80 text-slate-700 dark:text-slate-300 text-[11px] font-extrabold border-t border-slate-300 dark:border-slate-700">
+                          {w.days.map((d, dIdx) => (
+                            <td key={dIdx} className="py-1.5 px-2 border-r border-slate-200 dark:border-slate-800 last:border-r-0">
+                              {d.date ? `${d.dayName} ${d.date}` : "—"}
+                            </td>
+                          ))}
+                        </tr>
+                        <tr className="border-b border-slate-300 dark:border-slate-700">
+                          {w.days.map((d, dIdx) => {
+                            if (!d.date) {
+                              return <td key={dIdx} className="py-2.5 px-2 bg-slate-50 dark:bg-slate-950/40 text-slate-400 border-r border-slate-200 dark:border-slate-800 last:border-r-0">—</td>;
+                            }
+                            if (d.festivo) {
+                              return (
+                                <td key={dIdx} className="py-2.5 px-2 bg-rose-200 dark:bg-rose-950/70 text-rose-900 dark:text-rose-200 font-extrabold border-r border-slate-200 dark:border-slate-800 last:border-r-0">
+                                  Festivo
+                                </td>
+                              );
+                            }
+                            const teacherLetter = INFANTIL_TUTOR_LETTERS[selectedViewTeacherId] || null;
+                            const isTeacherTurn = teacherLetter && d.turno === teacherLetter;
+                            const bgClass = d.turno === "A"
+                              ? "bg-blue-500 text-white"
+                              : d.turno === "B"
+                              ? "bg-yellow-400 text-slate-950"
+                              : "bg-emerald-500 text-white";
+
+                            return (
+                              <td key={dIdx} className={`py-2.5 px-2 border-r border-slate-200 dark:border-slate-800 last:border-r-0 font-black ${bgClass} ${isTeacherTurn ? "ring-3 ring-inset ring-amber-400 relative" : ""}`}>
+                                <div className="flex items-center justify-center gap-1">
+                                  <span>{d.turno}</span>
+                                  {isTeacherTurn && <span title="¡Turno del docente seleccionado!">⭐</span>}
+                                </div>
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="px-5 py-3 bg-slate-100 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-700/60 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowInfantilPatioMonthGrid(false)}
+                className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-600 transition cursor-pointer"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: CUADRANTE COMPLETO PATIOS Y FILAS PRIMARIA */}
+      {showPrimariaPatioGrid && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setShowPrimariaPatioGrid(false)}
+        >
+          <div
+            className="w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 text-white flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <span className="text-2xl">🛝</span>
+                <div>
+                  <h3 className="font-extrabold text-base sm:text-lg leading-tight">
+                    Cuadrante Oficial · Fila y Patio de Primaria (10:30 - 11:00)
+                  </h3>
+                  <p className="text-[11px] text-emerald-100 font-medium">
+                    4 Espacios de vigilancia · Lunes a Viernes (Supervisión de patio y subida de filas)
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPrimariaPatioGrid(false)}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-bold text-sm transition cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-4">
+              <div className="overflow-x-auto rounded-2xl border border-slate-300 dark:border-slate-700 shadow-sm">
+                <table className="w-full text-center border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-b border-slate-300 dark:border-slate-700">
+                      <th className="py-2.5 px-3 text-left font-black uppercase text-[11px] bg-slate-300 dark:bg-slate-700 text-slate-900 dark:text-white">
+                        Espacio
+                      </th>
+                      {PRIMARIA_PATIO_GRID.days.map((d, dIdx) => (
+                        <th key={dIdx} className="py-2.5 px-3 font-black uppercase text-[11px]">
+                          {d}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900">
+                    {PRIMARIA_PATIO_GRID.rows.map((row, rIdx) => {
+                      const primPatio = getPrimariaPatioInfo(selectedViewTeacherId, nowDateObj);
+                      return (
+                        <tr key={rIdx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                          <td className="py-2.5 px-3 text-left font-black text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-slate-950/60 border-r border-slate-200 dark:border-slate-800">
+                            {row.space}
+                          </td>
+                          {row.teachers.map((tName, cIdx) => {
+                            const isCurrentTeacherAssigned = 
+                              primPatio?.assignment?.space === row.space && primPatio?.assignment?.dayIdx === cIdx;
+                            return (
+                              <td
+                                key={cIdx}
+                                className={`py-2.5 px-3 border-r border-slate-200 dark:border-slate-800 last:border-r-0 font-bold ${
+                                  isCurrentTeacherAssigned
+                                    ? "bg-emerald-500 text-white font-black ring-2 ring-inset ring-emerald-300 shadow-inner"
+                                    : "text-slate-700 dark:text-slate-300"
+                                }`}
+                              >
+                                <div className="flex items-center justify-center gap-1">
+                                  <span>{tName}</span>
+                                  {isCurrentTeacherAssigned && <span>⭐</span>}
+                                </div>
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="px-5 py-3 bg-slate-100 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-700/60 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowPrimariaPatioGrid(false)}
+                className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-600 transition cursor-pointer"
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
         </div>
       )}
