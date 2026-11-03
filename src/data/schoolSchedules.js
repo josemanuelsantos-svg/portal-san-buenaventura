@@ -7895,3 +7895,88 @@ export const INFANTIL_PATIO_WEEKS_NOVEMBER_2026 = [
   }
 ];
 
+// DISTRIBUCIÓN OFICIAL DE PATIOS Y FILAS DE EDUCACIÓN PRIMARIA (10:30 - 11:00) 2026/27
+export const PRIMARIA_PATIO_ASSIGNMENTS = {
+  // Lunes (dayIdx = 0)
+  "p740": { dayIdx: 0, dayName: "Lunes", space: "Pabellón" },       // Pilar F.
+  "m654": { dayIdx: 0, dayName: "Lunes", space: "Cuesta" },         // Carmen
+  "aort0": { dayIdx: 0, dayName: "Lunes", space: "Patio Pádel" },    // Álvaro O
+  "d558": { dayIdx: 0, dayName: "Lunes", space: "Patio Grande" },   // David
+
+  // Martes (dayIdx = 1)
+  "ihid0": { dayIdx: 1, dayName: "Martes", space: "Pabellón" },     // Isabel H
+  "feli": { dayIdx: 1, dayName: "Martes", space: "Pabellón" },      // Feli (sustituye Isabel)
+  "omol0": { dayIdx: 1, dayName: "Martes", space: "Cuesta" },       // Óscar
+  "j784": { dayIdx: 1, dayName: "Martes", space: "Patio Pádel" },   // Juan
+  "pgom0": { dayIdx: 1, dayName: "Martes", space: "Patio Grande" },  // Paula
+  "pgonzalez": { dayIdx: 1, dayName: "Martes", space: "Patio Grande" }, // Paula González
+
+  // Miércoles (dayIdx = 2)
+  "r299": { dayIdx: 2, dayName: "Miércoles", space: "Pabellón" },    // Rubén
+  "bleo0": { dayIdx: 2, dayName: "Miércoles", space: "Cuesta" },      // Bea
+  "mar1": { dayIdx: 2, dayName: "Miércoles", space: "Patio Pádel" }, // Pili
+  "jos7": { dayIdx: 2, dayName: "Miércoles", space: "Patio Grande" }, // Jose
+  "colivares": { dayIdx: 2, dayName: "Miércoles", space: "Patio Grande" }, // Casandra Olivares
+
+  // Jueves (dayIdx = 3)
+  "l681": { dayIdx: 3, dayName: "Jueves", space: "Pabellón" },      // Lorena
+  "afer0": { dayIdx: 3, dayName: "Jueves", space: "Cuesta" },        // Álvaro F
+  "j326": { dayIdx: 3, dayName: "Jueves", space: "Patio Pádel" },    // Julia
+  "n656": { dayIdx: 3, dayName: "Jueves", space: "Patio Grande" },   // Nuria J
+
+  // Viernes (dayIdx = 4)
+  "pveg0": { dayIdx: 4, dayName: "Viernes", space: "Pabellón" },     // Pedro V.
+  "ped4": { dayIdx: 4, dayName: "Viernes", space: "Cuesta" },        // Pedro Z.
+  "m851": { dayIdx: 4, dayName: "Viernes", space: "Patio Pádel" },   // Belén
+  "j414": { dayIdx: 4, dayName: "Viernes", space: "Patio Grande" }   // José A.
+};
+
+export const PRIMARIA_PATIO_GRID = [
+  {
+    space: "Pabellón",
+    lunes: { teacherId: "p740", name: "Pilar F." },
+    martes: { teacherId: "ihid0", name: "Isabel H / Feli" },
+    miercoles: { teacherId: "r299", name: "Rubén" },
+    jueves: { teacherId: "l681", name: "Lorena" },
+    viernes: { teacherId: "pveg0", name: "Pedro V." }
+  },
+  {
+    space: "Cuesta",
+    lunes: { teacherId: "m654", name: "Carmen" },
+    martes: { teacherId: "omol0", name: "Óscar" },
+    miercoles: { teacherId: "bleo0", name: "Bea" },
+    jueves: { teacherId: "afer0", name: "Álvaro F" },
+    viernes: { teacherId: "ped4", name: "Pedro Z." }
+  },
+  {
+    space: "Patio Pádel",
+    lunes: { teacherId: "aort0", name: "Álvaro O" },
+    martes: { teacherId: "j784", name: "Juan" },
+    miercoles: { teacherId: "mar1", name: "Pili" },
+    jueves: { teacherId: "j326", name: "Julia" },
+    viernes: { teacherId: "m851", name: "Belén" }
+  },
+  {
+    space: "Patio Grande",
+    lunes: { teacherId: "d558", name: "David" },
+    martes: { teacherId: "pgom0", name: "Paula" },
+    miercoles: { teacherId: "jos7", name: "Jose" },
+    jueves: { teacherId: "n656", name: "Nuria J" },
+    viernes: { teacherId: "j414", name: "José A." }
+  }
+];
+
+export function getPrimariaPatioInfo(teacherId, targetDate = new Date()) {
+  const assignment = PRIMARIA_PATIO_ASSIGNMENTS[teacherId] || null;
+  const dayOfWeek = targetDate.getDay(); // 0 Sun, 1 Mon, 2 Tue, 3 Wed, 4 Thu, 5 Fri, 6 Sat
+  const weekdayIdx = dayOfWeek >= 1 && dayOfWeek <= 5 ? dayOfWeek - 1 : null;
+  const hasDutyToday = Boolean(assignment && weekdayIdx !== null && assignment.dayIdx === weekdayIdx);
+
+  return {
+    assignment,
+    hasDutyToday,
+    hasPatioAssigned: Boolean(assignment)
+  };
+}
+
+
