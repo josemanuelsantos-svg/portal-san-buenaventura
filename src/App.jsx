@@ -6171,6 +6171,278 @@ export function App() {
                 );
               })()}
 
+              {/* TAB: OFRENDA A SANTA MARÍA DE LA ALMUDENA 2026 */}
+              {scheduleCenterTab === "ofrenda" && (
+                <div className="space-y-4">
+                  {/* Cabecera Informativa */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-rose-500 to-pink-600 text-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl">💐</span>
+                      <div>
+                        <h4 className="font-extrabold text-base sm:text-lg leading-tight">
+                          Horarios de la Ofrenda a Santa María de la Almudena 2026
+                        </h4>
+                        <p className="text-xs text-amber-100 font-medium">
+                          Viernes 6 de noviembre y Martes 10 de noviembre · Ed. Infantil y Ed. Primaria en el colegio
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-xl bg-white/20 text-white text-xs font-bold backdrop-blur-sm border border-white/25">
+                        27 Aulas organizadas
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Filtros de Día y Etapa */}
+                  <div className="flex flex-wrap items-center justify-between gap-2.5 p-2 bg-slate-100 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs font-bold">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 px-1 font-extrabold">
+                        Día:
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setOfrendaDayFilter("all")}
+                        className={`px-3 py-1.5 rounded-xl transition ${
+                          ofrendaDayFilter === "all"
+                            ? "bg-rose-600 text-white font-black shadow-xs"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                        }`}
+                      >
+                        🗓️ Ambos Días (Comparativa)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setOfrendaDayFilter("nov6")}
+                        className={`px-3 py-1.5 rounded-xl transition ${
+                          ofrendaDayFilter === "nov6"
+                            ? "bg-rose-600 text-white font-black shadow-xs"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                        }`}
+                      >
+                        🌸 Viernes 6 Nov (12 franjas)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setOfrendaDayFilter("nov10")}
+                        className={`px-3 py-1.5 rounded-xl transition ${
+                          ofrendaDayFilter === "nov10"
+                            ? "bg-rose-600 text-white font-black shadow-xs"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                        }`}
+                      >
+                        🌸 Martes 10 Nov (11 franjas)
+                      </button>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 px-1 font-extrabold">
+                        Etapa:
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setOfrendaStageFilter("all")}
+                        className={`px-2.5 py-1 rounded-lg text-xs transition ${
+                          ofrendaStageFilter === "all"
+                            ? "bg-slate-800 text-white dark:bg-white dark:text-slate-900 font-extrabold"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                        }`}
+                      >
+                        Todas
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setOfrendaStageFilter("Infantil")}
+                        className={`px-2.5 py-1 rounded-lg text-xs transition ${
+                          ofrendaStageFilter === "Infantil"
+                            ? "bg-pink-600 text-white font-extrabold"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                        }`}
+                      >
+                        Infantil
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setOfrendaStageFilter("1-3")}
+                        className={`px-2.5 py-1 rounded-lg text-xs transition ${
+                          ofrendaStageFilter === "1-3"
+                            ? "bg-indigo-600 text-white font-extrabold"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                        }`}
+                      >
+                        1.º a 3.º EP
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setOfrendaStageFilter("4-6")}
+                        className={`px-2.5 py-1 rounded-lg text-xs transition ${
+                          ofrendaStageFilter === "4-6"
+                            ? "bg-indigo-600 text-white font-extrabold"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                        }`}
+                      >
+                        4.º a 6.º EP
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Tabla Principal */}
+                  <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs bg-white dark:bg-slate-900">
+                    <table className="w-full text-left border-collapse min-w-[700px]">
+                      <thead>
+                        <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                          <th className="p-3 w-40 text-center">Franja Horaria</th>
+                          {(ofrendaDayFilter === "all" || ofrendaDayFilter === "nov6") && (
+                            <th className="p-3 text-center text-rose-700 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/20">
+                              🌸 6 de noviembre (Viernes)
+                            </th>
+                          )}
+                          {(ofrendaDayFilter === "all" || ofrendaDayFilter === "nov10") && (
+                            <th className="p-3 text-center text-amber-700 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20">
+                              🌸 10 de noviembre (Martes)
+                            </th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                        {OFRENDA_ALMUDENA_DATA.map((slot, rIdx) => {
+                          const nowMins = nowDateObj.getHours() * 60 + nowDateObj.getMinutes();
+                          const [sH, sM] = slot.start.split(":").map(Number);
+                          const [eH, eM] = slot.end.split(":").map(Number);
+                          const isNowActive = (nowDateObj.getMonth() === 10 && (nowDateObj.getDate() === 6 || nowDateObj.getDate() === 10)) &&
+                                              nowMins >= (sH * 60 + sM) && nowMins < (eH * 60 + eM);
+
+                          // Filtrado por etapa
+                          const matchStageNov6 = !slot.nov6 ? false :
+                            ofrendaStageFilter === "all" ? true :
+                            ofrendaStageFilter === "Infantil" ? slot.nov6.stage === "Infantil" :
+                            ofrendaStageFilter === "1-3" ? (slot.nov6.stage === "Primaria" && /^[123]/.test(slot.nov6.group)) :
+                            ofrendaStageFilter === "4-6" ? (slot.nov6.stage === "Primaria" && /^[456]/.test(slot.nov6.group)) : true;
+
+                          const matchStageNov10 = !slot.nov10 ? false :
+                            ofrendaStageFilter === "all" ? true :
+                            ofrendaStageFilter === "Infantil" ? slot.nov10.stage === "Infantil" :
+                            ofrendaStageFilter === "1-3" ? (slot.nov10.stage === "Primaria" && /^[123]/.test(slot.nov10.group)) :
+                            ofrendaStageFilter === "4-6" ? (slot.nov10.stage === "Primaria" && /^[456]/.test(slot.nov10.group)) : true;
+
+                          if (ofrendaStageFilter !== "all" && !matchStageNov6 && !matchStageNov10) {
+                            return null;
+                          }
+
+                          return (
+                            <React.Fragment key={slot.id}>
+                              {/* Separador de recreo antes de las 11:00 */}
+                              {rIdx === 7 && (
+                                <tr className="bg-amber-100/90 dark:bg-amber-950/40 text-amber-950 dark:text-amber-200 font-extrabold text-[11px] text-center border-y-2 border-amber-300 dark:border-amber-700">
+                                  <td colSpan={ofrendaDayFilter === "all" ? 3 : 2} className="py-2 px-3 tracking-widest uppercase">
+                                    ☕ 10:30 - 11:00 · Recreo Escolar y Patio de Alumnos
+                                  </td>
+                                </tr>
+                              )}
+
+                              <tr className={`transition ${
+                                isNowActive
+                                  ? "bg-emerald-50 dark:bg-emerald-950/40 font-bold"
+                                  : "hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
+                              }`}>
+                                <td className="p-3 text-center bg-slate-50/70 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                                  <div className="flex items-center justify-center gap-1.5 font-mono text-xs font-black text-slate-800 dark:text-slate-200">
+                                    <IconRenderer name="Clock" className="w-3.5 h-3.5 text-slate-400" />
+                                    <span>{slot.time}</span>
+                                  </div>
+                                  {isNowActive && (
+                                    <span className="inline-block mt-1 px-2 py-0.2 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-600 text-white animate-pulse">
+                                      En curso
+                                    </span>
+                                  )}
+                                </td>
+
+                                {(ofrendaDayFilter === "all" || ofrendaDayFilter === "nov6") && (
+                                  <td className="p-2.5 align-middle">
+                                    {slot.nov6 ? (
+                                      <div
+                                        className={`p-2.5 rounded-xl border transition ${
+                                          slot.nov6.stage === "Infantil"
+                                            ? "bg-pink-50/60 dark:bg-pink-950/25 border-pink-200 dark:border-pink-900/40"
+                                            : "bg-indigo-50/60 dark:bg-indigo-950/25 border-indigo-200 dark:border-indigo-900/40"
+                                        }`}
+                                      >
+                                        <div className="flex items-center justify-between gap-1.5 flex-wrap mb-1">
+                                          <span className="font-extrabold text-xs text-slate-900 dark:text-white">
+                                            {slot.nov6.label}
+                                          </span>
+                                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase border ${
+                                            slot.nov6.stage === "Infantil"
+                                              ? "bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300 border-pink-200 dark:border-pink-800"
+                                              : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800"
+                                          }`}>
+                                            {slot.nov6.stage}
+                                          </span>
+                                        </div>
+                                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                                          {slot.nov6.tutor ? `Tut: ${slot.nov6.tutor}` : "Grupo de alumnos"}
+                                        </p>
+                                      </div>
+                                    ) : (
+                                      <span className="text-slate-400 italic text-center block">—</span>
+                                    )}
+                                  </td>
+                                )}
+
+                                {(ofrendaDayFilter === "all" || ofrendaDayFilter === "nov10") && (
+                                  <td className="p-2.5 align-middle">
+                                    {slot.nov10 ? (
+                                      <div
+                                        className={`p-2.5 rounded-xl border transition ${
+                                          slot.nov10.stage === "Infantil"
+                                            ? "bg-pink-50/60 dark:bg-pink-950/25 border-pink-200 dark:border-pink-900/40"
+                                            : "bg-indigo-50/60 dark:bg-indigo-950/25 border-indigo-200 dark:border-indigo-900/40"
+                                        }`}
+                                      >
+                                        <div className="flex items-center justify-between gap-1.5 flex-wrap mb-1">
+                                          <span className="font-extrabold text-xs text-slate-900 dark:text-white">
+                                            {slot.nov10.label}
+                                          </span>
+                                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase border ${
+                                            slot.nov10.stage === "Infantil"
+                                              ? "bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300 border-pink-200 dark:border-pink-800"
+                                              : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800"
+                                          }`}>
+                                            {slot.nov10.stage}
+                                          </span>
+                                        </div>
+                                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                                          {slot.nov10.tutor ? `Tut: ${slot.nov10.tutor}` : "Grupo de alumnos"}
+                                        </p>
+                                      </div>
+                                    ) : (
+                                      <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 text-center text-[11px] italic">
+                                        Sin ofrenda (fin de jornada de ofrendas)
+                                      </div>
+                                    )}
+                                  </td>
+                                )}
+                              </tr>
+                            </React.Fragment>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Nota organizativa oficial */}
+                  <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/25 border border-amber-200 dark:border-amber-800/50 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
+                    <span className="text-base leading-none shrink-0 mt-0.5">ℹ️</span>
+                    <div>
+                      <p className="font-extrabold mb-0.5">Indicaciones de Dirección para el profesorado:</p>
+                      <p className="text-[11px] leading-relaxed opacity-90">
+                        La ofrenda floral se realiza directamente en el colegio por cursos. Cada grupo acude con su profesor/a o tutor/a a la capilla/altar preparado en la franja asignada de 15 minutos. Rogamos máxima puntualidad en los relevos para mantener la continuidad de la jornada.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* TAB 4: HORARIO DE APOYO · PROFESORADO (PRIMARIA) */}
               {scheduleCenterTab === "support" && (() => {
                 const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
@@ -7852,6 +8124,301 @@ export function App() {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DEDICADO: HORARIOS OFRENDA A LA ALMUDENA 2026 */}
+      {showOfrendaModal && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setShowOfrendaModal(false)}
+        >
+          <div
+            className="w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Cabecera del Modal */}
+            <div className="px-5 py-4 bg-gradient-to-r from-amber-500 via-rose-500 to-pink-600 text-white flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl sm:text-3xl">💐</span>
+                <div>
+                  <h3 className="font-black text-base sm:text-lg leading-tight">
+                    Horarios de la Ofrenda a Santa María de la Almudena 2026
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-amber-100 font-medium">
+                    Colegio San Buenaventura · Viernes 6 y Martes 10 de noviembre
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowOfrendaModal(false)}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-bold text-sm transition cursor-pointer"
+                title="Cerrar modal (Esc)"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Controles de Vista Rápida */}
+            <div className="p-3 sm:p-4 bg-slate-50 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2.5">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setOfrendaDayFilter("all")}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                    ofrendaDayFilter === "all"
+                      ? "bg-rose-600 text-white shadow-xs"
+                      : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  🗓️ Ambos Días
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOfrendaDayFilter("nov6")}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                    ofrendaDayFilter === "nov6"
+                      ? "bg-rose-600 text-white shadow-xs"
+                      : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  🌸 Viernes 6 Nov
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOfrendaDayFilter("nov10")}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                    ofrendaDayFilter === "nov10"
+                      ? "bg-rose-600 text-white shadow-xs"
+                      : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  🌸 Martes 10 Nov
+                </button>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setOfrendaStageFilter("all")}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    ofrendaStageFilter === "all"
+                      ? "bg-slate-800 text-white dark:bg-white dark:text-slate-900"
+                      : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
+                  }`}
+                >
+                  Todas las etapas
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOfrendaStageFilter("Infantil")}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    ofrendaStageFilter === "Infantil"
+                      ? "bg-pink-600 text-white"
+                      : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
+                  }`}
+                >
+                  👶 Infantil
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOfrendaStageFilter("1-3")}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    ofrendaStageFilter === "1-3"
+                      ? "bg-indigo-600 text-white"
+                      : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
+                  }`}
+                >
+                  🎒 1.º a 3.º EP
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOfrendaStageFilter("4-6")}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    ofrendaStageFilter === "4-6"
+                      ? "bg-indigo-600 text-white"
+                      : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
+                  }`}
+                >
+                  🎒 4.º a 6.º EP
+                </button>
+              </div>
+            </div>
+
+            {/* Contenido Desplazable del Modal */}
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1">
+              <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs bg-white dark:bg-slate-900">
+                <table className="w-full text-left border-collapse min-w-[640px]">
+                  <thead>
+                    <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs font-extrabold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                      <th className="p-3 w-36 text-center">Horario</th>
+                      {(ofrendaDayFilter === "all" || ofrendaDayFilter === "nov6") && (
+                        <th className="p-3 text-center text-rose-700 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/20">
+                          🌸 6 de noviembre (Viernes)
+                        </th>
+                      )}
+                      {(ofrendaDayFilter === "all" || ofrendaDayFilter === "nov10") && (
+                        <th className="p-3 text-center text-amber-700 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20">
+                          🌸 10 de noviembre (Martes)
+                        </th>
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                    {OFRENDA_ALMUDENA_DATA.map((slot, rIdx) => {
+                      const nowMins = nowDateObj.getHours() * 60 + nowDateObj.getMinutes();
+                      const [sH, sM] = slot.start.split(":").map(Number);
+                      const [eH, eM] = slot.end.split(":").map(Number);
+                      const isNowActive = (nowDateObj.getMonth() === 10 && (nowDateObj.getDate() === 6 || nowDateObj.getDate() === 10)) &&
+                                          nowMins >= (sH * 60 + sM) && nowMins < (eH * 60 + eM);
+
+                      // Filtrado por etapa
+                      const matchStageNov6 = !slot.nov6 ? false :
+                        ofrendaStageFilter === "all" ? true :
+                        ofrendaStageFilter === "Infantil" ? slot.nov6.stage === "Infantil" :
+                        ofrendaStageFilter === "1-3" ? (slot.nov6.stage === "Primaria" && /^[123]/.test(slot.nov6.group)) :
+                        ofrendaStageFilter === "4-6" ? (slot.nov6.stage === "Primaria" && /^[456]/.test(slot.nov6.group)) : true;
+
+                      const matchStageNov10 = !slot.nov10 ? false :
+                        ofrendaStageFilter === "all" ? true :
+                        ofrendaStageFilter === "Infantil" ? slot.nov10.stage === "Infantil" :
+                        ofrendaStageFilter === "1-3" ? (slot.nov10.stage === "Primaria" && /^[123]/.test(slot.nov10.group)) :
+                        ofrendaStageFilter === "4-6" ? (slot.nov10.stage === "Primaria" && /^[456]/.test(slot.nov10.group)) : true;
+
+                      if (ofrendaStageFilter !== "all" && !matchStageNov6 && !matchStageNov10) {
+                        return null;
+                      }
+
+                      return (
+                        <React.Fragment key={slot.id}>
+                          {/* Separador de recreo antes de las 11:00 */}
+                          {rIdx === 7 && (
+                            <tr className="bg-amber-100/90 dark:bg-amber-950/40 text-amber-950 dark:text-amber-200 font-extrabold text-[11px] text-center border-y-2 border-amber-300 dark:border-amber-700">
+                              <td colSpan={ofrendaDayFilter === "all" ? 3 : 2} className="py-2 px-3 tracking-widest uppercase">
+                                ☕ 10:30 - 11:00 · Recreo Escolar y Patio
+                              </td>
+                            </tr>
+                          )}
+
+                          <tr className={`transition ${
+                            isNowActive
+                              ? "bg-emerald-50 dark:bg-emerald-950/40 font-bold"
+                              : "hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
+                          }`}>
+                            <td className="p-3 text-center bg-slate-50/70 dark:bg-slate-950/50 border-r border-slate-200 dark:border-slate-800">
+                              <div className="flex items-center justify-center gap-1.5 font-mono text-xs font-black text-slate-800 dark:text-slate-200">
+                                <IconRenderer name="Clock" className="w-3.5 h-3.5 text-slate-400" />
+                                <span>{slot.time}</span>
+                              </div>
+                              {isNowActive && (
+                                <span className="inline-block mt-1 px-2 py-0.2 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-600 text-white animate-pulse">
+                                  En curso
+                                </span>
+                              )}
+                            </td>
+
+                            {(ofrendaDayFilter === "all" || ofrendaDayFilter === "nov6") && (
+                              <td className="p-2.5 align-middle">
+                                {slot.nov6 ? (
+                                  <div
+                                    className={`p-2.5 rounded-xl border transition ${
+                                      slot.nov6.stage === "Infantil"
+                                        ? "bg-pink-50/60 dark:bg-pink-950/25 border-pink-200 dark:border-pink-900/40"
+                                        : "bg-indigo-50/60 dark:bg-indigo-950/25 border-indigo-200 dark:border-indigo-900/40"
+                                    }`}
+                                  >
+                                    <div className="flex items-center justify-between gap-1.5 flex-wrap mb-1">
+                                      <span className="font-extrabold text-xs text-slate-900 dark:text-white">
+                                        {slot.nov6.label}
+                                      </span>
+                                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase border ${
+                                        slot.nov6.stage === "Infantil"
+                                          ? "bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300 border-pink-200 dark:border-pink-800"
+                                          : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800"
+                                      }`}>
+                                        {slot.nov6.stage}
+                                      </span>
+                                    </div>
+                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                                      {slot.nov6.tutor ? `Tut: ${slot.nov6.tutor}` : "Grupo de alumnos"}
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <span className="text-slate-400 italic text-center block">—</span>
+                                )}
+                              </td>
+                            )}
+
+                            {(ofrendaDayFilter === "all" || ofrendaDayFilter === "nov10") && (
+                              <td className="p-2.5 align-middle">
+                                {slot.nov10 ? (
+                                  <div
+                                    className={`p-2.5 rounded-xl border transition ${
+                                      slot.nov10.stage === "Infantil"
+                                        ? "bg-pink-50/60 dark:bg-pink-950/25 border-pink-200 dark:border-pink-900/40"
+                                        : "bg-indigo-50/60 dark:bg-indigo-950/25 border-indigo-200 dark:border-indigo-900/40"
+                                    }`}
+                                  >
+                                    <div className="flex items-center justify-between gap-1.5 flex-wrap mb-1">
+                                      <span className="font-extrabold text-xs text-slate-900 dark:text-white">
+                                        {slot.nov10.label}
+                                      </span>
+                                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase border ${
+                                        slot.nov10.stage === "Infantil"
+                                          ? "bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300 border-pink-200 dark:border-pink-800"
+                                          : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800"
+                                      }`}>
+                                        {slot.nov10.stage}
+                                      </span>
+                                    </div>
+                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                                      {slot.nov10.tutor ? `Tut: ${slot.nov10.tutor}` : "Grupo de alumnos"}
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 text-center text-[11px] italic">
+                                    Sin ofrenda (fin de jornada de ofrendas)
+                                  </div>
+                                )}
+                              </td>
+                            )}
+                          </tr>
+                        </React.Fragment>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Indicación Logística */}
+              <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
+                <span className="text-base leading-none shrink-0 mt-0.5">ℹ️</span>
+                <div>
+                  <p className="font-extrabold mb-0.5">Organización de la Celebración:</p>
+                  <p className="text-[11px] leading-relaxed opacity-90">
+                    Las ofrendas florales se realizan íntegramente en el centro escolar por cursos. Se ruega acudir con puntualidad respetando el turno de 15 minutos para que todos los grupos de Infantil y Primaria puedan realizar su ofrenda y oración con serenidad.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Pie del Modal */}
+            <div className="px-5 py-3 bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <span className="text-[11px] text-slate-500 font-medium">
+                Colegio San Buenaventura · Pastoral Escolar
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowOfrendaModal(false)}
+                className="px-4 py-1.5 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold hover:opacity-90 transition cursor-pointer"
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
         </div>
       )}

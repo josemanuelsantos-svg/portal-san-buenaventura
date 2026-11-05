@@ -8897,3 +8897,331 @@ export function getPrimariaPatioInfo(teacherId, targetDate = new Date()) {
 }
 
 
+
+// ============================================================================
+// HORARIOS DE LA OFRENDA A SANTA MARÍA DE LA ALMUDENA 2026
+// Viernes 6 de noviembre y Martes 10 de noviembre
+// ============================================================================
+export const OFRENDA_ALMUDENA_DATA = [
+  {
+    id: "o1",
+    time: "8:45-9:00",
+    start: "08:45",
+    end: "09:00",
+    nov6: {
+      group: "3 años B",
+      label: "3 años B",
+      classrooms: ["3 años B"],
+      stage: "Infantil",
+      tutor: "Nieves Jiménez"
+    },
+    nov10: {
+      group: "3 años A",
+      label: "3 años A",
+      classrooms: ["3 años A"],
+      stage: "Infantil",
+      tutor: "Elena Díaz"
+    }
+  },
+  {
+    id: "o2",
+    time: "9:00-9:15",
+    start: "09:00",
+    end: "09:15",
+    nov6: {
+      group: "3 años C",
+      label: "3 años C",
+      classrooms: ["3 años C"],
+      stage: "Infantil",
+      tutor: "Alejandra Calvo"
+    },
+    nov10: {
+      group: "4 años",
+      label: "4 años (A, B y C)",
+      classrooms: ["4 años A", "4 años B", "4 años C"],
+      stage: "Infantil",
+      tutor: "Susana López, Nuria Romero y Gema del Pozo"
+    }
+  },
+  {
+    id: "o3",
+    time: "9:15-9:30",
+    start: "09:15",
+    end: "09:30",
+    nov6: {
+      group: "5 años",
+      label: "5 años (A, B y C)",
+      classrooms: ["5 años A", "5 años B", "5 años C"],
+      stage: "Infantil",
+      tutor: "Alejandra Pérez, Teresa Espejo y Marta Rodríguez"
+    },
+    nov10: {
+      group: "1º EP C",
+      label: "1.º EP C",
+      classrooms: ["1ºEP-C"],
+      stage: "Primaria",
+      tutor: "1º EP C"
+    }
+  },
+  {
+    id: "o4",
+    time: "9:30-9:45",
+    start: "09:30",
+    end: "09:45",
+    nov6: {
+      group: "2º EP A",
+      label: "2.º EP A",
+      classrooms: ["2ºEP-A"],
+      stage: "Primaria",
+      tutor: "Isabel Hidalgo / Feli"
+    },
+    nov10: {
+      group: "1º EP B",
+      label: "1.º EP B",
+      classrooms: ["1ºEP-B"],
+      stage: "Primaria",
+      tutor: "1º EP B"
+    }
+  },
+  {
+    id: "o5",
+    time: "9:45-10:00",
+    start: "09:45",
+    end: "10:00",
+    nov6: {
+      group: "2º EP B",
+      label: "2.º EP B",
+      classrooms: ["2ºEP-B"],
+      stage: "Primaria",
+      tutor: "2º EP B"
+    },
+    nov10: {
+      group: "1º EP A",
+      label: "1.º EP A",
+      classrooms: ["1ºEP-A"],
+      stage: "Primaria",
+      tutor: "1º EP A"
+    }
+  },
+  {
+    id: "o6",
+    time: "10:00-10:15",
+    start: "10:00",
+    end: "10:15",
+    nov6: {
+      group: "2º EP C",
+      label: "2.º EP C",
+      classrooms: ["2ºEP-C"],
+      stage: "Primaria",
+      tutor: "2º EP C"
+    },
+    nov10: {
+      group: "3º EP A",
+      label: "3.º EP A",
+      classrooms: ["3ºEP-A"],
+      stage: "Primaria",
+      tutor: "3º EP A"
+    }
+  },
+  {
+    id: "o7",
+    time: "10:15-10:30",
+    start: "10:15",
+    end: "10:30",
+    nov6: {
+      group: "4º EP A",
+      label: "4.º EP A",
+      classrooms: ["4ºEP-A"],
+      stage: "Primaria",
+      tutor: "4º EP A"
+    },
+    nov10: {
+      group: "3º EP B",
+      label: "3.º EP B",
+      classrooms: ["3ºEP-B"],
+      stage: "Primaria",
+      tutor: "3º EP B"
+    }
+  },
+  // RECREO ESCOLAR 10:30 - 11:00
+  {
+    id: "o8",
+    time: "11:00-11:15",
+    start: "11:00",
+    end: "11:15",
+    nov6: {
+      group: "6º EP B",
+      label: "6.º EP B",
+      classrooms: ["6ºEP-B"],
+      stage: "Primaria",
+      tutor: "Casandra Olivares"
+    },
+    nov10: {
+      group: "3º EP C",
+      label: "3.º EP C",
+      classrooms: ["3ºEP-C"],
+      stage: "Primaria",
+      tutor: "3º EP C"
+    }
+  },
+  {
+    id: "o9",
+    time: "11:15-11:30",
+    start: "11:15",
+    end: "11:30",
+    nov6: {
+      group: "5º EP C",
+      label: "5.º EP C",
+      classrooms: ["5ºEP-C"],
+      stage: "Primaria",
+      tutor: "Álvaro Fernández"
+    },
+    nov10: {
+      group: "5º EP A",
+      label: "5.º EP A",
+      classrooms: ["5ºEP-A"],
+      stage: "Primaria",
+      tutor: "5º EP A"
+    }
+  },
+  {
+    id: "o10",
+    time: "11:30-11:45",
+    start: "11:30",
+    end: "11:45",
+    nov6: {
+      group: "4º EP C",
+      label: "4.º EP C",
+      classrooms: ["4ºEP-C"],
+      stage: "Primaria",
+      tutor: "4º EP C"
+    },
+    nov10: {
+      group: "5º EP B",
+      label: "5.º EP B",
+      classrooms: ["5ºEP-B"],
+      stage: "Primaria",
+      tutor: "Paula Gómez"
+    }
+  },
+  {
+    id: "o11",
+    time: "11:45-12:00",
+    start: "11:45",
+    end: "12:00",
+    nov6: {
+      group: "4º EP B",
+      label: "4.º EP B",
+      classrooms: ["4ºEP-B"],
+      stage: "Primaria",
+      tutor: "4º EP B"
+    },
+    nov10: {
+      group: "6º EP C",
+      label: "6.º EP C",
+      classrooms: ["6ºEP-C"],
+      stage: "Primaria",
+      tutor: "6º EP C"
+    }
+  },
+  {
+    id: "o12",
+    time: "12:00-12:15",
+    start: "12:00",
+    end: "12:15",
+    nov6: {
+      group: "6º EP A",
+      label: "6.º EP A",
+      classrooms: ["6ºEP-A"],
+      stage: "Primaria",
+      tutor: "José Manuel Santos"
+    },
+    nov10: null
+  }
+];
+
+export function normalizeClassroomForOfrenda(rawName) {
+  if (!rawName) return "";
+  let s = String(rawName).trim();
+  s = s.replace(/º\s*EP\s*-\s*/i, "ºEP-")
+       .replace(/º\s*EP\s*/i, "ºEP-")
+       .replace(/\.º\s*EP\s*/i, "ºEP-")
+       .replace(/º\s*EP/i, "ºEP");
+  return s;
+}
+
+export function getOfrendaForClassroom(classroomName, targetDateOrDayKey) {
+  if (!classroomName) return null;
+  const clean = normalizeClassroomForOfrenda(classroomName);
+
+  // Determine key: "nov6" or "nov10"
+  let dayKey = "nov6";
+  if (typeof targetDateOrDayKey === "string") {
+    if (targetDateOrDayKey.includes("10") || targetDateOrDayKey === "tuesday" || targetDateOrDayKey === "1") {
+      dayKey = "nov10";
+    }
+  } else if (targetDateOrDayKey instanceof Date) {
+    if (targetDateOrDayKey.getDate() === 10 || targetDateOrDayKey.getDay() === 2) {
+      dayKey = "nov10";
+    }
+  } else if (typeof targetDateOrDayKey === "number") {
+    if (targetDateOrDayKey === 1 || targetDateOrDayKey === 10) {
+      dayKey = "nov10";
+    }
+  }
+
+  for (const slot of OFRENDA_ALMUDENA_DATA) {
+    const dayItem = slot[dayKey];
+    if (!dayItem) continue;
+    const match = dayItem.classrooms.some(c => {
+      const cClean = normalizeClassroomForOfrenda(c);
+      return clean === cClean || clean.includes(cClean) || cClean.includes(clean);
+    });
+    if (match) {
+      return {
+        ...slot,
+        dayKey,
+        dayLabel: dayKey === "nov6" ? "Viernes 6 de noviembre" : "Martes 10 de noviembre",
+        item: dayItem
+      };
+    }
+  }
+  return null;
+}
+
+export function getOfrendaForTeacher(teacherObj, targetDateOrDayKey) {
+  if (!teacherObj) return null;
+  const dept = teacherObj.dept || "";
+  
+  // 1. Check if tutor of specific classroom
+  for (const slot of OFRENDA_ALMUDENA_DATA) {
+    const dayKey = (typeof targetDateOrDayKey === "string" && targetDateOrDayKey.includes("10")) ||
+                   (targetDateOrDayKey instanceof Date && targetDateOrDayKey.getDate() === 10) ||
+                   (targetDateOrDayKey === 1 || targetDateOrDayKey === 10) ? "nov10" : "nov6";
+    const dayItem = slot[dayKey];
+    if (!dayItem) continue;
+
+    // Check tutor name matching
+    if (dayItem.tutor && (dept.includes(dayItem.group) || dayItem.tutor.includes(teacherObj.name.split(" ")[0]))) {
+      return {
+        ...slot,
+        dayKey,
+        dayLabel: dayKey === "nov6" ? "Viernes 6 Nov" : "Martes 10 Nov",
+        item: dayItem
+      };
+    }
+
+    // Check each classroom in slot
+    for (const c of dayItem.classrooms) {
+      if (dept.includes(c)) {
+        return {
+          ...slot,
+          dayKey,
+          dayLabel: dayKey === "nov6" ? "Viernes 6 Nov" : "Martes 10 Nov",
+          item: dayItem
+        };
+      }
+    }
+  }
+  return null;
+}
