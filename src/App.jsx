@@ -2262,6 +2262,10 @@ export function App() {
   });
   const [showInfantilPatioMonthGrid, setShowInfantilPatioMonthGrid] = useState(false);
   const [showPrimariaPatioGrid, setShowPrimariaPatioGrid] = useState(false);
+  const [showOfrendaModal, setShowOfrendaModal] = useState(false);
+  const [ofrendaDayFilter, setOfrendaDayFilter] = useState("all"); // "all" | "nov6" | "nov10"
+  const [ofrendaStageFilter, setOfrendaStageFilter] = useState("all"); // "all" | "Infantil" | "1-3" | "4-6"
+  const [ofrendaSearchQuery, setOfrendaSearchQuery] = useState("");
 
   const handleSelectMyTeacherProfile = (teacherId) => {
     setMyTeacherId(teacherId);
