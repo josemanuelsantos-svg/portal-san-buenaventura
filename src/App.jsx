@@ -958,13 +958,134 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-9-13-nov-2026",
+    weekTitle: "Semana del 9 al 13 de Noviembre: Formación Franciscana, Lluvias y Patios Cubiertos, Ofrenda Almudena y Huelga General",
+    academicYear: "2026/2027",
+    summary: "Semana de 4 días (lunes festivo de la Almudena). Primera formación franciscana del curso (jueves 16:30h en el saloncito), protocolo de patios de recreo y recogidas cubiertas por lluvia, últimas ofrendas florales a la Virgen de la Almudena (martes 10), jornada de huelga general (miércoles 11 con actividades de consolidación y coordinación con Óscar en extraescolares) y cortes de tráfico por obras de la A-5 desde el martes 10.",
+    publishedAt: "2026-11-09",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1794182400000,
+    days: [
+      {
+        day: "Lunes",
+        date: "9 Nov",
+        items: [
+          "🍂 Festivo escolar en Madrid: Santa María la Real de la Almudena (Patrona de la ciudad).",
+          "🕊️ Sin actividad lectiva en el colegio."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "10 Nov",
+        items: [
+          "💐 Últimas ofrendas a la Virgen de la Almudena: 8:45h a 12:00h en el colegio (acompaña el profesor titular de cada grupo).",
+          "🚗 Obras A-5: cortes de circulación y cierre de conexión directa con túneles de M-30 en ambos sentidos (desvíos por Pº Extremadura y Avda. Portugal).",
+          "🌧️ Previsión de lluvias: activación de protocolo de patios y recogidas en zonas cubiertas si es necesario."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "11 Nov",
+        items: [
+          "⚠️ Jornada de Huelga General: responder a la mayor brevedad el sondeo enviado por Javi para organizar el centro.",
+          "🏫 Apertura ordinaria del centro escolar: en caso de ausencias de alumnado, evitar avanzar temario nuevo y realizar actividades de repaso/refuerzo.",
+          "🏀 Extraescolares (Alventus): Óscar informará de qué actividades se realizan según monitores. No improvisar cambios de espacio sin consultar a Óscar."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "12 Nov",
+        items: [
+          "✝️ 16:30h a 18:00h: Primera reunión de Formación Franciscana del curso para todo el claustro en el Saloncito.",
+          "🌧️ Recreos y salidas en zonas cubiertas en caso de lluvia."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "13 Nov",
+        items: [
+          "📚 Jornada lectiva ordinaria y consolidación de objetivos semanales.",
+          "🌧️ Recogidas de familias en pabellones cubiertos según protocolo."
+        ]
+      }
+    ],
+    generalNotes: "Jueves 12: 16:30h a 18:00h Formación franciscana en el saloncito. Martes 10: Últimas ofrendas a la Almudena (8:45-12:00) y cortes de tráfico por obras de la A-5 (conexión M-30 cerrada). Miércoles 11: Huelga general (sondeo de Javi, actividades de repaso/refuerzo y coordinar extraescolares exclusivamente con Óscar). Protocolo de Lluvia: Recreos cubiertos (1.º-2.º primer patio, 3.º-4.º segundo patio, 5.º tercer patio, 6.º último patio) y recogidas de familias cubiertas por pabellones.",
+    fullEmailText: `Buenos días a todos:
+
+Comenzamos una nueva semana, otra vez cortita y, por lo que parece, bastante pasada por agua.
+
+REUNIÓN DEL JUEVES – FORMACIÓN FRANCISCANA
+Este jueves tendremos nuestra primera formación franciscana del curso.
+En principio, nos encontraremos todos a las 16:30 h en el saloncito y la sesión finalizará, a las 18:00 h.
+
+PATIOS Y RECOGIDAS EN DÍAS DE LLUVIA
+Como esta semana parece que vamos a tener bastante lluvia, os recuerdo brevemente cómo nos organizamos tanto para los patios como para las recogidas.
+
+Patios de recreo
+Cuando llueva, los recreos se realizarán en los patios cubiertos, con la siguiente distribución:
+• Primer patio cubierto: 1.º y 2.º de Primaria.
+• Segundo patio cubierto: 3.º y 4.º de Primaria.
+• Tercer patio cubierto: 5.º de Primaria.
+• Último patio cubierto: 6.º de Primaria.
+
+Recogidas de las familias
+También se realizarán en las zonas cubiertas. Os recuerdo la distribución, comenzando desde el pabellón más bajo:
+• Pabellón de portería: 5.º y 6.º de Primaria.
+• Pabellón de 3.º y 4.º de ESO: 3.º de Primaria.
+• Pabellón de 1.º y 2.º de ESO: 2.º de Primaria.
+• Pabellón del comedor: 1.º de Primaria.
+• Soportal superior, junto a la pirámide: 4.º de Primaria.
+Así evitaremos movimientos innecesarios y podremos organizar las salidas de manera más cómoda para todos.
+
+MARTES 10 – ÚLTIMAS OFRENDAS A LA VIRGEN DE LA ALMUDENA
+Este martes terminaremos las ofrendas florales a la Virgen de la Almudena de este curso.
+La organización será exactamente igual que el viernes pasado: el profesor que esté con el grupo en ese momento será quien lo acompañe durante la ofrenda.
+Os recuerdo los horarios:
+• 8:45 h: 3 años A
+• 9:00 h: 4 años
+• 9:15 h: 1.º C de Primaria
+• 9:30 h: 1.º B de Primaria
+• 9:45 h: 1.º A de Primaria
+• 10:00 h: 3.º de Primaria (3.º A)
+• 10:15 h: 3.º B de Primaria
+• 11:00 h: 3.º C de Primaria
+• 11:15 h: 5.º de Primaria (5.º A)
+• 11:30 h: 5.º B de Primaria
+• 11:45 h: 6.º C de Primaria
+
+MIÉRCOLES 11 – HUELGA GENERAL
+Como ya sabéis, este miércoles está convocada una huelga general, sobre la que hemos recibido diferentes comunicaciones.
+En primer lugar, Javi nos ha enviado un sondeo para conocer, de manera orientativa, la intención del profesorado de cara a esta jornada. Os agradeceríamos que, en la medida de lo posible, pudierais responderlo para facilitar la organización del centro cuanto antes.
+Por otro lado, os dejo adjunta la comunicación que se ha enviado a las familias, para que todos conozcamos la información que han recibido y podamos resolver cualquier duda que nos planteen.
+El colegio abrirá sus puertas y trataremos de desarrollar la jornada con la mayor normalidad posible, adaptándonos, evidentemente, a las circunstancias que nos encontremos.
+Si finalmente tenemos una ausencia significativa de alumnado, lo más prudente será evitar avanzar contenidos curriculares nuevos, de manera que podamos organizar actividades de repaso, refuerzo o consolidación sin perjudicar a quienes no hayan podido asistir.
+En cuanto a las actividades extraescolares, también os adjunto el comunicado que Alventus ha enviado a las familias. Es importante que lo leamos para saber qué información se ha trasladado y poder responder si mañana algún padre nos pregunta.
+El miércoles, Óscar nos irá informando de qué actividades pueden desarrollarse y cuáles pueden verse afectadas, en función de la asistencia de los monitores.
+Por favor, ante cualquier duda sobre dónde debe quedarse un alumno o si su actividad se realiza, consultad siempre con Óscar. No debemos enviar a los niños a otros espacios ni improvisar cambios sin tener confirmación. Es preferible consultar y asegurarnos de que cada uno está donde corresponde.
+
+DESDE EL MARTES 10 – CAMBIOS DE CIRCULACIÓN POR LAS OBRAS DE LA A-5
+Os recuerdo también que desde mañana martes 10 comienzan los nuevos cortes de circulación relacionados con las obras de soterramiento de la A-5. La conexión directa entre la A-5 y los túneles de la M-30 quedará cerrada en ambos sentidos, por lo que quienes utilizamos habitualmente estos accesos tendremos que buscar itinerarios alternativos.
+En muchos casos, esto supondrá tener que circular en superficie por el paseo de Extremadura y el entorno de la avenida de Portugal, con las complicaciones de tráfico que seguramente tendremos durante los primeros días.
+Os recomiendo que encima con lluvias esta semana y huelgas en el transporte, lo tengáis en cuenta para organizar vuestros desplazamientos al colegio, especialmente mientras todos nos acostumbramos a los nuevos recorridos.
+
+REFLEXIÓN DEL EVANGELIO
+El Evangelio de ayer os hablaba de las diez jóvenes que esperan la llegada del esposo. Algunas estaban preparadas y otras, cuando llegó el momento, descubrieron que les faltaba lo necesario.
+Creo que es una imagen muy bonita de algo que también forma parte de nuestra vocación como profesores: estar siempre preparados. Y no me refiero solamente a tener preparada la clase del día siguiente, que también. Me refiero a comprender que un buen profesor nunca termina de aprender.
+Cambian las metodologías, aparecen nuevas tecnologías, evolucionan las necesidades de nuestros alumnos y surgen situaciones que hace unos años ni siquiera imaginábamos. Y nuestra responsabilidad es seguir creciendo para poder darles la mejor respuesta posible.
+A veces podemos pensar que, después de tantos años de experiencia, ya tenemos bastante aprendido. Pero precisamente la experiencia debería enseñarnos que siempre nos queda algo por descubrir, algo que mejorar y algo que aprender de quienes tenemos al lado.
+Quizá esa sea también una forma muy franciscana de entender nuestra profesión: seguir caminando con humildad, sin creernos nunca del todo preparados, pero con las ganas de estarlo cada día un poquito más.
+
+Que tengamos una estupenda semana y que la lluvia nos dé alguna tregua, aunque solo sea en las entradas y salidas.`
+  },
+  {
     id: "plan-semana-2-6-nov-2026",
     weekTitle: "Semana del 2 al 6 de Noviembre: Talleres Cruz Roja, Ofrenda Almudena, Musical e Incorporación de Feli",
     academicYear: "2026/2027",
     summary: "Semana de 4 días (festivo el lunes). Talleres de AyS con Cruz Roja (miércoles 3.º-4.º en aulas y jueves 5.º en aula / 6.º en salón de actos), ofrendas florales en el colegio (viernes 6), reunión de Pastoral (jueves 16:30h) y equipos docentes, preparativos y estreno del musical de San Francisco (sábado 7), inicio de ensayos de Navidad e incorporación de Feli.",
     publishedAt: "2026-11-02",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1793577600000,
     days: [
       {
@@ -2263,6 +2384,7 @@ export function App() {
   const [showInfantilPatioMonthGrid, setShowInfantilPatioMonthGrid] = useState(false);
   const [showPrimariaPatioGrid, setShowPrimariaPatioGrid] = useState(false);
   const [showOfrendaModal, setShowOfrendaModal] = useState(false);
+  const [showRainProtocolModal, setShowRainProtocolModal] = useState(false);
   const [ofrendaDayFilter, setOfrendaDayFilter] = useState("all"); // "all" | "nov6" | "nov10"
   const [ofrendaStageFilter, setOfrendaStageFilter] = useState("all"); // "all" | "Infantil" | "1-3" | "4-6"
   const [ofrendaSearchQuery, setOfrendaSearchQuery] = useState("");
@@ -3247,6 +3369,30 @@ export function App() {
               )}
             </button>
 
+            {/* BOTÓN OFRENDA A LA ALMUDENA 2026 */}
+            <button
+              type="button"
+              onClick={() => setShowOfrendaModal(true)}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-rose-500 to-pink-500 hover:from-amber-600 hover:to-pink-600 text-white text-xs font-extrabold transition shadow-sm active:scale-95 border border-amber-300/40 cursor-pointer"
+              title="Horarios de la Ofrenda a Santa María de la Almudena 2026 (Viernes 6 y Martes 10 de noviembre)"
+            >
+              <span className="text-sm leading-none">💐</span>
+              <span className="hidden xl:inline">Ofrenda Almudena</span>
+              <span className="xl:hidden hidden sm:inline">Ofrenda</span>
+            </button>
+
+            {/* BOTÓN PROTOCOLO DE LLUVIA */}
+            <button
+              type="button"
+              onClick={() => setShowRainProtocolModal(true)}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-extrabold transition shadow-sm active:scale-95 border border-sky-300/40 cursor-pointer"
+              title="Protocolo oficial de Patios de Recreo Cubiertos y Recogidas de Familias en días de lluvia"
+            >
+              <span className="text-sm leading-none">🌧️</span>
+              <span className="hidden xl:inline">Patios Lluvia</span>
+              <span className="xl:hidden hidden sm:inline">Lluvia</span>
+            </button>
+
             {/* BOTÓN BUSCADOR COMPACTO (SOLO MÓVIL) */}
             <button
               onClick={() => setIsCommandPaletteOpen(true)}
@@ -4074,6 +4220,16 @@ export function App() {
                           ))}
                         </select>
                       </div>
+
+                      {/* Botón Acceso Rápido Protocolo Lluvia */}
+                      <button
+                        type="button"
+                        onClick={() => setShowRainProtocolModal(true)}
+                        className="flex items-center gap-1.5 text-xs text-sky-800 dark:text-sky-300 bg-sky-50 dark:bg-sky-500/15 hover:bg-sky-100 dark:hover:bg-sky-500/25 border border-sky-200 dark:border-sky-500/30 px-2.5 py-1.5 rounded-xl font-bold transition shadow-2xs cursor-pointer"
+                        title="Ver distribución de patios cubiertos y recogidas de familias en días de lluvia"
+                      >
+                        <span>🌧️ Patios y Recogidas Lluvia</span>
+                      </button>
 
                       {/* Botón Compartir por WhatsApp */}
                       {currentSelectedPlan && (
@@ -8128,6 +8284,220 @@ export function App() {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DEDICADO: PROTOCOLO DE LLUVIA (PATIOS Y RECOGIDAS) */}
+      {showRainProtocolModal && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setShowRainProtocolModal(false)}
+        >
+          <div
+            className="w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Cabecera del Modal */}
+            <div className="px-5 py-4 bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-700 text-white flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">🌧️</span>
+                <div>
+                  <h3 className="font-black text-base sm:text-lg leading-tight">
+                    Protocolo Oficial en Días de Lluvia
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-sky-100 font-medium">
+                    Distribución de Patios de Recreo Cubiertos y Recogidas de Familias · Colegio San Buenaventura
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowRainProtocolModal(false)}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-bold text-sm transition cursor-pointer"
+                title="Cerrar modal (Esc)"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Contenido del Protocolo */}
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 text-xs">
+              {/* Bloque 1: Patios de Recreo Cubiertos */}
+              <div className="p-4 rounded-2xl bg-sky-50/70 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800/60 space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🛝</span>
+                  <h4 className="font-extrabold text-sm text-sky-950 dark:text-sky-200">
+                    Patios de Recreo Cubiertos (10:30 – 11:00)
+                  </h4>
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 text-[11px]">
+                  Cuando llueva, los recreos de Educación Primaria se realizarán en los patios cubiertos con la siguiente distribución:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between">
+                    <div>
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                        Primer Patio Cubierto
+                      </span>
+                      <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-white">
+                        1.º y 2.º de Primaria
+                      </span>
+                    </div>
+                    <span className="text-lg">🎒</span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between">
+                    <div>
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                        Segundo Patio Cubierto
+                      </span>
+                      <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-white">
+                        3.º y 4.º de Primaria
+                      </span>
+                    </div>
+                    <span className="text-lg">🎒</span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between">
+                    <div>
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                        Tercer Patio Cubierto
+                      </span>
+                      <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-white">
+                        5.º de Primaria
+                      </span>
+                    </div>
+                    <span className="text-lg">🎒</span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between">
+                    <div>
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                        Último Patio Cubierto
+                      </span>
+                      <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-white">
+                        6.º de Primaria
+                      </span>
+                    </div>
+                    <span className="text-lg">🎒</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bloque 2: Recogidas de Familias en Zonas Cubiertas */}
+              <div className="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/60 space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🚶</span>
+                  <h4 className="font-extrabold text-sm text-indigo-950 dark:text-indigo-200">
+                    Recogidas de las Familias en Zonas Cubiertas
+                  </h4>
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 text-[11px]">
+                  Distribución organizada para evitar movimientos innecesarios y agilizar las salidas de manera cómoda y segura, comenzando desde el pabellón más bajo:
+                </p>
+                <div className="space-y-2">
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-200/80 dark:border-indigo-800/80 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 flex items-center justify-center font-mono font-bold text-xs">
+                        1
+                      </span>
+                      <div>
+                        <span className="font-black text-xs text-slate-900 dark:text-white">
+                          Pabellón de Portería
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 block sm:inline sm:ml-1.5">
+                          (Pabellón más bajo)
+                        </span>
+                      </div>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-black bg-indigo-600 text-white shadow-2xs">
+                      5.º y 6.º de Primaria
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-200/80 dark:border-indigo-800/80 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 flex items-center justify-center font-mono font-bold text-xs">
+                        2
+                      </span>
+                      <span className="font-black text-xs text-slate-900 dark:text-white">
+                        Pabellón de 3.º y 4.º de ESO
+                      </span>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-black bg-indigo-600 text-white shadow-2xs">
+                      3.º de Primaria
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-200/80 dark:border-indigo-800/80 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 flex items-center justify-center font-mono font-bold text-xs">
+                        3
+                      </span>
+                      <span className="font-black text-xs text-slate-900 dark:text-white">
+                        Pabellón de 1.º y 2.º de ESO
+                      </span>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-black bg-indigo-600 text-white shadow-2xs">
+                      2.º de Primaria
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-200/80 dark:border-indigo-800/80 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 flex items-center justify-center font-mono font-bold text-xs">
+                        4
+                      </span>
+                      <span className="font-black text-xs text-slate-900 dark:text-white">
+                        Pabellón del Comedor
+                      </span>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-black bg-indigo-600 text-white shadow-2xs">
+                      1.º de Primaria
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-200/80 dark:border-indigo-800/80 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 flex items-center justify-center font-mono font-bold text-xs">
+                        5
+                      </span>
+                      <span className="font-black text-xs text-slate-900 dark:text-white">
+                        Soportal Superior (junto a la pirámide)
+                      </span>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-black bg-indigo-600 text-white shadow-2xs">
+                      4.º de Primaria
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Indicación de Dirección */}
+              <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-[11px] text-amber-900 dark:text-amber-200 flex items-center gap-2">
+                <span>⚠️</span>
+                <span>
+                  Rogamos puntualidad y máximo acompañamiento en las filas para asegurar que las familias y alumnos evacúen de forma ordenada y protegida del agua.
+                </span>
+              </div>
+            </div>
+
+            {/* Pie del Modal */}
+            <div className="px-5 py-3 bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <span className="text-[11px] text-slate-500 font-medium">
+                Colegio San Buenaventura · Organización Escolar
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowRainProtocolModal(false)}
+                className="px-4 py-1.5 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold hover:opacity-90 transition cursor-pointer"
+              >
+                Entendido
+              </button>
+            </div>
           </div>
         </div>
       )}
