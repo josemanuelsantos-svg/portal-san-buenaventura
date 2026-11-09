@@ -1010,7 +1010,7 @@ const INITIAL_WEEKLY_PLANS = [
         ]
       }
     ],
-    generalNotes: "Jueves 12: 16:30h a 18:00h Formación franciscana en el saloncito. Martes 10: Últimas ofrendas a la Almudena (8:45-12:00) y cortes de tráfico por obras de la A-5 (conexión M-30 cerrada). Miércoles 11: Huelga general (sondeo de Javi, actividades de repaso/refuerzo y coordinar extraescolares exclusivamente con Óscar). Protocolo de Lluvia: Recreos cubiertos (1.º-2.º primer patio, 3.º-4.º segundo patio, 5.º tercer patio, 6.º último patio) y recogidas de familias cubiertas por pabellones.",
+    generalNotes: "Jueves 12: 16:30h a 18:00h Formación franciscana en el saloncito. Martes 10: Últimas ofrendas a la Almudena (8:45-12:00) y cortes de tráfico por obras de la A-5 (conexión M-30 cerrada). Miércoles 11: Huelga general (sondeo de Javi, actividades de repaso/refuerzo y coordinar extraescolares exclusivamente con Óscar). Protocolo de Lluvia: Recreos cubiertos (Comedor: 1.º EP · 1.º-2.º ESO: 2.º EP · 3.º-4.º ESO: 3.º y 4.º EP · Bachillerato: 5.º y 6.º EP) y recogidas de familias cubiertas por pabellones.",
     fullEmailText: `Buenos días a todos:
 
 Comenzamos una nueva semana, otra vez cortita y, por lo que parece, bastante pasada por agua.
@@ -1024,10 +1024,10 @@ Como esta semana parece que vamos a tener bastante lluvia, os recuerdo brevement
 
 Patios de recreo
 Cuando llueva, los recreos se realizarán en los patios cubiertos, con la siguiente distribución:
-• Primer patio cubierto: 1.º y 2.º de Primaria.
-• Segundo patio cubierto: 3.º y 4.º de Primaria.
-• Tercer patio cubierto: 5.º de Primaria.
-• Último patio cubierto: 6.º de Primaria.
+• Cubierto del comedor: 1.º de Primaria.
+• Cubierto de 1.º y 2.º de ESO: 2.º de Primaria.
+• Cubierto de 3.º y 4.º de ESO: 3.º y 4.º de Primaria.
+• Cubierto de Bachillerato: 5.º y 6.º de Primaria.
 
 Recogidas de las familias
 También se realizarán en las zonas cubiertas. Os recuerdo la distribución, comenzando desde el pabellón más bajo:
@@ -8340,10 +8340,22 @@ export function App() {
                   <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between">
                     <div>
                       <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                        Primer Patio Cubierto
+                        Cubierto del Comedor
                       </span>
                       <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-white">
-                        1.º y 2.º de Primaria
+                        1.º de Primaria (1.º EP)
+                      </span>
+                    </div>
+                    <span className="text-lg">🍽️</span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between">
+                    <div>
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                        Cubierto de 1.º y 2.º de ESO
+                      </span>
+                      <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-white">
+                        2.º de Primaria (2.º EP)
                       </span>
                     </div>
                     <span className="text-lg">🎒</span>
@@ -8352,10 +8364,10 @@ export function App() {
                   <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between">
                     <div>
                       <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                        Segundo Patio Cubierto
+                        Cubierto de 3.º y 4.º de ESO
                       </span>
                       <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-white">
-                        3.º y 4.º de Primaria
+                        3.º y 4.º de Primaria (3.º y 4.º EP)
                       </span>
                     </div>
                     <span className="text-lg">🎒</span>
@@ -8364,25 +8376,13 @@ export function App() {
                   <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between">
                     <div>
                       <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                        Tercer Patio Cubierto
+                        Cubierto de Bachillerato
                       </span>
                       <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-white">
-                        5.º de Primaria
+                        5.º y 6.º de Primaria (5.º y 6.º EP)
                       </span>
                     </div>
-                    <span className="text-lg">🎒</span>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between">
-                    <div>
-                      <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                        Último Patio Cubierto
-                      </span>
-                      <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-white">
-                        6.º de Primaria
-                      </span>
-                    </div>
-                    <span className="text-lg">🎒</span>
+                    <span className="text-lg">🎓</span>
                   </div>
                 </div>
               </div>
