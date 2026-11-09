@@ -24,7 +24,10 @@ import {
   getInfantilPatioLetterForDate,
   PRIMARIA_PATIO_ASSIGNMENTS,
   PRIMARIA_PATIO_GRID,
-  getPrimariaPatioInfo
+  getPrimariaPatioInfo,
+  OFRENDA_ALMUDENA_DATA,
+  getOfrendaForClassroom,
+  getOfrendaForTeacher
 } from './data/schoolSchedules';
 
 function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
@@ -4228,6 +4231,16 @@ export function App() {
                         title="Ver distribución de patios cubiertos y recogidas de familias en días de lluvia"
                       >
                         <span>🌧️ Patios y Recogidas Lluvia</span>
+                      </button>
+
+                      {/* Botón Acceso Rápido Ofrenda Almudena */}
+                      <button
+                        type="button"
+                        onClick={() => setShowOfrendaModal(true)}
+                        className="flex items-center gap-1.5 text-xs text-rose-800 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/15 hover:bg-rose-100 dark:hover:bg-rose-500/25 border border-rose-200 dark:border-rose-500/30 px-2.5 py-1.5 rounded-xl font-bold transition shadow-2xs cursor-pointer"
+                        title="Ver horarios y distribución de la ofrenda a Santa María de la Almudena"
+                      >
+                        <span>💐 Horarios Ofrenda</span>
                       </button>
 
                       {/* Botón Compartir por WhatsApp */}
