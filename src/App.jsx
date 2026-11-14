@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import IconRenderer from './components/IconHelper';
+import ErrorBoundary from './components/ErrorBoundary';
 import { DUA_CATEGORIES, DUA_PROMPTS } from './data/duaPrompts';
 import {
   SCHOOL_TEACHERS,
@@ -14,6 +15,10 @@ import {
   DANIEL_ASENJO_STUDENTS,
   DANIEL_ASENJO_OBSERVATIONS,
   DANIEL_ASENJO_MATRIX_SLOTS,
+  MARIA_VAZQUEZ_CUSTOM_TIMETABLE,
+  MARIA_VAZQUEZ_STUDENTS,
+  MARIA_VAZQUEZ_OBSERVATIONS,
+  MARIA_VAZQUEZ_MATRIX_SLOTS,
   SCHOOL_SUPPORT_ASSIGNMENTS,
   getSupportForSession,
   formatSupportText,
@@ -27,7 +32,8 @@ import {
   getPrimariaPatioInfo,
   OFRENDA_ALMUDENA_DATA,
   getOfrendaForClassroom,
-  getOfrendaForTeacher
+  getOfrendaForTeacher,
+  getRainProtocolForTeacher
 } from './data/schoolSchedules';
 
 function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
@@ -2387,6 +2393,31 @@ export function App() {
   const [showPrimariaPatioGrid, setShowPrimariaPatioGrid] = useState(false);
   const [showOfrendaModal, setShowOfrendaModal] = useState(false);
   const [showRainProtocolModal, setShowRainProtocolModal] = useState(false);
+  const [isProtocolsMenuOpen, setIsProtocolsMenuOpen] = useState(false);
+  const [rainModeToday, setRainModeToday] = useState(() => {
+    try {
+      const todayKey = new Date().toISOString().slice(0, 10);
+      return localStorage.getItem(`sb_rain_mode_${todayKey}`) === "1";
+    } catch {
+      return false;
+    }
+  });
+  const toggleRainModeToday = () => {
+    setRainModeToday((prev) => {
+      const next = !prev;
+      try {
+        const todayKey = new Date().toISOString().slice(0, 10);
+        if (next) {
+          localStorage.setItem(`sb_rain_mode_${todayKey}`, "1");
+        } else {
+          localStorage.removeItem(`sb_rain_mode_${todayKey}`);
+        }
+      } catch {
+        // Ignore storage errors in restricted environments
+      }
+      return next;
+    });
+  };
   const [ofrendaDayFilter, setOfrendaDayFilter] = useState("all"); // "all" | "nov6" | "nov10"
   const [ofrendaStageFilter, setOfrendaStageFilter] = useState("all"); // "all" | "Infantil" | "1-3" | "4-6"
   const [ofrendaSearchQuery, setOfrendaSearchQuery] = useState("");
@@ -2467,7 +2498,10 @@ export function App() {
       if (e.key === 'Escape') {
         setIsCommandPaletteOpen(false);
         setIsPreferencesDropdownOpen(false);
+        setIsProtocolsMenuOpen(false);
         setIsAdminOpen(false);
+        setShowOfrendaModal(false);
+        setShowRainProtocolModal(false);
         setIsWeeklyPlanModalOpen(false);
         setPendingAppModal(null);
         setIsPwaModalOpen(false);
@@ -3371,29 +3405,99 @@ export function App() {
               )}
             </button>
 
-            {/* BOTÓN OFRENDA A LA ALMUDENA 2026 */}
+            {/* INTERRUPTOR RÁPIDO MODO LLUVIA HOY */}
             <button
               type="button"
-              onClick={() => setShowOfrendaModal(true)}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-rose-500 to-pink-500 hover:from-amber-600 hover:to-pink-600 text-white text-xs font-extrabold transition shadow-sm active:scale-95 border border-amber-300/40 cursor-pointer"
-              title="Horarios de la Ofrenda a Santa María de la Almudena 2026 (Viernes 6 y Martes 10 de noviembre)"
-            >
-              <span className="text-sm leading-none">💐</span>
-              <span className="hidden xl:inline">Ofrenda Almudena</span>
-              <span className="xl:hidden hidden sm:inline">Ofrenda</span>
-            </button>
-
-            {/* BOTÓN PROTOCOLO DE LLUVIA */}
-            <button
-              type="button"
-              onClick={() => setShowRainProtocolModal(true)}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-extrabold transition shadow-sm active:scale-95 border border-sky-300/40 cursor-pointer"
-              title="Protocolo oficial de Patios de Recreo Cubiertos y Recogidas de Familias en días de lluvia"
+              onClick={toggleRainModeToday}
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-extrabold transition shadow-2xs active:scale-95 border cursor-pointer ${
+                rainModeToday
+                  ? "bg-sky-600 hover:bg-sky-500 text-white border-sky-400 shadow-sm"
+                  : "bg-slate-100 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700"
+              }`}
+              title={rainModeToday ? "Modo Lluvia activo hoy (clic para desactivar)" : "Activar Modo Lluvia hoy: muestra tu patio cubierto y recogida en tu jornada"}
+              aria-pressed={rainModeToday}
             >
               <span className="text-sm leading-none">🌧️</span>
-              <span className="hidden xl:inline">Patios Lluvia</span>
-              <span className="xl:hidden hidden sm:inline">Lluvia</span>
+              <span className="hidden xl:inline">{rainModeToday ? "Lluvia activa" : "Lluvia"}</span>
             </button>
+
+            {/* MENÚ AGRUPADO DE PROTOCOLOS Y EVENTOS */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsProtocolsMenuOpen(prev => !prev);
+                  setIsPreferencesDropdownOpen(false);
+                }}
+                className={`relative flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-extrabold transition shadow-2xs active:scale-95 border cursor-pointer ${
+                  isProtocolsMenuOpen
+                    ? "bg-slate-800 text-white dark:bg-white dark:text-slate-900 border-slate-700 dark:border-slate-200"
+                    : "bg-slate-100 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700"
+                }`}
+                title="Protocolos de centro y eventos (Lluvia, Ofrenda a la Almudena...)"
+              >
+                <span className="text-sm leading-none">📌</span>
+                <span className="hidden lg:inline">Protocolos</span>
+                {rainModeToday && (
+                  <span className="w-2 h-2 rounded-full bg-sky-500 ring-2 ring-white dark:ring-slate-900" />
+                )}
+              </button>
+
+              {isProtocolsMenuOpen && (
+                <div className="absolute right-0 mt-2 w-64 p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl z-50 text-xs space-y-1 animate-slide-up">
+                  <div className="px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    Protocolos y Eventos
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsProtocolsMenuOpen(false);
+                      setShowRainProtocolModal(true);
+                    }}
+                    className="w-full flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl hover:bg-sky-50 dark:hover:bg-sky-950/40 text-slate-800 dark:text-slate-100 font-bold transition text-left cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span>🌧️</span>
+                      <span>Patios y Recogidas Lluvia</span>
+                    </span>
+                    <span className="text-[10px] text-slate-400">↗</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsProtocolsMenuOpen(false);
+                      setShowOfrendaModal(true);
+                    }}
+                    className="w-full flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-800 dark:text-slate-100 font-bold transition text-left cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span>💐</span>
+                      <span>Ofrenda Almudena 2026</span>
+                    </span>
+                    <span className="text-[10px] text-slate-400">↗</span>
+                  </button>
+                  <div className="border-t border-slate-100 dark:border-slate-800 my-1 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        toggleRainModeToday();
+                        setIsProtocolsMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold transition text-left cursor-pointer"
+                    >
+                      <span>Modo Lluvia hoy</span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                        rainModeToday
+                          ? "bg-sky-600 text-white"
+                          : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
+                      }`}>
+                        {rainModeToday ? "ON" : "OFF"}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* BOTÓN BUSCADOR COMPACTO (SOLO MÓVIL) */}
             <button
@@ -3891,6 +3995,33 @@ export function App() {
                     <span>→</span>
                   </button>
                 </div>
+
+                {rainModeToday && (() => {
+                  const rainInfo = getRainProtocolForTeacher(myTeacherObj);
+                  return (
+                    <button
+                      type="button"
+                      onClick={() => setShowRainProtocolModal(true)}
+                      className="w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-sky-50 dark:bg-sky-950/40 hover:bg-sky-100 dark:hover:bg-sky-900/50 border border-sky-200 dark:border-sky-800/70 text-[11px] text-sky-900 dark:text-sky-200 transition text-left cursor-pointer"
+                      title="Ver protocolo completo de lluvia"
+                    >
+                      <span className="flex items-center gap-1.5 flex-wrap font-semibold">
+                        <span>🌧️</span>
+                        <span className="font-black">Modo Lluvia hoy:</span>
+                        {rainInfo ? (
+                          <span>
+                            Recreo en <strong>{rainInfo.patio}</strong> · Recogida en <strong>{rainInfo.recogida}</strong>
+                          </span>
+                        ) : (
+                          <span>Patios de recreo y recogidas de familias en zonas cubiertas</span>
+                        )}
+                      </span>
+                      <span className="text-[10px] font-bold text-sky-700 dark:text-sky-300 shrink-0">
+                        Ver distribución ↗
+                      </span>
+                    </button>
+                  );
+                })()}
 
                 {myTeacherObj.id === "dasenjo" ? (() => {
                   const daySessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[String(activeDayForSchedule)] || [];
@@ -4995,6 +5126,12 @@ export function App() {
               {scheduleCenterTab === "teacher" && (() => {
                 const currentTeacher = SCHOOL_TEACHERS.find(t => t.id === selectedViewTeacherId) || SCHOOL_TEACHERS[0];
                 const isDanielAsenjo = currentTeacher.id === "dasenjo";
+                const isMariaVazquez = currentTeacher.id === "mvazquez";
+                const isPtSpecialist = isDanielAsenjo || isMariaVazquez;
+                const ptMatrixSlots = isDanielAsenjo ? DANIEL_ASENJO_MATRIX_SLOTS : MARIA_VAZQUEZ_MATRIX_SLOTS;
+                const ptCustomTimetable = isDanielAsenjo ? DANIEL_ASENJO_CUSTOM_TIMETABLE : MARIA_VAZQUEZ_CUSTOM_TIMETABLE;
+                const ptStudents = isDanielAsenjo ? DANIEL_ASENJO_STUDENTS : MARIA_VAZQUEZ_STUDENTS;
+                const ptObservations = isDanielAsenjo ? DANIEL_ASENJO_OBSERVATIONS : MARIA_VAZQUEZ_OBSERVATIONS;
                 const teacherSched = TEACHER_SCHEDULES[currentTeacher.id] || {};
                 const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
@@ -5155,8 +5292,8 @@ export function App() {
                       </div>
                     </div>
 
-                    {/* VISTA ESPECÍFICA PARA DANIEL ASENJO CON FRANJAS INDIVIDUALES */}
-                    {isDanielAsenjo ? (
+                    {/* VISTA ESPECÍFICA PARA ESPECIALISTAS PT/AL CON FRANJAS INDIVIDUALES */}
+                    {isPtSpecialist ? (
                       <div className="space-y-4">
                         {/* Subpestañas de visualización para Daniel Asenjo */}
                         <div className="flex flex-wrap items-center justify-between gap-2 p-1.5 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-extrabold">
@@ -8302,6 +8439,7 @@ export function App() {
 
       {/* MODAL DEDICADO: PROTOCOLO DE LLUVIA (PATIOS Y RECOGIDAS) */}
       {showRainProtocolModal && (
+        <ErrorBoundary compact onReset={() => setShowRainProtocolModal(false)}>
         <div
           className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md"
           role="dialog"
@@ -8484,10 +8622,19 @@ export function App() {
             </div>
 
             {/* Pie del Modal */}
-            <div className="px-5 py-3 bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-              <span className="text-[11px] text-slate-500 font-medium">
-                Colegio San Buenaventura · Organización Escolar
-              </span>
+            <div className="px-5 py-3 bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={toggleRainModeToday}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold transition border cursor-pointer ${
+                  rainModeToday
+                    ? "bg-sky-600 text-white border-sky-500 shadow-xs"
+                    : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-sky-50 dark:hover:bg-sky-950/30"
+                }`}
+              >
+                <span>🌧️</span>
+                <span>{rainModeToday ? "Modo Lluvia hoy: ACTIVO" : "Activar Modo Lluvia hoy"}</span>
+              </button>
               <button
                 type="button"
                 onClick={() => setShowRainProtocolModal(false)}
@@ -8498,10 +8645,12 @@ export function App() {
             </div>
           </div>
         </div>
+        </ErrorBoundary>
       )}
 
       {/* MODAL DEDICADO: HORARIOS OFRENDA A LA ALMUDENA 2026 */}
       {showOfrendaModal && (
+        <ErrorBoundary compact onReset={() => setShowOfrendaModal(false)}>
         <div
           className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md"
           role="dialog"
@@ -8793,6 +8942,7 @@ export function App() {
             </div>
           </div>
         </div>
+        </ErrorBoundary>
       )}
 
       {/* MODAL: CUADRANTE COMPLETO PATIOS INFANTIL (MES NOVIEMBRE) */}

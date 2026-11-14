@@ -9225,3 +9225,72 @@ export function getOfrendaForTeacher(teacherObj, targetDateOrDayKey) {
   }
   return null;
 }
+
+// ============================================================================
+// PROTOCOLO OFICIAL EN DÍAS DE LLUVIA (PRIMARIA)
+// ============================================================================
+export const RAIN_PROTOCOL_BY_GRADE = {
+  "1": {
+    gradeLabel: "1.º de Primaria",
+    patio: "Primer patio cubierto (comedor)",
+    recogida: "Pabellón del comedor"
+  },
+  "2": {
+    gradeLabel: "2.º de Primaria",
+    patio: "Primer patio cubierto (comedor)",
+    recogida: "Pabellón de 1.º y 2.º de ESO"
+  },
+  "3": {
+    gradeLabel: "3.º de Primaria",
+    patio: "Segundo patio cubierto",
+    recogida: "Pabellón de 3.º y 4.º de ESO"
+  },
+  "4": {
+    gradeLabel: "4.º de Primaria",
+    patio: "Segundo patio cubierto",
+    recogida: "Pabellón de 3.º y 4.º de ESO"
+  },
+  "5": {
+    gradeLabel: "5.º de Primaria",
+    patio: "Tercer patio cubierto",
+    recogida: "Pabellón de portería"
+  },
+  "6": {
+    gradeLabel: "6.º de Primaria",
+    patio: "Último patio cubierto (portería)",
+    recogida: "Pabellón de portería"
+  }
+};
+
+/**
+ * Devuelve la distribución de patio cubierto y recogida en días de lluvia
+ * para el curso de Primaria asociado al docente (si aplica).
+ */
+export function getRainProtocolForTeacher(teacherObj) {
+  if (!teacherObj || teacherObj.stage === "Infantil") return null;
+  const dept = String(teacherObj.dept || "");
+  let grade = null;
+
+  const match = dept.match(/(?:Tutoría\s+)?([1-6])(?:\.?º)?\s*EP/i);
+  if (match) {
+    grade = match[1];
+  } else if (/Tutoría/i.test(dept)) {
+    const sched = TEACHER_SCHEDULES[teacherObj.id] || {};
+    const gradeCounts = {};
+    for (const dayObj of Object.values(sched)) {
+      for (const ses of Object.values(dayObj || {})) {
+        const aula = Array.isArray(ses) ? ses[1] : ses?.aula;
+        const gMatch = String(aula || "").match(/^([1-6])(?:\.?º)?\s*EP/i);
+        if (gMatch) {
+          gradeCounts[gMatch[1]] = (gradeCounts[gMatch[1]] || 0) + 1;
+        }
+      }
+    }
+    const topGrade = Object.entries(gradeCounts).sort((a, b) => b[1] - a[1])[0];
+    if (topGrade) grade = topGrade[0];
+  }
+
+  if (!grade) return null;
+  const info = RAIN_PROTOCOL_BY_GRADE[grade];
+  return info ? { grade, ...info } : null;
+}
