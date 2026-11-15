@@ -38,11 +38,61 @@ import {
 
 function GoogleTauFranciscanLogo({ className = "w-14 h-14" }) {
   return (
-    <img 
-      src="/san_buenaventura_user_logo.jpeg" 
-      alt="Logo Colegio San Buenaventura" 
-      className={className + " object-contain rounded-2xl drop-shadow-sm bg-white p-1 border border-slate-200 dark:border-slate-800"}
-    />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      className={className + " rounded-2xl drop-shadow-sm"}
+      role="img"
+      aria-label="Logo Colegio San Buenaventura"
+    >
+      <defs>
+        <linearGradient id="sbLogoBg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#1E293B" />
+          <stop offset="100%" stopColor="#0F172A" />
+        </linearGradient>
+        <linearGradient id="sbLogoTau" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="100%" stopColor="#FDE68A" />
+        </linearGradient>
+      </defs>
+
+      {/* Base squircle */}
+      <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#sbLogoBg)" />
+      <rect
+        x="2.75"
+        y="2.75"
+        width="58.5"
+        height="58.5"
+        rx="15.25"
+        fill="none"
+        stroke="rgba(255,255,255,0.16)"
+        strokeWidth="1.5"
+      />
+
+      {/* Aro cuatricolor limpio (Educación / Workspace) */}
+      <g fill="none" strokeWidth="3.2" strokeLinecap="round">
+        <path d="M 14.5 23.5 A 19.5 19.5 0 0 1 29.5 12.6" stroke="#4285F4" />
+        <path d="M 34.5 12.6 A 19.5 19.5 0 0 1 49.5 23.5" stroke="#EA4335" />
+        <path d="M 50.8 28.5 A 19.5 19.5 0 0 1 39 49.8" stroke="#34A853" />
+        <path d="M 25 49.8 A 19.5 19.5 0 0 1 13.2 28.5" stroke="#FBBC05" />
+      </g>
+
+      {/* Cruz Tau Franciscana estilizada */}
+      <path
+        d="M 18.5 22.5 C 18.5 20.6 20 19.5 22 19.5 L 42 19.5 C 44 19.5 45.5 20.6 45.5 22.5 C 45.5 24.2 44.2 25.3 42.3 25.3 L 35.3 25.3 L 35.3 41.5 C 35.3 43.6 33.8 45 32 45 C 30.2 45 28.7 43.6 28.7 41.5 L 28.7 25.3 L 21.7 25.3 C 19.8 25.3 18.5 24.2 18.5 22.5 Z"
+        fill="url(#sbLogoTau)"
+      />
+
+      {/* Trazo sutil de libro abierto en la base */}
+      <path
+        d="M 21 44.5 Q 26.5 47.5 32 46 Q 37.5 47.5 43 44.5"
+        fill="none"
+        stroke="#93C5FD"
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
+    </svg>
   );
 }
 
