@@ -4439,34 +4439,58 @@ export function App() {
                         </h3>
                       </div>
 
-                      {/* Lista continua y compacta (Lunes a Viernes todo seguido) */}
-                      <div className="rounded-xl border border-slate-200/80 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800/80 overflow-hidden bg-slate-50/40 dark:bg-slate-900/50">
+                      {/* Lista continua y compacta (Lunes a Viernes todo seguido, cada día con su color) */}
+                      <div className="rounded-xl border border-slate-200/80 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800/80 overflow-hidden">
                         {weekdaysList.map((dayName, idx) => {
                           const isTodayCard = Boolean(currentSelectedPlan.isCurrent && currentWeekdayIdx === idx);
                           const dayData = currentSelectedPlan.days?.find(d => d.day.toLowerCase().includes(dayName.toLowerCase())) || { day: dayName, date: "", items: [] };
+                          const dayThemes = [
+                            {
+                              row: "bg-blue-50/50 dark:bg-blue-950/25 border-l-4 border-l-blue-500",
+                              title: "text-blue-700 dark:text-blue-300",
+                              badge: "bg-blue-600 text-white"
+                            },
+                            {
+                              row: "bg-emerald-50/50 dark:bg-emerald-950/25 border-l-4 border-l-emerald-500",
+                              title: "text-emerald-700 dark:text-emerald-300",
+                              badge: "bg-emerald-600 text-white"
+                            },
+                            {
+                              row: "bg-amber-50/50 dark:bg-amber-950/25 border-l-4 border-l-amber-500",
+                              title: "text-amber-700 dark:text-amber-300",
+                              badge: "bg-amber-600 text-white"
+                            },
+                            {
+                              row: "bg-purple-50/50 dark:bg-purple-950/25 border-l-4 border-l-purple-500",
+                              title: "text-purple-700 dark:text-purple-300",
+                              badge: "bg-purple-600 text-white"
+                            },
+                            {
+                              row: "bg-rose-50/50 dark:bg-rose-950/25 border-l-4 border-l-rose-500",
+                              title: "text-rose-700 dark:text-rose-300",
+                              badge: "bg-rose-600 text-white"
+                            }
+                          ];
+                          const theme = dayThemes[idx] || dayThemes[0];
 
                           return (
                             <div
                               key={dayName}
-                              className={`px-3 py-2.5 flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-4 transition ${
-                                isTodayCard
-                                  ? "bg-indigo-50/70 dark:bg-indigo-950/35 border-l-4 border-l-indigo-600 dark:border-l-indigo-400"
-                                  : "hover:bg-slate-50 dark:hover:bg-slate-800/30"
+                              className={`px-3 py-2.5 flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-4 transition ${theme.row} ${
+                                isTodayCard ? "ring-1 ring-inset ring-indigo-400/50" : ""
                               }`}
                             >
                               <div className="sm:w-32 shrink-0 flex items-center gap-1.5">
-                                <span className={`text-xs font-extrabold ${
-                                  isTodayCard ? "text-indigo-700 dark:text-indigo-300" : "text-slate-800 dark:text-slate-200"
-                                }`}>
+                                <span className={`text-xs font-extrabold ${theme.title}`}>
                                   {dayName}
                                 </span>
                                 {dayData.date && (
-                                  <span className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+                                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                                     {dayData.date}
                                   </span>
                                 )}
                                 {isTodayCard && (
-                                  <span className="text-[9px] font-black bg-indigo-600 text-white px-1.5 py-0.2 rounded-full uppercase tracking-wider">
+                                  <span className={`text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-wider ${theme.badge}`}>
                                     Hoy
                                   </span>
                                 )}
