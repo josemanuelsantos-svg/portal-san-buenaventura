@@ -4432,126 +4432,65 @@ export function App() {
 
                   {currentSelectedPlan ? (
                     <div className="space-y-3">
-                      {/* Tarjeta de Cabecera de la Semana */}
-                      <div className="p-3 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
-                              {currentSelectedPlan.weekTitle}
-                            </h3>
-                          </div>
-                          {currentSelectedPlan.summary && (
-                            <p className="text-xs text-indigo-900 dark:text-indigo-200 mt-1 font-medium leading-relaxed">
-                              {renderFormattedText(currentSelectedPlan.summary)}
-                            </p>
-                          )}
-                        </div>
-                        <div className="text-[11px] text-slate-500 dark:text-slate-400 flex sm:flex-col sm:items-end gap-2 sm:gap-0.5 shrink-0">
-                          <span>✍️ {currentSelectedPlan.author}</span>
-                          {currentSelectedPlan.publishedAt && (
-                            <span>📅 {currentSelectedPlan.publishedAt}</span>
-                          )}
-                        </div>
+                      {/* Título breve de la semana */}
+                      <div className="flex items-center justify-between gap-2 px-1">
+                        <h3 className="font-extrabold text-xs sm:text-sm text-slate-800 dark:text-slate-100 truncate">
+                          {currentSelectedPlan.weekTitle}
+                        </h3>
                       </div>
 
-
-
-                      {/* Selector de Días Móvil (Solo visible en pantallas < md) */}
-                      <div className="md:hidden flex items-center justify-between gap-1 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200 dark:border-slate-700/80">
-                        {["Lun", "Mar", "Mié", "Jue", "Vie"].map((dShort, idx) => (
-                          <button
-                            key={dShort}
-                            onClick={() => setMobileDayTab(idx)}
-                            className={`flex-1 py-1.5 text-center text-xs font-black rounded-xl transition relative ${
-                              mobileDayTab === idx
-                                ? "bg-indigo-600 text-white shadow-sm"
-                                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                            }`}
-                          >
-                            {dShort}
-                            {currentSelectedPlan.isCurrent && currentWeekdayIdx === idx && (
-                              <span className="absolute -top-1 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900"></span>
-                            )}
-                          </button>
-                        ))}
-                        <button
-                          onClick={() => setMobileDayTab(mobileDayTab === "all" ? ((new Date().getDay() >= 1 && new Date().getDay() <= 5) ? new Date().getDay() - 1 : 0) : "all")}
-                          className={`px-2 py-1.5 text-center text-[10px] font-extrabold rounded-xl transition ${
-                            mobileDayTab === "all"
-                              ? "bg-indigo-600 text-white shadow-sm"
-                              : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
-                          }`}
-                          title="Ver todos los días de la semana"
-                        >
-                          {mobileDayTab === "all" ? "Plegar" : "Todos"}
-                        </button>
-                      </div>
-
-                      {/* Desglose por Días (Lunes a Viernes) */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+                      {/* Lista continua y compacta (Lunes a Viernes todo seguido) */}
+                      <div className="rounded-xl border border-slate-200/80 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800/80 overflow-hidden bg-slate-50/40 dark:bg-slate-900/50">
                         {weekdaysList.map((dayName, idx) => {
-                          const isVisibleOnMobile = mobileDayTab === "all" || mobileDayTab === idx;
                           const isTodayCard = Boolean(currentSelectedPlan.isCurrent && currentWeekdayIdx === idx);
                           const dayData = currentSelectedPlan.days?.find(d => d.day.toLowerCase().includes(dayName.toLowerCase())) || { day: dayName, date: "", items: [] };
 
                           return (
-                            <div 
-                              key={dayName} 
-                              className={`rounded-xl border p-3 flex flex-col justify-between transition min-w-0 break-words ${
+                            <div
+                              key={dayName}
+                              className={`px-3 py-2.5 flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-4 transition ${
                                 isTodayCard
-                                  ? "border-indigo-300 dark:border-indigo-500/60 bg-indigo-50/50 dark:bg-indigo-950/30 ring-2 ring-indigo-500/25 shadow-sm"
-                                  : "border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/35"
-                              } ${
-                                !isVisibleOnMobile ? "hidden md:flex" : "flex"
+                                  ? "bg-indigo-50/70 dark:bg-indigo-950/35 border-l-4 border-l-indigo-600 dark:border-l-indigo-400"
+                                  : "hover:bg-slate-50 dark:hover:bg-slate-800/30"
                               }`}
                             >
-                              <div>
-                                <div className={`px-2.5 py-1 rounded-lg text-xs font-extrabold flex items-center justify-between mb-2.5 ${
-                                  isTodayCard
-                                    ? "bg-indigo-600 text-white"
-                                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-slate-700/70"
+                              <div className="sm:w-32 shrink-0 flex items-center gap-1.5">
+                                <span className={`text-xs font-extrabold ${
+                                  isTodayCard ? "text-indigo-700 dark:text-indigo-300" : "text-slate-800 dark:text-slate-200"
                                 }`}>
-                                  <div className="flex items-center gap-1.5">
-                                    <span>{dayName}</span>
-                                    {isTodayCard && (
-                                      <span className="text-[9px] font-black bg-white/20 text-white px-1.5 py-0.2 rounded-full uppercase tracking-wider">
-                                        Hoy
-                                      </span>
-                                    )}
-                                  </div>
-                                  {dayData.date && <span className="text-[10px] opacity-80">{dayData.date}</span>}
-                                </div>
+                                  {dayName}
+                                </span>
+                                {dayData.date && (
+                                  <span className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+                                    {dayData.date}
+                                  </span>
+                                )}
+                                {isTodayCard && (
+                                  <span className="text-[9px] font-black bg-indigo-600 text-white px-1.5 py-0.2 rounded-full uppercase tracking-wider">
+                                    Hoy
+                                  </span>
+                                )}
+                              </div>
 
+                              <div className="flex-1 min-w-0">
                                 {dayData.items && dayData.items.length > 0 ? (
-                                  <ul className="space-y-1.5 text-xs text-slate-800 dark:text-slate-200">
+                                  <ul className="space-y-1 text-xs text-slate-700 dark:text-slate-300">
                                     {dayData.items.map((item, iIdx) => (
-                                      <li key={iIdx} className="flex items-start gap-1.5 leading-snug min-w-0 break-words">
-                                        <span className="text-indigo-500 shrink-0 font-bold">•</span>
-                                        <span>{renderFormattedText(item)}</span>
+                                      <li key={iIdx} className="leading-snug break-words">
+                                        {renderFormattedText(item)}
                                       </li>
                                     ))}
                                   </ul>
                                 ) : (
-                                  <p className="text-[11px] text-slate-400 dark:text-slate-500 italic py-2">
+                                  <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
                                     Sin eventos especiales
-                                  </p>
+                                  </span>
                                 )}
                               </div>
                             </div>
                           );
                         })}
                       </div>
-
-                      {/* Notas Generales / Recordatorios */}
-                      {currentSelectedPlan.generalNotes && (
-                        <div className="p-3 rounded-xl bg-amber-50/70 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
-                          <IconRenderer name="AlertCircle" className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                          <div className="leading-relaxed">
-                            <strong className="font-bold block mb-0.5">Notas y Recordatorios de la Semana:</strong>
-                            <span>{renderFormattedText(currentSelectedPlan.generalNotes)}</span>
-                          </div>
-                        </div>
-                      )}
 
                       {/* Desplegable de Correo Original con Vista Editorial */}
                       {currentSelectedPlan.fullEmailText && (
