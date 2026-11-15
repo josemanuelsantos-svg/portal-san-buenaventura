@@ -3252,7 +3252,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#070913] text-slate-900 dark:text-slate-100 font-sans selection:bg-indigo-500 selection:text-white pb-16 md:pb-0 transition-colors">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-100/90 via-slate-50 to-amber-50/25 dark:from-[#070913] dark:via-[#070913] dark:to-[#0a0f1f] text-slate-900 dark:text-slate-100 font-sans selection:bg-indigo-500 selection:text-white pb-16 md:pb-0 transition-colors">
       
       {/* BANNER FLOTANTE DE ALERTA URGENTE */}
       {urgentNotice && (
@@ -3295,7 +3295,7 @@ export function App() {
       )}
 
       {/* HEADER SUPERIOR LIMPIO Y CONSOLIDADO (3 ZONAS) */}
-      <header className="bg-white/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 px-3 sm:px-6 py-2.5 sticky top-0 z-30 backdrop-blur-xl shadow-sm transition-colors">
+      <header className="bg-white/95 dark:bg-slate-900/95 border-t-[3px] border-t-amber-800/85 dark:border-t-amber-600/80 border-b border-slate-200/80 dark:border-slate-800 px-3 sm:px-6 py-2.5 sticky top-0 z-30 backdrop-blur-xl shadow-sm transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
           
           {/* ZONA 1: MARCA & IDENTIDAD */}
@@ -3824,7 +3824,7 @@ export function App() {
         <main className="flex-1 min-w-0 p-4 sm:p-6 pb-28 sm:pb-8 space-y-5 overflow-y-auto">
           
           {/* 1. CABECERA COCKPIT DIARIO + HORARIO EN VIVO + ACCESOS RÁPIDOS BENTO */}
-          <section className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs transition-all space-y-4">
+          <section className="bg-gradient-to-br from-white via-white to-amber-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/20 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 border-t-2 border-t-amber-600/35 dark:border-t-amber-500/30 shadow-xs transition-all space-y-4">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
@@ -4563,10 +4563,10 @@ export function App() {
           </section>
 
           {/* 4. CALENDARIO DE GOOGLE CON VISTA MENSUAL POR DEFECTO */}
-          <section id="calendario-escolar" className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs transition-colors scroll-mt-20">
+          <section id="calendario-escolar" className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 border-t-2 border-t-teal-500/45 dark:border-t-teal-500/35 shadow-xs transition-colors scroll-mt-20">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80 mb-3">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 flex-shrink-0">
+                <div className="p-2 rounded-xl bg-teal-50 text-teal-700 dark:bg-teal-500/15 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30 flex-shrink-0">
                   <IconRenderer name="Calendar" className="w-4 h-4" />
                 </div>
                 <div>
