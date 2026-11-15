@@ -4163,39 +4163,28 @@ export function App() {
             )}
               </div>
 
-            {/* BENTO GRID DE APLICACIONES FAVORITAS (COLUMNA DERECHA COMPACTA EN XL) */}
+            {/* BENTO GRID DE APLICACIONES FAVORITAS (COMPACTO EN 1 LÍNEA POR APP) */}
             {isQuickLaunchOpen && favoriteApps.length > 0 && (
               <div className="xl:col-span-4">
-                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-2 gap-1.5">
                 {favoriteApps.map(app => (
                   <a
                     key={app.id}
                     href={app.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="group relative p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 hover:bg-indigo-50/50 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all flex flex-col justify-between gap-1.5 overflow-hidden"
+                    title={app.subtitle ? `${app.title} · ${app.subtitle}` : app.title}
+                    className="group px-2.5 py-1.5 rounded-xl bg-slate-50/80 dark:bg-slate-800/45 hover:bg-indigo-50/60 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all flex items-center justify-between gap-2 min-w-0"
                   >
-                    <div className="flex items-center justify-between gap-1">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center border shadow-2xs transition-transform group-hover:scale-105 ${app.color}`}>
-                        <IconRenderer name={app.icon} className="w-4 h-4" />
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className={`w-6 h-6 rounded-lg flex items-center justify-center border shrink-0 transition-transform group-hover:scale-105 ${app.color}`}>
+                        <IconRenderer name={app.icon} className="w-3.5 h-3.5" />
                       </div>
-                      <div className="flex items-center gap-1">
-                        {app.shortcut && (
-                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hidden 2xl:inline">
-                            {app.shortcut}
-                          </span>
-                        )}
-                        <IconRenderer name="ArrowUpRight" className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 group-hover:text-indigo-500 transition-colors" />
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="font-extrabold text-xs text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 truncate leading-snug">
+                      <span className="font-bold text-[11px] text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 truncate">
                         {app.title}
-                      </h3>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
-                        {app.subtitle}
-                      </p>
+                      </span>
                     </div>
+                    <IconRenderer name="ArrowUpRight" className="w-3 h-3 text-slate-300 dark:text-slate-600 group-hover:text-indigo-500 shrink-0 transition-colors" />
                   </a>
                 ))}
                 </div>
