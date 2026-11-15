@@ -1,4 +1,4 @@
-const CACHE_NAME = 'portal-san-buenaventura-v31';
+const CACHE_NAME = 'portal-san-buenaventura-v32';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',

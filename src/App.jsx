@@ -2394,6 +2394,7 @@ export function App() {
   const [showOfrendaModal, setShowOfrendaModal] = useState(false);
   const [showRainProtocolModal, setShowRainProtocolModal] = useState(false);
   const [isProtocolsMenuOpen, setIsProtocolsMenuOpen] = useState(false);
+  const [isWeeklyActionsOpen, setIsWeeklyActionsOpen] = useState(false);
   const [rainModeToday, setRainModeToday] = useState(() => {
     try {
       const todayKey = new Date().toISOString().slice(0, 10);
@@ -2499,6 +2500,7 @@ export function App() {
         setIsCommandPaletteOpen(false);
         setIsPreferencesDropdownOpen(false);
         setIsProtocolsMenuOpen(false);
+        setIsWeeklyActionsOpen(false);
         setIsAdminOpen(false);
         setShowOfrendaModal(false);
         setShowRainProtocolModal(false);
@@ -3363,43 +3365,30 @@ export function App() {
               </button>
             )}
 
-            {/* BOTÓN HORARIOS & RADAR EN VIVO */}
+            {/* BOTÓN HORARIOS & RADAR EN VIVO (ACCIÓN PRINCIPAL) */}
             <button
               onClick={() => {
                 setSelectedRadarDay(activeDayForSchedule);
                 setSelectedRadarPeriod(livePeriodIdNow);
                 setIsScheduleCenterOpen(true);
               }}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition shadow-sm active:scale-95"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition shadow-xs active:scale-95"
               title="Abrir Centro de Horarios Reales y Radar de Aulas/Apoyos en Vivo (Alt+H)"
             >
               <IconRenderer name="Compass" className="w-3.5 h-3.5 text-emerald-100 shrink-0" />
               <span className="hidden sm:inline">Horarios & Radar</span>
             </button>
 
-            {/* BOTÓN ASISTENTE DUA & IA PEDAGÓGICA */}
-            <button
-              onClick={() => {
-                setActiveKitTab("dua");
-                setIsClassroomKitOpen(true);
-              }}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 dark:bg-purple-950/50 dark:hover:bg-purple-900/60 dark:text-purple-200 border border-purple-300 dark:border-purple-700/60 text-xs font-extrabold transition shadow-2xs active:scale-95"
-              title="Abrir Asistente DUA: Generador de adaptaciones multinivel, rúbricas y dinámicas"
-            >
-              <IconRenderer name="Sparkles" className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
-              <span className="hidden md:inline">Asistente DUA</span>
-            </button>
-
-            {/* BOTÓN KIT DE AULA INTERACTIVO */}
+            {/* BOTÓN KIT DE AULA INTERACTIVO (INCLUYE DUA, TEMPORIZADOR Y NOTAS) */}
             <button
               onClick={() => setIsClassroomKitOpen(true)}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-extrabold transition shadow-sm active:scale-95"
-              title="Abrir Kit de Aula: Temporizador, Semáforo de Ruido, Sorteo de Alumnos y Notas (Alt+K)"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-extrabold transition shadow-2xs active:scale-95"
+              title="Abrir Kit de Aula: Temporizador, Semáforo de Ruido, Sorteo, Notas y Asistente DUA (Alt+K)"
             >
-              <IconRenderer name="Zap" className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+              <IconRenderer name="Zap" className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
               <span className="hidden lg:inline">Kit Aula</span>
               {teacherTodos.filter(t => !t.done).length > 0 && (
-                <span className="hidden xl:inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] rounded-full bg-white/20 text-white font-black">
+                <span className="hidden xl:inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] rounded-full bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-black">
                   {teacherTodos.filter(t => !t.done).length}
                 </span>
               )}
@@ -3835,7 +3824,7 @@ export function App() {
         <main className="flex-1 min-w-0 p-4 sm:p-6 pb-28 sm:pb-8 space-y-5 overflow-y-auto">
           
           {/* 1. CABECERA COCKPIT DIARIO + HORARIO EN VIVO + ACCESOS RÁPIDOS BENTO */}
-          <section className="bg-gradient-to-br from-white via-white to-indigo-50/40 dark:from-slate-900 dark:via-slate-900/95 dark:to-indigo-950/20 rounded-3xl p-4 sm:p-5 border border-slate-200/90 dark:border-slate-800 shadow-xs transition-all space-y-4">
+          <section className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs transition-all space-y-4">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
@@ -3903,8 +3892,11 @@ export function App() {
               </div>
             </div>
 
-            {/* WIDGET INTELIGENTE: EN DIRECTO / PRÓXIMA SESIÓN DOCENTE (PROPUESTA 1) */}
-            <LiveTeacherNextClassBanner
+            {/* DISPOSICIÓN EN 2 COLUMNAS EQUILIBRADAS EN ESCRITORIO */}
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
+              <div className={isQuickLaunchOpen && favoriteApps.length > 0 ? "xl:col-span-8 space-y-3 min-w-0" : "xl:col-span-12 space-y-3 min-w-0"}>
+                {/* WIDGET INTELIGENTE: EN DIRECTO / PRÓXIMA SESIÓN DOCENTE (PROPUESTA 1) */}
+                <LiveTeacherNextClassBanner
               myTeacherObj={myTeacherObj}
               activeDayForSchedule={activeDayForSchedule}
               currentWeekdayIdx={currentWeekdayIdx}
@@ -4169,25 +4161,27 @@ export function App() {
                 </button>
               </div>
             )}
+              </div>
 
-            {/* BENTO GRID DE APLICACIONES FAVORITAS */}
+            {/* BENTO GRID DE APLICACIONES FAVORITAS (COLUMNA DERECHA COMPACTA EN XL) */}
             {isQuickLaunchOpen && favoriteApps.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 pt-1">
+              <div className="xl:col-span-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-2 gap-2">
                 {favoriteApps.map(app => (
                   <a
                     key={app.id}
                     href={app.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="group relative p-3 rounded-2xl bg-white dark:bg-slate-900/90 hover:bg-indigo-50/40 dark:hover:bg-slate-800/90 border border-slate-200/90 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/40 shadow-2xs hover:shadow-md transition-all hover:-translate-y-0.5 flex flex-col justify-between gap-2 overflow-hidden"
+                    className="group relative p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 hover:bg-indigo-50/50 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all flex flex-col justify-between gap-1.5 overflow-hidden"
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center border shadow-2xs transition-transform group-hover:scale-110 ${app.color}`}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center border shadow-2xs transition-transform group-hover:scale-105 ${app.color}`}>
                         <IconRenderer name={app.icon} className="w-4 h-4" />
                       </div>
                       <div className="flex items-center gap-1">
                         {app.shortcut && (
-                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hidden xl:inline">
+                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hidden 2xl:inline">
                             {app.shortcut}
                           </span>
                         )}
@@ -4204,8 +4198,10 @@ export function App() {
                     </div>
                   </a>
                 ))}
+                </div>
               </div>
             )}
+            </div>
           </section>
 
           {/* 2. TABLÓN DE AVISOS DEL DÍA (ULTRALIMPIO SI ESTÁ VACÍO) */}
@@ -4305,7 +4301,7 @@ export function App() {
           )}
 
           {/* 3. SECCIÓN PROGRAMACIÓN SEMANAL DEL CLAUSTRO */}
-          <section id="programacion-semanal" className="bg-white dark:bg-slate-900/90 rounded-3xl p-3.5 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
+          <section id="programacion-semanal" className="bg-white dark:bg-slate-900 rounded-2xl p-3.5 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs transition-colors scroll-mt-20">
             {(() => {
               const currentSelectedPlan = weeklyPlans.find(p => p.id === selectedWeekId) || weeklyPlans[0];
               const weekdaysList = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
@@ -4354,88 +4350,83 @@ export function App() {
                         </select>
                       </div>
 
-                      {/* Botón Acceso Rápido Protocolo Lluvia */}
-                      <button
-                        type="button"
-                        onClick={() => setShowRainProtocolModal(true)}
-                        className="flex items-center gap-1.5 text-xs text-sky-800 dark:text-sky-300 bg-sky-50 dark:bg-sky-500/15 hover:bg-sky-100 dark:hover:bg-sky-500/25 border border-sky-200 dark:border-sky-500/30 px-2.5 py-1.5 rounded-xl font-bold transition shadow-2xs cursor-pointer"
-                        title="Ver distribución de patios cubiertos y recogidas de familias en días de lluvia"
-                      >
-                        <span>🌧️ Patios y Recogidas Lluvia</span>
-                      </button>
-
-                      {/* Botón Acceso Rápido Ofrenda Almudena */}
-                      <button
-                        type="button"
-                        onClick={() => setShowOfrendaModal(true)}
-                        className="flex items-center gap-1.5 text-xs text-rose-800 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/15 hover:bg-rose-100 dark:hover:bg-rose-500/25 border border-rose-200 dark:border-rose-500/30 px-2.5 py-1.5 rounded-xl font-bold transition shadow-2xs cursor-pointer"
-                        title="Ver horarios y distribución de la ofrenda a Santa María de la Almudena"
-                      >
-                        <span>💐 Horarios Ofrenda</span>
-                      </button>
-
-                      {/* Botón Compartir por WhatsApp */}
-                      {currentSelectedPlan && (
+                      {/* Menú agrupado de acciones de la semana */}
+                      <div className="relative">
                         <button
-                          onClick={() => handleShareWhatsApp(currentSelectedPlan)}
-                          className="flex items-center gap-1.5 text-xs text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 hover:bg-emerald-100 dark:hover:bg-emerald-500/25 border border-emerald-200 dark:border-emerald-500/30 px-2.5 py-1.5 rounded-xl font-bold transition shadow-2xs"
-                          title="Compartir resumen de la semana por WhatsApp"
+                          type="button"
+                          onClick={() => setIsWeeklyActionsOpen(prev => !prev)}
+                          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl font-bold border transition cursor-pointer ${
+                            isWeeklyActionsOpen
+                              ? "bg-slate-800 text-white dark:bg-white dark:text-slate-900 border-slate-700 dark:border-slate-200"
+                              : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700"
+                          }`}
+                          title="Compartir, imprimir, copiar correo o editar semana"
                         >
-                          <IconRenderer name="Share2" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                          <span className="hidden lg:inline">WhatsApp</span>
+                          <IconRenderer name="MoreVertical" className="w-3.5 h-3.5" />
+                          <span>Acciones</span>
                         </button>
-                      )}
 
-                      {/* Botón Imprimir */}
-                      <button
-                        onClick={handlePrintWeeklyPlan}
-                        className="hidden sm:flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-2.5 py-1.5 rounded-xl font-bold transition shadow-2xs"
-                        title="Imprimir o guardar en PDF la programación semanal"
-                      >
-                        <IconRenderer name="Printer" className="w-3.5 h-3.5 text-slate-500" />
-                      </button>
-
-                      {/* Botón Copiar Mail */}
-                      <button
-                        onClick={handleCopyEmailToClipboard}
-                        className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-xl font-bold transition shadow-xs"
-                        title="Copiar texto del email de la semana"
-                      >
-                        <IconRenderer name="Mail" className="w-3.5 h-3.5 text-indigo-500" />
-                        <span className="hidden sm:inline">Copiar Mail</span>
-                      </button>
-
-                      {/* Botón Editar Esta Semana */}
-                      {currentSelectedPlan && (
-                        <button
-                          onClick={() => handleEditPlan(currentSelectedPlan)}
-                          className="flex items-center gap-1.5 text-xs text-amber-900 dark:text-amber-300 bg-amber-100 dark:bg-amber-500/20 hover:bg-amber-200 dark:hover:bg-amber-500/30 border border-amber-300 dark:border-amber-500/40 px-3 py-1.5 rounded-xl font-bold transition shadow-xs"
-                          title="Editar el contenido y el mail de esta semana"
-                        >
-                          <IconRenderer name="Edit3" className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Editar</span>
-                        </button>
-                      )}
-
-                      {/* Botón Publicar Nueva Semana */}
-                      <button
-                        onClick={handleOpenCreatePlan}
-                        className="flex items-center gap-1.5 text-xs text-white bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded-xl font-bold transition shadow-sm"
-                        title="Publicar una nueva programación semanal"
-                      >
-                        <IconRenderer name="PlusCircle" className="w-3.5 h-3.5" />
-                        <span>+ Semana</span>
-                      </button>
-
-                      {isPinAuthenticated && currentSelectedPlan && (
-                        <button
-                          onClick={() => handleDeleteWeeklyPlan(currentSelectedPlan.id)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 bg-slate-100 dark:bg-slate-800 rounded-lg transition"
-                          title="Eliminar esta programación del historial"
-                        >
-                          <IconRenderer name="Trash2" className="w-3.5 h-3.5" />
-                        </button>
-                      )}
+                        {isWeeklyActionsOpen && (
+                          <div className="absolute right-0 mt-2 w-56 p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl z-40 text-xs space-y-1 animate-slide-up">
+                            {currentSelectedPlan && (
+                              <button
+                                type="button"
+                                onClick={() => { setIsWeeklyActionsOpen(false); handleShareWhatsApp(currentSelectedPlan); }}
+                                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-slate-800 dark:text-slate-100 font-bold text-left cursor-pointer"
+                              >
+                                <IconRenderer name="Share2" className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                                <span>Compartir por WhatsApp</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => { setIsWeeklyActionsOpen(false); handleCopyEmailToClipboard(); }}
+                              className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-left cursor-pointer"
+                            >
+                              <IconRenderer name="Mail" className="w-3.5 h-3.5 text-indigo-500" />
+                              <span>Copiar Mail de Dirección</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => { setIsWeeklyActionsOpen(false); handlePrintWeeklyPlan(); }}
+                              className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-left cursor-pointer"
+                            >
+                              <IconRenderer name="Printer" className="w-3.5 h-3.5 text-slate-500" />
+                              <span>Imprimir / PDF</span>
+                            </button>
+                            <div className="border-t border-slate-100 dark:border-slate-800 my-1 pt-1 space-y-1">
+                              {currentSelectedPlan && (
+                                <button
+                                  type="button"
+                                  onClick={() => { setIsWeeklyActionsOpen(false); handleEditPlan(currentSelectedPlan); }}
+                                  className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/30 text-slate-800 dark:text-slate-100 font-bold text-left cursor-pointer"
+                                >
+                                  <IconRenderer name="Edit3" className="w-3.5 h-3.5 text-amber-600" />
+                                  <span>Editar esta semana</span>
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => { setIsWeeklyActionsOpen(false); handleOpenCreatePlan(); }}
+                                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300 font-extrabold text-left cursor-pointer"
+                              >
+                                <IconRenderer name="PlusCircle" className="w-3.5 h-3.5" />
+                                <span>Publicar nueva semana</span>
+                              </button>
+                              {isPinAuthenticated && currentSelectedPlan && (
+                                <button
+                                  type="button"
+                                  onClick={() => { setIsWeeklyActionsOpen(false); handleDeleteWeeklyPlan(currentSelectedPlan.id); }}
+                                  className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/30 text-rose-600 dark:text-rose-400 font-bold text-left cursor-pointer"
+                                >
+                                  <IconRenderer name="Trash2" className="w-3.5 h-3.5" />
+                                  <span>Eliminar del historial</span>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -4502,36 +4493,28 @@ export function App() {
                           const isVisibleOnMobile = mobileDayTab === "all" || mobileDayTab === idx;
                           const isTodayCard = Boolean(currentSelectedPlan.isCurrent && currentWeekdayIdx === idx);
                           const dayData = currentSelectedPlan.days?.find(d => d.day.toLowerCase().includes(dayName.toLowerCase())) || { day: dayName, date: "", items: [] };
-                          const dayColors = [
-                            "border-blue-200 dark:border-blue-900/40 bg-blue-50/30 dark:bg-slate-900",
-                            "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/30 dark:bg-slate-900",
-                            "border-amber-200 dark:border-amber-900/40 bg-amber-50/30 dark:bg-slate-900",
-                            "border-purple-200 dark:border-purple-900/40 bg-purple-50/30 dark:bg-slate-900",
-                            "border-rose-200 dark:border-rose-900/40 bg-rose-50/30 dark:bg-slate-900"
-                          ];
-                          const headerColors = [
-                            "text-blue-700 dark:text-blue-300 bg-blue-100/60 dark:bg-blue-500/20",
-                            "text-emerald-700 dark:text-emerald-300 bg-emerald-100/60 dark:bg-emerald-500/20",
-                            "text-amber-700 dark:text-amber-300 bg-amber-100/60 dark:bg-amber-500/20",
-                            "text-purple-700 dark:text-purple-300 bg-purple-100/60 dark:bg-purple-500/20",
-                            "text-rose-700 dark:text-rose-300 bg-rose-100/60 dark:bg-rose-500/20"
-                          ];
 
                           return (
                             <div 
                               key={dayName} 
-                              className={`rounded-2xl border p-3 flex flex-col justify-between transition min-w-0 break-words ${dayColors[idx]} ${
-                                isTodayCard ? "ring-2 ring-indigo-500 dark:ring-indigo-400 shadow-md" : ""
+                              className={`rounded-xl border p-3 flex flex-col justify-between transition min-w-0 break-words ${
+                                isTodayCard
+                                  ? "border-indigo-300 dark:border-indigo-500/60 bg-indigo-50/50 dark:bg-indigo-950/30 ring-2 ring-indigo-500/25 shadow-sm"
+                                  : "border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/35"
                               } ${
                                 !isVisibleOnMobile ? "hidden md:flex" : "flex"
                               }`}
                             >
                               <div>
-                                <div className={`px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center justify-between mb-2.5 ${headerColors[idx]}`}>
+                                <div className={`px-2.5 py-1 rounded-lg text-xs font-extrabold flex items-center justify-between mb-2.5 ${
+                                  isTodayCard
+                                    ? "bg-indigo-600 text-white"
+                                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-slate-700/70"
+                                }`}>
                                   <div className="flex items-center gap-1.5">
                                     <span>{dayName}</span>
                                     {isTodayCard && (
-                                      <span className="text-[9px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-900/40 px-1.5 py-0.2 rounded-full uppercase tracking-wider">
+                                      <span className="text-[9px] font-black bg-white/20 text-white px-1.5 py-0.2 rounded-full uppercase tracking-wider">
                                         Hoy
                                       </span>
                                     )}
@@ -4628,7 +4611,7 @@ export function App() {
           </section>
 
           {/* 4. CALENDARIO DE GOOGLE CON VISTA MENSUAL POR DEFECTO */}
-          <section id="calendario-escolar" className="bg-white dark:bg-slate-900/90 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors scroll-mt-20">
+          <section id="calendario-escolar" className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs transition-colors scroll-mt-20">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80 mb-3">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 flex-shrink-0">
