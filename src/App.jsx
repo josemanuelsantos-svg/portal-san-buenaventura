@@ -967,13 +967,130 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-16-20-nov-2026",
+    weekTitle: "Semana del 16 al 20 de Noviembre: Jubilación de Isabel, Lifeteen, Derechos del Niño y Congreso de Franciscanismo",
+    academicYear: "2026/2027",
+    summary: "Semana pasada por agua (con los nuevos patios cubiertos). Celebración de jubilación de Isabel (jueves 16:30h en la iglesia), charlas Lifeteen 5.º y 6.º EP (miércoles), reunión telemática 5.º EP «Aprender a Amar» (miércoles 17:00h), proyecto «Tejiendo Compromiso Social en Red» (charla familias martes 17 y pijama el viernes 20), oración por los difuntos (3.º-6.º EP), recordatorio de pagos pendientes y sustituciones por Congreso de Franciscanismo.",
+    publishedAt: "2026-11-16",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1794787200000,
+    days: [
+      {
+        day: "Lunes",
+        date: "16 Nov",
+        items: [
+          "📖 Motivación «Tejiendo Compromiso Social en Red» (cuento en aulas tras Diez Minutos Contigo).",
+          "💶 Recordar a familias pagos pendientes de actividades (sobres a Elena, Rubén o Bea).",
+          "🙏 Semana de Oración por los difuntos (3.º a 6.º EP · ver PDF en Diez Minutos con Dios)."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "17 Nov",
+        items: [
+          "🏡 16:30h (Saloncito): Charla familias sobre acogimiento familiar («¿Sabes que cerca de ti hay un niño que necesita una familia?»).",
+          "📢 Convocatoria reunión acogida familias 3 años (para el martes 24 nov, 16:30h).",
+          "📱 Tutores 5.º EP: recordar a familias la videollamada informativa del miércoles."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "18 Nov",
+        items: [
+          "🔥 Charlas Lifeteen (sala Lifeteen): 9:00h 6.º EP · 11:00h 5.º EP.",
+          "💻 17:00h (Telemática): Reunión familias 5.º EP · Talleres «Aprender a Amar» (UFV).",
+          "🔁 Congreso Franciscanismo (mañana): ausencias de Lourdes y Susana (pendientes de sustituciones)."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "19 Nov",
+        items: [
+          "🎉 16:30h (Iglesia): Celebración de jubilación de Isabel.",
+          "🔁 Congreso Franciscanismo (mañana): ausencias de Dani y Belén (pendientes de sustituciones)."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "20 Nov",
+        items: [
+          "👕 Día Internacional de los Derechos del Niño: venir con camiseta del pijama (encima o debajo del jersey).",
+          "🕯️ Sin sesión de Oratorio en 5 años B (se recuperará más adelante).",
+          "🔁 Congreso Franciscanismo (mañana): ausencias de Pilar Fuentes y Susana."
+        ]
+      }
+    ],
+    generalNotes: "Jueves 19 (16:30h, iglesia): Celebración jubilación de Isabel. Martes 17 (16:30h, saloncito): Charla familias acogimiento familiar. Miércoles 18: Lifeteen 6.º EP (9:00h) y 5.º EP (11:00h) en sala Lifeteen; 17:00h reunión telemática familias 5.º EP UFV. Viernes 20: Camiseta de pijama (Derechos del Niño) y sin Oratorio en 5 años B. Congreso Franciscanismo (mañanas): Mié Lourdes y Susana · Jue Dani y Belén · Vie Pilar Fuentes y Susana. Martes 24 nov (16:30h, salón de actos): Reunión acogida familias 3 años (sin asistencia de tutoras).",
+    fullEmailText: `Buenos días a todos:
+
+Comenzamos una nueva semana que, por lo que parece no va a permitir que guardemos los paraguas, mira que bien nos vienen los techados nuevos de los patios cubiertos…
+Os dejo, como cada semana, las cuestiones más importantes que tenemos por delante.
+
+REUNIÓN DEL JUEVES – CELEBRACIÓN DE ISABEL
+Como ya habéis podido ver a través de Educamos, Isabel nos ha vuelto a invitar a compartir con ella la celebración de su jubilación, que, por desgracia, no pudo tener lugar en la fecha que teníamos prevista inicialmente.
+Por tanto, este jueves nos encontraremos todos a las 16:30 h en la iglesia para acompañarla en este momento tan especial y poder celebrar, por fin, tantos años de entrega y dedicación a nuestro colegio.
+
+MIÉRCOLES 18 – CHARLAS DE ACOGIDA DE LIFETEEN
+Este miércoles tendrán lugar las charlas de acogida de Lifeteen para los alumnos de 5.º y 6.º de Primaria.
+Los horarios serán los siguientes:
+• 6.º de Primaria: 9:00 h.
+• 5.º de Primaria: 11:00 h.
+Ambas charlas se realizarán en la sala Lifeteen.
+
+REUNIÓN DE ACOGIDA CON LAS FAMILIAS DE 3 AÑOS
+Esta semana enviaremos también la convocatoria para la reunión de acogida de las familias de 3 años con el Equipo Directivo, que tendrá lugar el martes 24 de noviembre a las 16:30 h en el salón de actos.
+Como ya hicimos el curso pasado, será un encuentro para dar la bienvenida a las familias, compartir un ratito con ellas y explicar algunos aspectos generales del funcionamiento del centro: la importancia de la aportación voluntaria, los diferentes servicios, cuestiones organizativas, etc. No es necesario que las tutoras asistan, ya que la reunión estará centrada en asuntos generales de gestión y funcionamiento del colegio.
+Os lo comento simplemente porque, en principio, mañana se publicará la convocatoria para que las familias tengan toda la información. Además, aquellas familias que lo necesiten podrán dejar a sus hijos en el servicio de Ampliar mientras se desarrolla la reunión.
+
+ORACIÓN POR LOS DIFUNTOS – 3.º A 6.º DE PRIMARIA
+Esta semana los cursos de 3.º a 6.º de Primaria tendrán su momento de oración por los familiares y personas queridas que han fallecido.
+Toda la información se ha enviado ya a través de Educamos y tenéis también el documento correspondiente enlazado en el PDF de Diez Minutos con Dios.
+
+PAGOS PENDIENTES DE LAS ACTIVIDADES DEL TRIMESTRE
+Os pido, por favor, que esta semana volvamos a recordar a las familias que todavía no han abonado las actividades del trimestre que deben realizar el pago cuanto antes.
+Sé que muchos ya habéis insistido en ello desde las tutorías, pero es importante que no quede por nuestra parte y que ningún pago se quede pendiente simplemente por un despiste o porque las familias entiendan que, al no habérselo vuelto a recordar, ya no es necesario abonarlo. Evidentemente, ningún alumno debe quedarse sin participar en una actividad por una dificultad económica familiar, y esas situaciones siempre las trataremos con la sensibilidad y discreción que merecen. Pero una cosa es eso y otra que se vayan dejando pasar los pagos sin justificación.
+En cuanto entreguen el dinero, las familias deberán hacérselo llegar al tutor en su sobre correspondiente, y posteriormente el tutor se lo entregará a Elena, Rubén o a Bea.
+
+5.º DE PRIMARIA – TALLERES «APRENDER A AMAR» DE LA UNIVERSIDAD FRANCISCO DE VITORIA
+La próxima semana los alumnos de 5.º de Primaria participarán en los talleres «Aprender a Amar», impartidos por la Universidad Francisco de Vitoria.
+Como parte de esta actividad, este miércoles tendrá lugar una reunión informativa con las familias, que se realizará de manera telemática, a través de videollamada a las 17:00. Os pido, por favor, a los tutores de 5.º que mañana enviéis un mensaje a las familias recordándoles la reunión y, especialmente, la importancia de participar en ella.
+
+PROYECTO «TEJIENDO COMPROMISO SOCIAL EN RED»
+Comenzamos también esta semana el proyecto Tejiendo Compromiso Social en Red, en el que ya han empezado a trabajar nuestros compañeros de 5 años, que nos han hecho llegar por correo la propuesta.
+Os dejo igualmente adjunto el PDF con toda la información, pero os resumo las tres cuestiones principales:
+1. Motivación en las aulas: Después de Diez Minutos Contigo, realizaremos la actividad de motivación a través de uno de los dos cuentos propuestos, según el curso correspondiente. Tenéis todo explicado en el documento adjunto.
+2. Charla para las familias – martes 17: El martes 17 de noviembre, a las 16:30 h en el saloncito, tendrá lugar la charla: «¿Sabes que cerca de ti hay un niño que necesita una familia?» En ella se hablará sobre el acogimiento familiar y la importancia de ofrecer un hogar a aquellos niños que lo necesitan. Os pido que desde las tutorías animemos a las familias a participar. Creo que es una oportunidad muy bonita para conocer una realidad que muchas veces tenemos más cerca de lo que pensamos.
+3. Viernes 20 – Día Internacional de los Derechos del Niño: Con motivo del Día Internacional de los Derechos del Niño, nos uniremos a la propuesta de la Asamblea de Acogida con un gesto muy sencillo: venir todos al colegio con la camiseta del pijama. La idea es que el pijama sea un símbolo del calor del hogar, de la acogida y de ese entorno familiar que todos los niños merecen tener. Como tampoco queremos que nadie termine pasando frío, podemos llevar la camiseta del pijama por encima o por debajo del jersey, como cada uno prefiera. Lo importante es participar en el gesto y en lo que representa.
+
+CONGRESO INTERNACIONAL DE FRANCISCANISMO
+Esta semana varios compañeros de Pastoral participarán en el Congreso Internacional de Franciscanismo.
+Os indico los días para que los tengamos presentes de cara a las sustituciones, todo será en horario de mañana:
+• Miércoles 18: Lourdes y Susana.
+• Jueves 19: Dani y Belén.
+• Viernes 20: Pilar Fuentes y Susana.
+Os pido que durante estos días estemos especialmente pendientes del calendario de sustituciones, ya que tendremos que organizar las ausencias correspondientes.
+
+VIERNES 20 – ORATORIO
+Por último, os recuerdo que este viernes no habrá sesión de oratorio en 5 años B.
+La sesión se recuperará más adelante ya lo habláis Tere y Susana.
+
+REFLEXIÓN DEL EVANGELIO
+Un señor confía a sus servidores diferentes talentos y, mientras unos los ponen a trabajar y consiguen multiplicarlos, otro decide esconder el suyo por miedo a perderlo.
+Cada día tenemos delante a niños llenos de talentos. Algunos son muy evidentes y otros están mucho más escondidos. Y quizá una de nuestras responsabilidades más bonitas sea precisamente esa: ayudar a descubrir los talentos de aquellos alumnos que todavía no saben que los tienen.
+Pero también creo que el Evangelio nos invita a mirarnos a nosotros mismos. Porque todos tenemos nuestros propios talentos, nuestras capacidades y nuestras fortalezas. Y merece la pena preguntarnos de vez en cuando si realmente los estamos poniendo al servicio de los demás o si, por comodidad, por miedo o simplemente por la rutina, estamos dejando alguno guardado.
+Al final, lo importante no es cuántos talentos hemos recibido, sino qué hacemos con ellos.
+
+Que paséis todos una estupenda semana.`
+  },
+  {
     id: "plan-semana-9-13-nov-2026",
     weekTitle: "Semana del 9 al 13 de Noviembre: Formación Franciscana, Lluvias y Patios Cubiertos, Ofrenda Almudena y Huelga General",
     academicYear: "2026/2027",
     summary: "Semana de 4 días (lunes festivo de la Almudena). Primera formación franciscana del curso (jueves 16:30h en el saloncito), protocolo de patios de recreo y recogidas cubiertas por lluvia, últimas ofrendas florales a la Virgen de la Almudena (martes 10), jornada de huelga general (miércoles 11 con actividades de consolidación y coordinación con Óscar en extraescolares) y cortes de tráfico por obras de la A-5 desde el martes 10.",
     publishedAt: "2026-11-09",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1794182400000,
     days: [
       {
