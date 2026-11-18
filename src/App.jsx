@@ -957,6 +957,47 @@ const PeriodBellTracker = React.memo(function PeriodBellTracker({ onOpenClassroo
   );
 });
 
+const MONDAY_COUNTDOWN_TARGET = new Date(2026, 10, 23, 9, 0, 0).getTime();
+
+const MondayCountdownPill = React.memo(function MondayCountdownPill() {
+  const [nowMs, setNowMs] = useState(() => Date.now());
+  const [revealSecret, setRevealSecret] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => setNowMs(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const diffMs = Math.max(0, MONDAY_COUNTDOWN_TARGET - nowMs);
+  const isFinished = diffMs === 0;
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diffMs / (1000 * 60)) % 60);
+  const seconds = Math.floor((diffMs / 1000) % 60);
+  const pad = (n) => (n < 10 ? `0${n}` : `${n}`);
+
+  return (
+    <button
+      type="button"
+      onClick={() => setRevealSecret((prev) => !prev)}
+      className="group relative flex items-center gap-2 px-3 py-1.5 rounded-2xl border border-amber-300/80 dark:border-amber-500/30 bg-amber-50/90 dark:bg-amber-500/10 text-amber-900 dark:text-amber-200 text-xs font-bold shadow-2xs hover:scale-[1.01] active:scale-95 transition-all cursor-pointer"
+    >
+      <span className="text-[11px]">⏳</span>
+      <span className="text-[11px] opacity-80 hidden sm:inline">Lunes 9:00</span>
+      <span className="font-mono font-extrabold text-[11px] tabular-nums">
+        {isFinished
+          ? "00d 00h 00m 00s"
+          : `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`}
+      </span>
+      {(revealSecret || isFinished) && (
+        <span className="ml-0.5 px-1.5 py-0.5 rounded-md bg-amber-900 text-amber-50 dark:bg-amber-300 dark:text-amber-950 font-mono text-[10px] font-black tracking-widest animate-pulse">
+          ELV
+        </span>
+      )}
+    </button>
+  );
+});
+
 
 const INITIAL_NOTICES = [];
 
@@ -3985,6 +4026,7 @@ export function App() {
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
+                <MondayCountdownPill />
                 <PeriodBellTracker
                   onOpenClassroomKit={() => {
                     setSelectedRadarDay(activeDayForSchedule);
