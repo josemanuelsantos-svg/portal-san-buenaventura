@@ -982,8 +982,6 @@ const MondayCountdownPill = React.memo(function MondayCountdownPill() {
       onClick={() => setRevealSecret((prev) => !prev)}
       className="group relative flex items-center gap-2 px-3 py-1.5 rounded-2xl border border-amber-300/80 dark:border-amber-500/30 bg-amber-50/90 dark:bg-amber-500/10 text-amber-900 dark:text-amber-200 text-xs font-bold shadow-2xs hover:scale-[1.01] active:scale-95 transition-all cursor-pointer"
     >
-      <span className="text-[11px]">⏳</span>
-      <span className="text-[11px] opacity-80 hidden sm:inline">Lunes 9:00</span>
       <span className="font-mono font-extrabold text-[11px] tabular-nums">
         {isFinished
           ? "00d 00h 00m 00s"
