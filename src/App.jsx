@@ -120,6 +120,41 @@ function getLivePeriodId(now = new Date(), isInfantil = false) {
   return "1H";
 }
 
+function getTeacherLiveStatus(teacher, now = new Date()) {
+  if (!teacher) return { state: "off", label: "" };
+  const day = now.getDay();
+  const mins = now.getHours() * 60 + now.getMinutes();
+  if (day === 0 || day === 6 || mins < 8 * 60 + 45 || mins >= 16 * 60 + 30) {
+    return { state: "off", label: "Fuera de horario" };
+  }
+  const dayIdx = String(day - 1);
+  if (teacher.id === "dasenjo") {
+    const sessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[dayIdx] || [];
+    for (let i = 0; i < sessions.length; i++) {
+      const ses = sessions[i];
+      const [sH, sM] = ses.start.split(":").map(Number);
+      const [eH, eM] = ses.end.split(":").map(Number);
+      if (mins >= sH * 60 + sM && mins < eH * 60 + eM) {
+        return { state: "class", label: `${ses.group || ses.room || "Sesión"} · ${ses.label || "PT"}` };
+      }
+    }
+    if (mins >= 10 * 60 + 30 && mins < 11 * 60) return { state: "break", label: "Recreo" };
+    return { state: "free", label: "Libre / Coordinación" };
+  }
+  const isInf = teacher.stage === "Infantil";
+  if (!isInf && mins >= 10 * 60 + 30 && mins < 11 * 60) return { state: "break", label: "Recreo" };
+  if (!isInf && mins >= 12 * 60 + 30 && mins < 14 * 60 + 30) return { state: "lunch", label: "Comedor" };
+  const pId = getLivePeriodId(now, isInf);
+  if (pId === "REC") return { state: "break", label: "Recreo" };
+  if (pId === "COM") return { state: "lunch", label: "Comedor" };
+  const slot = TEACHER_SCHEDULES[teacher.id]?.[dayIdx]?.[pId];
+  if (!slot) return { state: "free", label: "Libre / Gestión" };
+  const aula = slot.aula ? formatShortAula(slot.aula) : "";
+  const mat = slot.materia ? formatShortSubject(slot.materia) : "";
+  const txt = [aula, mat].filter(Boolean).join(" · ");
+  return { state: "class", label: txt || "En clase" };
+}
+
 
 function playTimerChime() {
   try {
@@ -993,6 +1028,64 @@ const MondayCountdownPill = React.memo(function MondayCountdownPill() {
         </span>
       )}
     </button>
+  );
+});
+
+const TODAY_BRIEF_STYLES = [
+  { key: "lunes", label: "Lunes", badge: "bg-blue-600 text-white", box: "bg-blue-50/70 dark:bg-blue-950/25 border-blue-200/80 dark:border-blue-500/30", dot: "bg-blue-500" },
+  { key: "martes", label: "Martes", badge: "bg-emerald-600 text-white", box: "bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-200/80 dark:border-emerald-500/30", dot: "bg-emerald-500" },
+  { key: "miercoles", label: "Miércoles", badge: "bg-amber-600 text-white", box: "bg-amber-50/70 dark:bg-amber-950/25 border-amber-200/80 dark:border-amber-500/30", dot: "bg-amber-500" },
+  { key: "jueves", label: "Jueves", badge: "bg-purple-600 text-white", box: "bg-purple-50/70 dark:bg-purple-950/25 border-purple-200/80 dark:border-purple-500/30", dot: "bg-purple-500" },
+  { key: "viernes", label: "Viernes", badge: "bg-rose-600 text-white", box: "bg-rose-50/70 dark:bg-rose-950/25 border-rose-200/80 dark:border-rose-500/30", dot: "bg-rose-500" }
+];
+
+const TodaySchoolBrief = React.memo(function TodaySchoolBrief({ currentPlan, onJumpToWeekly, onOpenCircular }) {
+  if (!currentPlan || !Array.isArray(currentPlan.days)) return null;
+  const todayJs = new Date().getDay(); // 0 Sun .. 6 Sat
+  const isWeekend = todayJs === 0 || todayJs === 6;
+  const idx = isWeekend ? 0 : todayJs - 1;
+  const style = TODAY_BRIEF_STYLES[idx] || TODAY_BRIEF_STYLES[0];
+  const dayData = currentPlan.days[idx];
+  const items = Array.isArray(dayData?.items) ? dayData.items.filter(Boolean) : [];
+
+  if (items.length === 0) return null;
+
+  return (
+    <div className={`rounded-2xl border px-3.5 py-2.5 transition-all animate-fade-in ${style.box}`}>
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div className="flex items-start gap-2.5 min-w-0 flex-1">
+          <span className={`shrink-0 px-2 py-0.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wider mt-0.5 shadow-2xs ${style.badge}`}>
+            {isWeekend ? `Próximo ${dayData?.day || style.label}` : `Hoy · ${dayData?.day || style.label}`}
+          </span>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-800 dark:text-slate-100 font-medium min-w-0">
+            {items.map((item, i) => (
+              <span key={i} className="inline-flex items-center gap-1.5 leading-snug">
+                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`}></span>
+                <span>{renderFormattedText(item)}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            onClick={onJumpToWeekly}
+            className="px-2 py-1 rounded-lg bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-[10px] font-bold text-slate-700 dark:text-slate-200 transition"
+            title="Ir al cuadrante semanal completo"
+          >
+            Semana ↓
+          </button>
+          <button
+            type="button"
+            onClick={onOpenCircular}
+            className="px-2 py-1 rounded-lg bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-[10px] font-bold text-indigo-700 dark:text-indigo-300 transition"
+            title="Abrir la circular semanal completa"
+          >
+            Circular ↗
+          </button>
+        </div>
+      </div>
+    </div>
   );
 });
 
@@ -2288,6 +2381,10 @@ export function App() {
   const [formError, setFormError] = useState("");
   const [toastMessage, setToastMessage] = useState(null);
   const [logoClicks, setLogoClicks] = useState(0);
+  const [smartAlertsEnabled, setSmartAlertsEnabled] = useState(() => {
+    try { return localStorage.getItem("sb_smart_alerts_enabled") === "true"; } catch { return false; }
+  });
+  const notifiedSlotsRef = React.useRef(new Set());
 
   // Hash criptográfico SHA-256: la clave en texto plano NUNCA reside en el código
   const ADMIN_PIN_HASH = "409dbe6c27ffcbbdf28f41b920b91d22ded884bf0122b3b2bdbd78bdaee2b2c4";
@@ -3395,6 +3492,89 @@ export function App() {
   const activeDayForSchedule = (currentWeekdayIdx >= 0 && currentWeekdayIdx <= 4) ? currentWeekdayIdx : 0;
   const livePeriodIdNow = getLivePeriodId(nowDateObj, myTeacherObj?.stage === "Infantil");
 
+  const handleToggleSmartAlerts = async () => {
+    const next = !smartAlertsEnabled;
+    if (next && typeof Notification !== "undefined" && Notification.permission === "default") {
+      try { await Notification.requestPermission(); } catch {}
+    }
+    setSmartAlertsEnabled(next);
+    try { localStorage.setItem("sb_smart_alerts_enabled", next ? "true" : "false"); } catch {}
+    setToastMessage(next
+      ? (myTeacherObj ? "🔔 Alertas activadas: te avisaremos 5 min antes de cada clase o patio" : "🔔 Alertas activadas (elige tu perfil docente para avisos de clase/patio)")
+      : "🔕 Alertas de clase y patio desactivadas"
+    );
+    setTimeout(() => setToastMessage(null), 3200);
+  };
+
+  useEffect(() => {
+    if (!smartAlertsEnabled || !myTeacherObj) return;
+    const checkUpcomingAlert = () => {
+      const now = new Date();
+      const day = now.getDay();
+      if (day === 0 || day === 6) return;
+      const nowMins = now.getHours() * 60 + now.getMinutes();
+      const dayKey = String(day - 1);
+      const dateStamp = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+      const isInf = myTeacherObj.stage === "Infantil";
+
+      const fireAlert = (slotKey, title, body) => {
+        const fullKey = `${dateStamp}:${slotKey}`;
+        if (notifiedSlotsRef.current.has(fullKey)) return;
+        notifiedSlotsRef.current.add(fullKey);
+        playTimerChime();
+        setToastMessage(`🔔 ${title}: ${body}`);
+        setTimeout(() => setToastMessage(null), 6000);
+        if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+          try { new Notification(title, { body }); } catch {}
+        }
+      };
+
+      // Aviso de patio 5 min antes del recreo
+      const patioStart = isInf ? 10 * 60 : 10 * 60 + 30;
+      if (patioStart - nowMins > 0 && patioStart - nowMins <= 5) {
+        const hasPatio = isInf
+          ? getInfantilPatioInfo(myTeacherObj.id, now)?.hasDutyToday
+          : Boolean(getPrimariaPatioInfo(myTeacherObj.id, now));
+        if (hasPatio) {
+          fireAlert("PATIO", "Turno de Patio en breve", `En ${patioStart - nowMins} min comienza tu vigilancia de patio.`);
+        }
+      }
+
+      // Aviso de próxima clase 5 min antes
+      const periodStarts = isInf
+        ? [
+            { id: "1H", start: 8 * 60 + 45 },
+            { id: "2H", start: 9 * 60 + 30 },
+            { id: "3H", start: 10 * 60 + 30 },
+            { id: "4H", start: 11 * 60 + 15 },
+            { id: "5H", start: 14 * 60 },
+            { id: "6H", start: 15 * 60 }
+          ]
+        : [
+            { id: "1H", start: 9 * 60 },
+            { id: "2H", start: 9 * 60 + 45 },
+            { id: "3H", start: 11 * 60 },
+            { id: "4H", start: 11 * 60 + 45 },
+            { id: "5H", start: 14 * 60 + 30 },
+            { id: "6H", start: 15 * 60 + 15 }
+          ];
+      const todaySched = TEACHER_SCHEDULES[myTeacherObj.id]?.[dayKey] || {};
+      for (let i = 0; i < periodStarts.length; i++) {
+        const p = periodStarts[i];
+        const diff = p.start - nowMins;
+        if (diff > 0 && diff <= 5 && todaySched[p.id]) {
+          const slot = todaySched[p.id];
+          const aula = slot.aula ? formatShortAula(slot.aula) : "";
+          const mat = slot.materia ? formatShortSubject(slot.materia) : "Clase";
+          fireAlert(p.id, `Próxima clase en ${diff} min`, [aula, mat].filter(Boolean).join(" · "));
+        }
+      }
+    };
+    checkUpcomingAlert();
+    const interval = setInterval(checkUpcomingAlert, 30000);
+    return () => clearInterval(interval);
+  }, [smartAlertsEnabled, myTeacherObj]);
+
   let activeCalendarSrc = "";
   const calBaseParams = `ctz=Europe%2FMadrid&mode=${calViewMode}&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0`;
   if (activeCalTab === "unificados") {
@@ -4034,6 +4214,19 @@ export function App() {
                 />
                 <button
                   type="button"
+                  onClick={handleToggleSmartAlerts}
+                  className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                    smartAlertsEnabled
+                      ? "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/40"
+                      : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700"
+                  }`}
+                  title={smartAlertsEnabled ? "Alertas activadas (aviso 5 min antes de clase y patio)" : "Activar avisos 5 min antes de tu próxima clase o turno de patio"}
+                >
+                  <IconRenderer name={smartAlertsEnabled ? "BellRing" : "Bell"} className={`w-3.5 h-3.5 ${smartAlertsEnabled ? "text-emerald-600 dark:text-emerald-400" : "text-slate-500"}`} />
+                  <span className="hidden sm:inline">{smartAlertsEnabled ? "Alertas ON" : "Alertas"}</span>
+                </button>
+                <button
+                  type="button"
                   onClick={() => {
                     const next = !isQuickLaunchOpen;
                     setIsQuickLaunchOpen(next);
@@ -4048,6 +4241,22 @@ export function App() {
                 </button>
               </div>
             </div>
+
+            {/* RESUMEN INTELIGENTE DE HOY (EXTRAÍDO DE LA SEMANA ACTIVA) */}
+            <TodaySchoolBrief
+              currentPlan={weeklyPlans.find(p => p.isCurrent) || weeklyPlans[0]}
+              onJumpToWeekly={() => {
+                document.getElementById("programacion-semanal")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              onOpenCircular={() => {
+                const activePlan = weeklyPlans.find(p => p.isCurrent) || weeklyPlans[0];
+                if (activePlan) setSelectedWeekId(activePlan.id);
+                setIsEmailViewExpanded(true);
+                setTimeout(() => {
+                  document.getElementById("programacion-semanal")?.scrollIntoView({ behavior: "smooth" });
+                }, 80);
+              }}
+            />
 
             {/* DISPOSICIÓN EN 2 COLUMNAS EQUILIBRADAS EN ESCRITORIO */}
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
@@ -4840,7 +5049,7 @@ export function App() {
       </div>
 
       {/* BARRA DE NAVEGACIÓN INFERIOR MÓVIL OPTIMIZADA (TOP 5 APPS ESCOLARES) */}
-      <div className="md:hidden fixed bottom-3 left-2 right-2 sm:left-4 sm:right-4 z-40 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 backdrop-blur-xl px-1 py-1.5 rounded-2xl flex items-center justify-around shadow-2xl">
+      <div className="md:hidden fixed bottom-2.5 left-2 right-2 sm:left-4 sm:right-4 z-40 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 ring-1 ring-black/5 dark:ring-white/5 backdrop-blur-xl px-1.5 pt-1.5 safe-area-bottom rounded-2xl flex items-center justify-around shadow-2xl">
         
         {/* 1. Comedor */}
         <a
@@ -7554,14 +7763,104 @@ export function App() {
             </div>
 
             <div className="p-4 max-h-[65vh] overflow-y-auto space-y-4">
+              {/* ACCIONES RÁPIDAS SPOTLIGHT CUANDO NO HAY BÚSQUEDA */}
+              {!searchQuery.trim() && (
+                <div>
+                  <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-amber-700 dark:text-amber-400 mb-2 px-2">
+                    ⚡ Acciones Rápidas del Claustro
+                  </h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => { setActiveKitTab("timer"); setIsClassroomKitOpen(true); setIsCommandPaletteOpen(false); }}
+                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 border border-indigo-200/80 dark:border-indigo-500/30 text-left transition"
+                    >
+                      <span className="text-base">⏱️</span>
+                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">Temporizador</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setActiveKitTab("noise"); setIsClassroomKitOpen(true); setIsCommandPaletteOpen(false); }}
+                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-200/80 dark:border-emerald-500/30 text-left transition"
+                    >
+                      <span className="text-base">🚦</span>
+                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">Semáforo Ruido</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setActiveKitTab("dua"); setIsClassroomKitOpen(true); setIsCommandPaletteOpen(false); }}
+                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-purple-50/70 dark:bg-purple-950/30 hover:bg-purple-100 dark:hover:bg-purple-900/40 border border-purple-200/80 dark:border-purple-500/30 text-left transition"
+                    >
+                      <span className="text-base">🧠</span>
+                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">Asistente DUA</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedRadarDay(activeDayForSchedule);
+                        setSelectedRadarPeriod(livePeriodIdNow);
+                        setScheduleCenterTab("radar");
+                        setIsScheduleCenterOpen(true);
+                        setIsCommandPaletteOpen(false);
+                      }}
+                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-200/80 dark:border-amber-500/30 text-left transition"
+                    >
+                      <span className="text-base">📡</span>
+                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">Radar en Vivo</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (myTeacherObj) {
+                          setSelectedViewTeacherId(myTeacherObj.id);
+                          setScheduleCenterTab("teacher");
+                        } else {
+                          setScheduleCenterTab("radar");
+                        }
+                        setIsScheduleCenterOpen(true);
+                        setIsCommandPaletteOpen(false);
+                      }}
+                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-sky-50/70 dark:bg-sky-950/30 hover:bg-sky-100 dark:hover:bg-sky-900/40 border border-sky-200/80 dark:border-sky-500/30 text-left transition"
+                    >
+                      <span className="text-base">🗓️</span>
+                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">Mi Horario</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const activePlan = weeklyPlans.find(p => p.isCurrent) || weeklyPlans[0];
+                        if (activePlan) setSelectedWeekId(activePlan.id);
+                        setIsEmailViewExpanded(true);
+                        setIsCommandPaletteOpen(false);
+                        setTimeout(() => {
+                          document.getElementById("programacion-semanal")?.scrollIntoView({ behavior: "smooth" });
+                        }, 100);
+                      }}
+                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-rose-50/70 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/40 border border-rose-200/80 dark:border-rose-500/30 text-left transition"
+                    >
+                      <span className="text-base">✉️</span>
+                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">Circular Semanal</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* RESULTADOS EN HORARIOS DE PROFESORES Y AULAS */}
               {(filteredSearchTeachers.length > 0 || filteredSearchClassrooms.length > 0) && (
                 <div>
                   <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 mb-2 px-2">
-                    🕒 Horarios Oficiales de Profesores y Cursos
+                    🕒 Horarios Oficiales de Profesores y Cursos (con estado en vivo)
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                    {filteredSearchTeachers.map((t) => (
+                    {filteredSearchTeachers.map((t) => {
+                      const liveSt = getTeacherLiveStatus(t);
+                      const livePillCls =
+                        liveSt.state === "class"
+                          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300"
+                          : liveSt.state === "break" || liveSt.state === "lunch"
+                          ? "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300"
+                          : "bg-slate-200/80 text-slate-600 dark:bg-slate-800 dark:text-slate-400";
+                      return (
                       <button
                         key={`t-${t.id}`}
                         type="button"
@@ -7579,14 +7878,21 @@ export function App() {
                             👨‍🏫 {t.name}
                           </span>
                           <span className="text-[10px] text-indigo-600 dark:text-indigo-400 block truncate">
-                            {t.dept} · Ver horario semanal
+                            {t.dept}
                           </span>
+                          {liveSt.label && (
+                            <span className={`mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-bold truncate max-w-full ${livePillCls}`}>
+                              <span>{liveSt.state === "class" ? "🟢" : liveSt.state === "break" || liveSt.state === "lunch" ? "🟡" : "⚪"}</span>
+                              <span className="truncate">{liveSt.label}</span>
+                            </span>
+                          )}
                         </div>
                         <span className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 shrink-0">
                           Horario →
                         </span>
                       </button>
-                    ))}
+                      );
+                    })}
                     {filteredSearchClassrooms.map((aula) => (
                       <button
                         key={`c-${aula}`}
