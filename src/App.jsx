@@ -1099,13 +1099,141 @@ const INITIAL_BOOKMARKS = [
 
 const INITIAL_WEEKLY_PLANS = [
   {
+    id: "plan-semana-23-27-nov-2026",
+    weekTitle: "Semana del 23 al 27 de Noviembre: Talleres UFV, Beti Jai, Educapop, Cross Escolar y Musical de San Francisco",
+    academicYear: "2026/2027",
+    summary: "Semana muy completa: talleres «Aprender a Amar» 5.º EP (L-M-X), visita al Beti Jai de 6.º EP (mar 6.º B/C y mié 6.º A), Diez Minutos Con Dios (mar 8:20h) y reunión acogida 3 años (mar 16:30h), conciertos pedagógicos Educapop (jue 3.º–6.º y vie Infantil/1.º–2.º), reunión por cursos / Great Little People (jue), Cross Escolar de Latina (vie 5.º–6.º), «Mis familias en el cole» 4–5 años (vie 14:30h), Musical de San Francisco, cierre de fotos (lunes), oración por los difuntos (Infantil y 1.º–2.º) y circular de exámenes Cambridge.",
+    publishedAt: "2026-11-23",
+    author: "Dirección & Jefatura de Estudios",
+    isCurrent: true,
+    createdAt: 1795392000000,
+    days: [
+      {
+        day: "Lunes",
+        date: "23 Nov",
+        items: [
+          "❤️ Mañana: Talleres «Aprender a Amar» (UFV) para 5.º EP (intercambios entre tutores y especialistas si se requiere).",
+          "📸 Último día recogida dinero/paquetes de fotografías escolares (sobre de Rubén o Elena y hoja de pagos).",
+          "👶 Tutoras 3 años: comunicar a Joli la estimación de niños para el servicio de ampliación del martes.",
+          "🙏 Semana de Oración por los fieles difuntos (Infantil y 1.º–2.º EP · materiales en Educamos)."
+        ]
+      },
+      {
+        day: "Martes",
+        date: "24 Nov",
+        items: [
+          "⛪ 8:20h (Iglesia): Diez Minutos Con Dios abierto a toda la comunidad educativa.",
+          "🚌 9:15h (Metro Batán): Visita al frontón Beti Jai de 6.º B y 6.º C (Pili y José; especialistas sustituyen en huecos).",
+          "❤️ Mañana: Talleres «Aprender a Amar» (UFV) para 5.º EP.",
+          "👋 16:30h (Salón de actos): Reunión de acogida familias de 3 años con Equipo Directivo (servicio de ampliación)."
+        ]
+      },
+      {
+        day: "Miércoles",
+        date: "25 Nov",
+        items: [
+          "🚌 9:15h (Metro Batán): Visita al frontón Beti Jai de 6.º A (Álvaro y Dani; especialistas sustituyen en huecos).",
+          "❤️ Mañana: Última sesión Talleres «Aprender a Amar» (UFV) para 5.º EP."
+        ]
+      },
+      {
+        day: "Jueves",
+        date: "26 Nov",
+        items: [
+          "🎵 Concierto pedagógico Educapop (Salón de actos): 9:30h 3.º y 4.º EP (ojo cambio 9:45h) · 11:00h 5.º y 6.º EP.",
+          "👥 Reunión de la tarde: trabajo por cursos (profesoras de Inglés de Infantil con asesora de Great Little People)."
+        ]
+      },
+      {
+        day: "Viernes",
+        date: "27 Nov",
+        items: [
+          "🎵 Concierto pedagógico Educapop (Salón de actos): 9:00h Infantil · 11:00h 1.º y 2.º EP.",
+          "🏃 9:30–9:45h (Buses): Cross Escolar de Latina (5.º y 6.º EP con tutores y David Sagaseta; toda la mañana).",
+          "👨‍👩‍👧 14:30h: «Mis familias en el cole» para 4 y 5 años (bajan tutoras del grupo C a recoger a las familias).",
+          "🎭 Musical San Francisco: retirar colchonetas del gimnasio al oratorio y recoger material del salón de actos por la mañana."
+        ]
+      }
+    ],
+    generalNotes: "5.º EP: Talleres «Aprender a Amar» (L-M-X mañana). Beti Jai 6.º EP (bus 9:15h Batán): Mar 6.º B/C (Pili y José) · Mié 6.º A (Álvaro y Dani) — revisar autorizaciones y sustituciones de especialistas. Concierto Educapop: Jue 9:30h 3.º–4.º / 11:00h 5.º–6.º · Vie 9:00h Infantil / 11:00h 1.º–2.º. Vie 27: Cross Escolar Latina (5.º–6.º EP), «Mis familias en el cole» 4–5 años (14:30h) y retirada de material gimnasio/salón de actos por Musical de San Francisco. Exámenes Cambridge (Starters, Movers, Flyers desde 2.º EP): recomendar antes de fin de trimestre a alumnos con media de notable o superior.",
+    fullEmailText: `Hola a todos:
+
+Comenzamos una nueva semana que, esta vez sí, viene un poquito más cargada de actividades que las anteriores. Entre talleres, salidas, conciertos y preparativos de Navidad, tenemos unos días bastante completos por delante.
+
+Os dejo, como cada semana, las cuestiones más importantes para que podamos organizarnos.
+
+5.º DE PRIMARIA – TALLERES «APRENDER A AMAR»
+Esta semana los alumnos de 5.º de Primaria tendrán las tres sesiones restantes de los talleres de la Universidad Francisco de Vitoria, lunes, martes y miércoles por la mañana, según la programación organizada con Esther.
+Si algún tutor quiere estar presente en una sesión en la que tiene clase un especialista, podrá intercambiarse con él para que el especialista atienda al grupo que le correspondería al tutor. Estos cambios los organizaréis directamente entre tutores y especialistas, garantizando que todos los grupos queden atendidos.
+
+MARTES 24 Y MIÉRCOLES 25 – VISITA AL BETI JAI
+Los alumnos de 6.º de Primaria realizarán esta semana su visita al frontón Beti Jai.
+• Martes 24: 6.º C y 6.º B, acompañados por Pili y José.
+• Miércoles 25: 6.º A, acompañado por Álvaro y Dani.
+En ambos casos, el autobús recogerá a los grupos aproximadamente a las 9:15 h en el metro de Batán. Si algún especialista tiene clase en cualquiera de las clases que han salido deberá sustituir al tutor allá donde tuviera clase; tutores, recordad revisar las autorizaciones. Como llegaremos bastante justos se ha recomendado a las familias quedarse al comedor ese día.
+
+JUEVES 26 Y VIERNES 27 – CONCIERTO PEDAGÓGICO EDUCAPOP
+Este jueves tendremos el concierto pedagógico de Educapop en el salón de actos:
+• 3.º y 4.º de Primaria: 9:30 h.
+• 5.º y 6.º de Primaria: 11:00 h.
+Los grupos bajarán acompañados por el profesor que tenga clase con ellos en esa sesión, no necesariamente por el tutor. Especial atención en 3.º y 4.º, ya que el concierto comienza a las 9:30 h y el cambio de sesión es a las 9:45 h.
+
+El viernes tendremos una nueva jornada del concierto pedagógico de Educapop en el salón de actos, esta vez para Infantil y 1.º y 2.º de Primaria:
+• Educación Infantil: 9:00 h.
+• 1.º y 2.º de Primaria: 11:00 h.
+En Infantil, cada tutora acompañará a su grupo, junto con los profesores de apoyo correspondientes. En Primaria, al participar únicamente algunos cursos, acompañará a los alumnos el profesor que tenga clase con ellos en esa sesión, sin necesidad de que sea el tutor.
+
+VIERNES 27 – CROSS ESCOLAR DE LATINA
+Los alumnos de 5.º y 6.º de Primaria participarán en el Cross Escolar de Latina, acompañados por sus tutores y David Sagaseta. En principio los buses nos recogerán entre las 9:30 y las 9:45, por lo que llegamos, dejamos lo que haya que dejar en clase y salimos.
+La actividad ocupará toda la mañana y, en principio, esperamos estar de vuelta para comer en el colegio. Como sabemos por otros años que los horarios pueden variar bastante, iremos informando durante la mañana según avance la actividad.
+
+VIERNES 27 – «MIS FAMILIAS EN EL COLE» (4 Y 5 AÑOS)
+Este viernes por la tarde tendremos también una nueva jornada de «Mis papás en el cole», en esta ocasión para los grupos de 4 y 5 años de Infantil. Los grupos de 3 años todavía no participarán.
+Las puertas se abrirán a las 14:30 h como siempre y bajarán las tutoras del grupo C a recoger a las familias. Os pido que recordemos a las familias la importancia de participar en estos talleres, que son una oportunidad estupenda para compartir la vida del colegio con sus hijos. Tenemos ya muchísimo trabajo preparado y organizado, así que ahora solo queda disfrutarlo y animar a las familias a participar.
+
+MARTES 24 – REUNIÓN CON LAS FAMILIAS DE 3 AÑOS
+Os recuerdo que el martes, a las 16:30 h en el salón de actos, tendremos la reunión de acogida de las familias de 3 años con el Equipo Directivo.
+Las familias que lo necesiten podrán dejar a sus hijos en el servicio de ampliación. Por favor, mañana lunes las tutoras comunicaréis a Joli una estimación de los niños que necesitarán este servicio, según lo que os hayan trasladado las familias, para que podamos organizarlo.
+
+MARTES 24 – DIEZ MINUTOS CON DIOS
+Este martes tendremos nuevamente nuestro encuentro de Diez Minutos Con Dios abierto a toda la comunidad educativa, a las 8:20 h en la iglesia.
+Os animo a que desde las tutorías recordemos la invitación a las familias y las animemos a participar en este pequeño momento de oración compartida antes de comenzar las clases.
+
+ORACIÓN POR LOS FIELES DIFUNTOS
+Esta semana corresponde realizar la oración por los fieles difuntos a Educación Infantil y 1.º y 2.º de Primaria.
+Desde Pastoral ya nos enviaron ayer toda la información a través de Educamos, por lo que tenemos disponibles los materiales necesarios para organizarla.
+
+REUNIÓN DEL JUEVES
+Este jueves aprovecharemos la reunión para trabajar por cursos y avanzar en las cuestiones que cada equipo tenga pendientes.
+La excepción serán las profesoras de Inglés de Infantil, que se reunirán con la asesora pedagógica de Great Little People para revisar el funcionamiento del método, compartir cómo está avanzando el curso y resolver posibles dudas.
+
+VIERNES 27 – MUSICAL DE SAN FRANCISCO Y ORGANIZACIÓN DE ESPACIOS
+Con motivo de una nueva representación del musical de San Francisco de Asís, el viernes se retirarán las colchonetas y materiales del gimnasio, que quedarán guardados en el oratorio situado junto al saloncito. El lunes volverá a estar todo colocado.
+Además, como estamos utilizando el salón de actos para los ensayos de Navidad, os pido que el viernes por la mañana dejemos recogidos los micrófonos, pies, altavoces y demás materiales, para que todo esté preparado para el musical.
+
+LUNES 23 – RECOGIDA DEL DINERO DE LAS FOTOGRAFÍAS
+En principio, mañana lunes es el último día para recoger el dinero de las fotografías escolares.
+Por favor, recordad a las familias que todavía tengan algo pendiente que deben entregar el importe correspondiente o devolver el paquete de fotografías si no desean adquirirlo, para que podamos cerrar esto cuanto antes y cada tutor contarlo dejándolo en el sobre que os dieron Rubén o Elena y apuntándolo en la hoja de pagos.
+
+EXÁMENES OFICIALES DE CAMBRIDGE
+Ya está publicada la circular para la inscripción a los exámenes de Cambridge: Starters, Movers y Flyers, dirigidos a alumnos a partir de 2.º de Primaria.
+Aunque todavía tenemos tiempo, os recuerdo a los profesores de Inglés que, como acordamos en el departamento, debemos recomendar la participación a aquellos alumnos con una media de notable o superior que consideremos preparados para superar la prueba. La idea es que antes de terminar el trimestre hayamos trasladado esta recomendación a todas las familias correspondientes.
+
+REFLEXIÓN DEL EVANGELIO
+El Evangelio de hoy nos recuerda unas palabras de Jesús que creo que tienen muchísimo que ver con nuestra vocación: «Cada vez que lo hicisteis con uno de estos, mis hermanos más pequeños, conmigo lo hicisteis».
+Y creo que hay algo especialmente importante en nuestra labor como profesores: hacer las cosas bien, incluso cuando nadie nos está mirando.
+Porque cuidar a un alumno, acompañar a una familia o ayudar a un compañero no debería depender de que alguien lo vea, lo reconozca o nos lo agradezca. Debería nacer, sencillamente, de estar convencidos de que es lo que debemos hacer.
+A veces los gestos más importantes de nuestro trabajo son precisamente esos que nadie ve: quedarnos un momento más con un niño que nos necesita, preocuparnos por un compañero o dedicar un tiempo extra a una familia que necesita ser escuchada.
+Quizá ahí esté una de las mejores formas de vivir nuestra vocación: ser las mismas personas cuando nos están mirando que cuando no lo hacen. Trabajar con transparencia, coherencia y cariño, no porque alguien nos lo exija, sino porque creemos en lo que hacemos.`
+  },
+  {
     id: "plan-semana-16-20-nov-2026",
     weekTitle: "Semana del 16 al 20 de Noviembre: Jubilación de Isabel, Lifeteen, Derechos del Niño y Congreso de Franciscanismo",
     academicYear: "2026/2027",
     summary: "Semana pasada por agua (con los nuevos patios cubiertos). Celebración de jubilación de Isabel (jueves 16:30h en la iglesia), charlas Lifeteen 5.º y 6.º EP (miércoles), reunión telemática 5.º EP «Aprender a Amar» (miércoles 17:00h), proyecto «Tejiendo Compromiso Social en Red» (charla familias martes 17 y pijama el viernes 20), oración por los difuntos (3.º-6.º EP), recordatorio de pagos pendientes y sustituciones por Congreso de Franciscanismo.",
     publishedAt: "2026-11-16",
     author: "Dirección & Jefatura de Estudios",
-    isCurrent: true,
+    isCurrent: false,
     createdAt: 1794787200000,
     days: [
       {
