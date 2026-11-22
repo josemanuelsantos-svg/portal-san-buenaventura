@@ -1051,39 +1051,24 @@ const TodaySchoolBrief = React.memo(function TodaySchoolBrief({ currentPlan, onJ
   if (items.length === 0) return null;
 
   return (
-    <div className={`rounded-2xl border px-3.5 py-2.5 transition-all animate-fade-in ${style.box}`}>
-      <div className="flex items-start justify-between gap-3 flex-wrap">
-        <div className="flex items-start gap-2.5 min-w-0 flex-1">
-          <span className={`shrink-0 px-2 py-0.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wider mt-0.5 shadow-2xs ${style.badge}`}>
-            {isWeekend ? `Próximo ${dayData?.day || style.label}` : `Hoy · ${dayData?.day || style.label}`}
+    <div className={`rounded-xl border px-3 py-1.5 transition-all animate-fade-in ${style.box}`}>
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex items-center gap-2 min-w-0 flex-1 flex-wrap text-[11px] text-slate-700 dark:text-slate-200 font-medium">
+          <span className={`shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wide ${style.badge}`}>
+            {isWeekend ? `${dayData?.day || style.label}` : `Hoy`}
           </span>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-800 dark:text-slate-100 font-medium min-w-0">
-            {items.map((item, i) => (
-              <span key={i} className="inline-flex items-center gap-1.5 leading-snug">
-                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`}></span>
-                <span>{renderFormattedText(item)}</span>
-              </span>
-            ))}
-          </div>
+          <span className="truncate sm:whitespace-normal">
+            {items.join("  ·  ")}
+          </span>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
-          <button
-            type="button"
-            onClick={onJumpToWeekly}
-            className="px-2 py-1 rounded-lg bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-[10px] font-bold text-slate-700 dark:text-slate-200 transition"
-            title="Ir al cuadrante semanal completo"
-          >
-            Semana ↓
-          </button>
-          <button
-            type="button"
-            onClick={onOpenCircular}
-            className="px-2 py-1 rounded-lg bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-[10px] font-bold text-indigo-700 dark:text-indigo-300 transition"
-            title="Abrir la circular semanal completa"
-          >
-            Circular ↗
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={onOpenCircular}
+          className="shrink-0 text-[10px] font-bold text-indigo-700 dark:text-indigo-300 hover:underline transition"
+          title="Abrir la circular semanal completa"
+        >
+          Circular ↗
+        </button>
       </div>
     </div>
   );
@@ -1100,9 +1085,9 @@ const INITIAL_BOOKMARKS = [
 const INITIAL_WEEKLY_PLANS = [
   {
     id: "plan-semana-23-27-nov-2026",
-    weekTitle: "Semana del 23 al 27 de Noviembre: Talleres UFV, Beti Jai, Educapop, Cross Escolar y Musical de San Francisco",
+    weekTitle: "Semana del 23 al 27 de Noviembre",
     academicYear: "2026/2027",
-    summary: "Semana muy completa: talleres «Aprender a Amar» 5.º EP (L-M-X), visita al Beti Jai de 6.º EP (mar 6.º B/C y mié 6.º A), Diez Minutos Con Dios (mar 8:20h) y reunión acogida 3 años (mar 16:30h), conciertos pedagógicos Educapop (jue 3.º–6.º y vie Infantil/1.º–2.º), reunión por cursos / Great Little People (jue), Cross Escolar de Latina (vie 5.º–6.º), «Mis familias en el cole» 4–5 años (vie 14:30h), Musical de San Francisco, cierre de fotos (lunes), oración por los difuntos (Infantil y 1.º–2.º) y circular de exámenes Cambridge.",
+    summary: "Talleres 5.º EP, Beti Jai (6.º), Educapop, Cross Escolar, Mis familias en el cole y Musical San Francisco.",
     publishedAt: "2026-11-23",
     author: "Dirección & Jefatura de Estudios",
     isCurrent: true,
@@ -1112,50 +1097,49 @@ const INITIAL_WEEKLY_PLANS = [
         day: "Lunes",
         date: "23 Nov",
         items: [
-          "❤️ Mañana: Talleres «Aprender a Amar» (UFV) para 5.º EP (intercambios entre tutores y especialistas si se requiere).",
-          "📸 Último día recogida dinero/paquetes de fotografías escolares (sobre de Rubén o Elena y hoja de pagos).",
-          "👶 Tutoras 3 años: comunicar a Joli la estimación de niños para el servicio de ampliación del martes.",
-          "🙏 Semana de Oración por los fieles difuntos (Infantil y 1.º–2.º EP · materiales en Educamos)."
+          "Talleres 5.º EP (mañana)",
+          "Último día fotos escolares",
+          "Oración difuntos (Inf. y 1.º–2.º)"
         ]
       },
       {
         day: "Martes",
         date: "24 Nov",
         items: [
-          "⛪ 8:20h (Iglesia): Diez Minutos Con Dios abierto a toda la comunidad educativa.",
-          "🚌 9:15h (Metro Batán): Visita al frontón Beti Jai de 6.º B y 6.º C (Pili y José; especialistas sustituyen en huecos).",
-          "❤️ Mañana: Talleres «Aprender a Amar» (UFV) para 5.º EP.",
-          "👋 16:30h (Salón de actos): Reunión de acogida familias de 3 años con Equipo Directivo (servicio de ampliación)."
+          "8:20h Diez Minutos Con Dios",
+          "9:15h Beti Jai · 6.º B y C",
+          "Talleres 5.º EP (mañana)",
+          "16:30h Reunión familias 3 años"
         ]
       },
       {
         day: "Miércoles",
         date: "25 Nov",
         items: [
-          "🚌 9:15h (Metro Batán): Visita al frontón Beti Jai de 6.º A (Álvaro y Dani; especialistas sustituyen en huecos).",
-          "❤️ Mañana: Última sesión Talleres «Aprender a Amar» (UFV) para 5.º EP."
+          "9:15h Beti Jai · 6.º A",
+          "Talleres 5.º EP (mañana)"
         ]
       },
       {
         day: "Jueves",
         date: "26 Nov",
         items: [
-          "🎵 Concierto pedagógico Educapop (Salón de actos): 9:30h 3.º y 4.º EP (ojo cambio 9:45h) · 11:00h 5.º y 6.º EP.",
-          "👥 Reunión de la tarde: trabajo por cursos (profesoras de Inglés de Infantil con asesora de Great Little People)."
+          "Educapop: 9:30h (3.º–4.º) · 11:00h (5.º–6.º)",
+          "Reunión por cursos / GLP Inglés Inf."
         ]
       },
       {
         day: "Viernes",
         date: "27 Nov",
         items: [
-          "🎵 Concierto pedagógico Educapop (Salón de actos): 9:00h Infantil · 11:00h 1.º y 2.º EP.",
-          "🏃 9:30–9:45h (Buses): Cross Escolar de Latina (5.º y 6.º EP con tutores y David Sagaseta; toda la mañana).",
-          "👨‍👩‍👧 14:30h: «Mis familias en el cole» para 4 y 5 años (bajan tutoras del grupo C a recoger a las familias).",
-          "🎭 Musical San Francisco: retirar colchonetas del gimnasio al oratorio y recoger material del salón de actos por la mañana."
+          "Educapop: 9:00h (Inf.) · 11:00h (1.º–2.º)",
+          "9:30h Cross Escolar (5.º–6.º)",
+          "14:30h Mis familias en el cole (4–5 años)",
+          "Musical San Francisco (recoger espacios)"
         ]
       }
     ],
-    generalNotes: "5.º EP: Talleres «Aprender a Amar» (L-M-X mañana). Beti Jai 6.º EP (bus 9:15h Batán): Mar 6.º B/C (Pili y José) · Mié 6.º A (Álvaro y Dani) — revisar autorizaciones y sustituciones de especialistas. Concierto Educapop: Jue 9:30h 3.º–4.º / 11:00h 5.º–6.º · Vie 9:00h Infantil / 11:00h 1.º–2.º. Vie 27: Cross Escolar Latina (5.º–6.º EP), «Mis familias en el cole» 4–5 años (14:30h) y retirada de material gimnasio/salón de actos por Musical de San Francisco. Exámenes Cambridge (Starters, Movers, Flyers desde 2.º EP): recomendar antes de fin de trimestre a alumnos con media de notable o superior.",
+    generalNotes: "Cambridge (desde 2.º EP): recomendar a alumnos con notable o superior. Lunes: avisar a Joli ampliación 3 años.",
     fullEmailText: `Hola a todos:
 
 Comenzamos una nueva semana que, esta vez sí, viene un poquito más cargada de actividades que las anteriores. Entre talleres, salidas, conciertos y preparativos de Navidad, tenemos unos días bastante completos por delante.
