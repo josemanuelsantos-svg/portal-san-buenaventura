@@ -8689,7 +8689,8 @@ export function formatSupportText(list) {
 
 
 // ============================================================================
-// TURNOS DE VIGILANCIA DE PATIOS EN EDUCACIÓN INFANTIL (NOVIEMBRE 2026)
+// MOTOR PERPETUO DE VIGILANCIA DE PATIOS EN EDUCACIÓN INFANTIL (CURSO 2026/2027)
+// Rotación continua A → B → C en días lectivos (Calendario Escolar CAM 2026/27)
 // ============================================================================
 export const INFANTIL_TUTOR_LETTERS = {
   "ediaz": "A",       // Elena Díaz (3 años A)
@@ -8703,114 +8704,170 @@ export const INFANTIL_TUTOR_LETTERS = {
   "mrodriguezc": "C"  // Marta Rodríguez (5 años C)
 };
 
-export const INFANTIL_PATIO_NOVEMBER_2026 = {
-  2: null,  // Lunes 2 (Festivo)
-  3: "A",   // Martes 3
-  4: "B",   // Miércoles 4
-  5: "C",   // Jueves 5
-  6: "A",   // Viernes 6
-  9: null,  // Lunes 9 (Festivo Almudena)
-  10: "B",  // Martes 10
-  11: "C",  // Miércoles 11
-  12: "A",  // Jueves 12
-  13: "B",  // Viernes 13
-  16: "C",  // Lunes 16
-  17: "A",  // Martes 17
-  18: "B",  // Miércoles 18
-  19: "C",  // Jueves 19
-  20: "A",  // Viernes 20
-  23: "B",  // Lunes 23
-  24: "C",  // Martes 24
-  25: "A",  // Miércoles 25
-  26: "B",  // Jueves 26
-  27: "C",  // Viernes 27
-  30: "A"   // Lunes 30
+export const MADRID_FESTIVOS_Y_NO_LECTIVOS_2026_2027 = {
+  "2026-10-12": "Fiesta Nacional",
+  "2026-11-02": "Todos los Santos",
+  "2026-11-09": "La Almudena",
+  "2026-12-07": "Día no lectivo",
+  "2026-12-08": "Inmaculada Concepción",
+  "2027-01-01": "Año Nuevo",
+  "2027-01-06": "Epifanía del Señor",
+  "2027-02-25": "Día no lectivo",
+  "2027-02-26": "Día no lectivo",
+  "2027-03-19": "Día no lectivo",
+  "2027-05-03": "Comunidad de Madrid",
+  "2027-05-17": "San Isidro (local)"
 };
+
+function toIsoLocalDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+export function getMadridNonTeachingReason(targetDate) {
+  if (!targetDate) return null;
+  const dow = targetDate.getDay();
+  if (dow === 0 || dow === 6) return "Fin de semana";
+  const iso = toIsoLocalDate(targetDate);
+  if (MADRID_FESTIVOS_Y_NO_LECTIVOS_2026_2027[iso]) {
+    return MADRID_FESTIVOS_Y_NO_LECTIVOS_2026_2027[iso];
+  }
+  // Vacaciones de Navidad: 23 dic 2026 al 7 ene 2027
+  if (iso >= "2026-12-23" && iso <= "2027-01-07") return "Vacaciones de Navidad";
+  // Vacaciones de Semana Santa: 22 mar 2027 al 29 mar 2027
+  if (iso >= "2027-03-22" && iso <= "2027-03-29") return "Semana Santa";
+  return null;
+}
+
+export const INFANTIL_PATIO_NOVEMBER_2026 = {
+  2: null, 3: "A", 4: "B", 5: "C", 6: "A",
+  9: null, 10: "B", 11: "C", 12: "A", 13: "B",
+  16: "C", 17: "A", 18: "B", 19: "C", 20: "A",
+  23: "B", 24: "C", 25: "A", 26: "B", 27: "C",
+  30: "A"
+};
+
+export function getInfantilPatioLetterForDate(targetDate) {
+  if (!targetDate) return null;
+  const d = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+  if (getMadridNonTeachingReason(d)) return null;
+
+  // Ancla verificada: Martes 3 de noviembre de 2026 = Turno "A" (índice 0)
+  const anchor = new Date(2026, 10, 3);
+  const letters = ["A", "B", "C"];
+
+  if (d.getTime() === anchor.getTime()) return "A";
+
+  if (d > anchor) {
+    let steps = 0;
+    const cur = new Date(anchor);
+    while (cur < d) {
+      cur.setDate(cur.getDate() + 1);
+      if (!getMadridNonTeachingReason(cur)) steps++;
+    }
+    return letters[steps % 3];
+  } else {
+    let steps = 0;
+    const cur = new Date(anchor);
+    while (cur > d) {
+      cur.setDate(cur.getDate() - 1);
+      if (!getMadridNonTeachingReason(cur)) steps++;
+    }
+    return letters[((0 - steps) % 3 + 3) % 3];
+  }
+}
 
 export function getInfantilPatioInfo(teacherId, targetDate = new Date()) {
   const teacherLetter = INFANTIL_TUTOR_LETTERS[teacherId] || null;
-  const dayOfMonth = targetDate.getDate();
-  const month = targetDate.getMonth(); // 10 = Noviembre (0-indexed)
-  
-  // Turno asignado para el día en noviembre
-  const activeLetter = (month === 10) ? (INFANTIL_PATIO_NOVEMBER_2026[dayOfMonth] || null) : null;
-  const hasDutyToday = Boolean(teacherLetter && activeLetter && teacherLetter === activeLetter);
+  const activeLetter = getInfantilPatioLetterForDate(targetDate);
+  let hasDutyToday = Boolean(teacherLetter && activeLetter && teacherLetter === activeLetter);
+  let swapNote = null;
+
+  // Soporte de permutas puntuales guardadas en localStorage ("sb_patio_swaps")
+  if (typeof localStorage !== "undefined") {
+    try {
+      const rawSwaps = localStorage.getItem("sb_patio_swaps");
+      if (rawSwaps) {
+        const swaps = JSON.parse(rawSwaps);
+        const iso = toIsoLocalDate(targetDate);
+        const todaySwap = swaps?.[iso];
+        if (todaySwap) {
+          if (todaySwap.coverTeacherId === teacherId) {
+            hasDutyToday = true;
+            swapNote = `Cubres turno de ${todaySwap.originalName || "compañero/a"}`;
+          } else if (todaySwap.originalTeacherId === teacherId) {
+            hasDutyToday = false;
+            swapNote = `Turno cedido a ${todaySwap.coverName || "compañero/a"}`;
+          }
+        }
+      }
+    } catch {}
+  }
 
   return {
     teacherLetter,
     activeLetter,
     hasDutyToday,
+    swapNote,
     isInfantilTutor: Boolean(teacherLetter)
   };
 }
 
-export function getInfantilPatioLetterForDate(targetDate) {
-  if (!targetDate) return null;
-  const dayOfMonth = targetDate.getDate();
-  const month = targetDate.getMonth();
-  if (month === 10) {
-    return INFANTIL_PATIO_NOVEMBER_2026[dayOfMonth] || null;
+export function getInfantilPatioWeeksForMonth(year, monthIndex) {
+  const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+  const mShort = monthNames[monthIndex] || "";
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+  const weeks = [];
+  let currentWeekDays = null;
+
+  for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+    const dt = new Date(year, monthIndex, dayNum);
+    const dow = dt.getDay();
+    if (dow === 0 || dow === 6) continue;
+    const dayIdx = dow - 1; // 0..4
+    if (!currentWeekDays || dayIdx === 0) {
+      if (currentWeekDays) weeks.push(currentWeekDays);
+      currentWeekDays = [
+        { dayIdx: 0, dayName: "Lunes", date: null, turno: null },
+        { dayIdx: 1, dayName: "Martes", date: null, turno: null },
+        { dayIdx: 2, dayName: "Miércoles", date: null, turno: null },
+        { dayIdx: 3, dayName: "Jueves", date: null, turno: null },
+        { dayIdx: 4, dayName: "Viernes", date: null, turno: null }
+      ];
+    }
+    const reason = getMadridNonTeachingReason(dt);
+    const turno = reason ? null : getInfantilPatioLetterForDate(dt);
+    currentWeekDays[dayIdx] = {
+      dayIdx,
+      dayName: dayNames[dayIdx],
+      date: dayNum,
+      turno,
+      ...(reason ? { festivo: true, note: reason } : {})
+    };
   }
-  return null;
+  if (currentWeekDays) weeks.push(currentWeekDays);
+
+  return weeks.map((wDays, idx) => {
+    const validDates = wDays.map(d => d.date).filter(Boolean);
+    const firstD = validDates[0];
+    const lastD = validDates[validDates.length - 1];
+    const rangeStr = firstD === lastD ? `${firstD} ${mShort}` : `${firstD} al ${lastD} ${mShort}`;
+    return {
+      id: idx + 1,
+      label: `Semana ${idx + 1} · ${rangeStr}`,
+      days: wDays
+    };
+  });
 }
 
-export const INFANTIL_PATIO_WEEKS_NOVEMBER_2026 = [
-  {
-    id: 1,
-    label: "Semana 1 · 2 al 6 Nov",
-    days: [
-      { dayIdx: 0, dayName: "Lunes", date: 2, turno: null, festivo: true, note: "Todos los Santos" },
-      { dayIdx: 1, dayName: "Martes", date: 3, turno: "A" },
-      { dayIdx: 2, dayName: "Miércoles", date: 4, turno: "B" },
-      { dayIdx: 3, dayName: "Jueves", date: 5, turno: "C" },
-      { dayIdx: 4, dayName: "Viernes", date: 6, turno: "A" }
-    ]
-  },
-  {
-    id: 2,
-    label: "Semana 2 · 9 al 13 Nov",
-    days: [
-      { dayIdx: 0, dayName: "Lunes", date: 9, turno: null, festivo: true, note: "La Almudena" },
-      { dayIdx: 1, dayName: "Martes", date: 10, turno: "B" },
-      { dayIdx: 2, dayName: "Miércoles", date: 11, turno: "C" },
-      { dayIdx: 3, dayName: "Jueves", date: 12, turno: "A" },
-      { dayIdx: 4, dayName: "Viernes", date: 13, turno: "B" }
-    ]
-  },
-  {
-    id: 3,
-    label: "Semana 3 · 16 al 20 Nov",
-    days: [
-      { dayIdx: 0, dayName: "Lunes", date: 16, turno: "C" },
-      { dayIdx: 1, dayName: "Martes", date: 17, turno: "A" },
-      { dayIdx: 2, dayName: "Miércoles", date: 18, turno: "B" },
-      { dayIdx: 3, dayName: "Jueves", date: 19, turno: "C" },
-      { dayIdx: 4, dayName: "Viernes", date: 20, turno: "A" }
-    ]
-  },
-  {
-    id: 4,
-    label: "Semana 4 · 23 al 27 Nov",
-    days: [
-      { dayIdx: 0, dayName: "Lunes", date: 23, turno: "B" },
-      { dayIdx: 1, dayName: "Martes", date: 24, turno: "C" },
-      { dayIdx: 2, dayName: "Miércoles", date: 25, turno: "A" },
-      { dayIdx: 3, dayName: "Jueves", date: 26, turno: "B" },
-      { dayIdx: 4, dayName: "Viernes", date: 27, turno: "C" }
-    ]
-  },
-  {
-    id: 5,
-    label: "Semana 5 · 30 Nov",
-    days: [
-      { dayIdx: 0, dayName: "Lunes", date: 30, turno: "A" },
-      { dayIdx: 1, dayName: "Martes", date: null, turno: null },
-      { dayIdx: 2, dayName: "Miércoles", date: null, turno: null },
-      { dayIdx: 3, dayName: "Jueves", date: null, turno: null },
-      { dayIdx: 4, dayName: "Viernes", date: null, turno: null }
-    ]
-  }
-];
+const _nowForPatioInit = new Date();
+export const INFANTIL_PATIO_WEEKS_NOVEMBER_2026 = getInfantilPatioWeeksForMonth(
+  _nowForPatioInit.getFullYear(),
+  _nowForPatioInit.getMonth()
+);
 
 // DISTRIBUCIÓN OFICIAL DE PATIOS Y FILAS DE EDUCACIÓN PRIMARIA (10:30 - 11:00) 2026/27
 export const PRIMARIA_PATIO_ASSIGNMENTS = {

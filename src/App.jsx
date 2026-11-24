@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import IconRenderer from './components/IconHelper';
 import ErrorBoundary from './components/ErrorBoundary';
+import SubstitutionEngineTab from './components/SubstitutionEngineTab';
 import { DUA_CATEGORIES, DUA_PROMPTS } from './data/duaPrompts';
 import {
   SCHOOL_TEACHERS,
@@ -128,18 +129,21 @@ function getTeacherLiveStatus(teacher, now = new Date()) {
     return { state: "off", label: "Fuera de horario" };
   }
   const dayIdx = String(day - 1);
-  if (teacher.id === "dasenjo") {
-    const sessions = DANIEL_ASENJO_CUSTOM_TIMETABLE[dayIdx] || [];
+  if (teacher.id === "dasenjo" || teacher.id === "mvazquez") {
+    const customTable = teacher.id === "dasenjo" ? DANIEL_ASENJO_CUSTOM_TIMETABLE : MARIA_VAZQUEZ_CUSTOM_TIMETABLE;
+    const sessions = customTable[dayIdx] || [];
     for (let i = 0; i < sessions.length; i++) {
       const ses = sessions[i];
       const [sH, sM] = ses.start.split(":").map(Number);
       const [eH, eM] = ses.end.split(":").map(Number);
       if (mins >= sH * 60 + sM && mins < eH * 60 + eM) {
-        return { state: "class", label: `${ses.group || ses.room || "Sesión"} · ${ses.label || "PT"}` };
+        const g = ses.aula ? formatShortAula(ses.aula) : "Sesión";
+        const m = ses.materia ? formatShortSubject(ses.materia) : "Apoyo";
+        return { state: "class", label: `${g} · ${m}` };
       }
     }
     if (mins >= 10 * 60 + 30 && mins < 11 * 60) return { state: "break", label: "Recreo" };
-    return { state: "free", label: "Libre / Coordinación" };
+    return { state: "free", label: "Coordinación / Apoyo" };
   }
   const isInf = teacher.stage === "Infantil";
   if (!isInf && mins >= 10 * 60 + 30 && mins < 11 * 60) return { state: "break", label: "Recreo" };
@@ -148,9 +152,14 @@ function getTeacherLiveStatus(teacher, now = new Date()) {
   if (pId === "REC") return { state: "break", label: "Recreo" };
   if (pId === "COM") return { state: "lunch", label: "Comedor" };
   const slot = TEACHER_SCHEDULES[teacher.id]?.[dayIdx]?.[pId];
-  if (!slot) return { state: "free", label: "Libre / Gestión" };
-  const aula = slot.aula ? formatShortAula(slot.aula) : "";
-  const mat = slot.materia ? formatShortSubject(slot.materia) : "";
+  if (!slot) return { state: "free", label: "Sin clase lectiva" };
+  const [typeCode, rawAula, rawMat] = Array.isArray(slot) ? slot : ["L", slot.aula, slot.materia];
+  if (typeCode === "D") {
+    return { state: "support", label: rawMat ? `Disp. · ${formatShortSubject(rawMat)}` : "Disponible / Guardia" };
+  }
+  if (typeCode !== "L") return { state: "free", label: "Sin clase lectiva" };
+  const aula = rawAula && rawAula !== "Sin Aula" ? formatShortAula(rawAula) : "";
+  const mat = rawMat ? formatShortSubject(rawMat) : "";
   const txt = [aula, mat].filter(Boolean).join(" · ");
   return { state: "class", label: txt || "En clase" };
 }
@@ -998,12 +1007,29 @@ const MondayCountdownPill = React.memo(function MondayCountdownPill() {
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [revealSecret, setRevealSecret] = useState(false);
 
+  const customCfg = (() => {
+    try {
+      const raw = localStorage.getItem("sb_custom_countdown");
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  })();
+
+  const targetMs = customCfg?.targetMs || MONDAY_COUNTDOWN_TARGET;
+  const secretLabel = customCfg?.secret || "ELV";
+  // Ocultar automáticamente pasadas 6 horas del vencimiento para no dejar ruido visual fijo
+  const isExpiredLongAgo = nowMs - targetMs > 6 * 60 * 60 * 1000;
+
   useEffect(() => {
+    if (isExpiredLongAgo) return;
     const timer = setInterval(() => setNowMs(Date.now()), 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isExpiredLongAgo]);
 
-  const diffMs = Math.max(0, MONDAY_COUNTDOWN_TARGET - nowMs);
+  if (isExpiredLongAgo) return null;
+
+  const diffMs = Math.max(0, targetMs - nowMs);
   const isFinished = diffMs === 0;
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
@@ -1015,16 +1041,16 @@ const MondayCountdownPill = React.memo(function MondayCountdownPill() {
     <button
       type="button"
       onClick={() => setRevealSecret((prev) => !prev)}
-      className="group relative flex items-center gap-2 px-3 py-1.5 rounded-2xl border border-amber-300/80 dark:border-amber-500/30 bg-amber-50/90 dark:bg-amber-500/10 text-amber-900 dark:text-amber-200 text-xs font-bold shadow-2xs hover:scale-[1.01] active:scale-95 transition-all cursor-pointer"
+      className="group relative flex items-center gap-2 px-3 py-1.5 rounded-2xl border border-tau bg-tau-soft text-tau text-xs font-bold shadow-2xs hover:scale-[1.01] active:scale-95 transition-all cursor-pointer"
     >
       <span className="font-mono font-extrabold text-[11px] tabular-nums">
         {isFinished
           ? "00d 00h 00m 00s"
           : `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`}
       </span>
-      {(revealSecret || isFinished) && (
-        <span className="ml-0.5 px-1.5 py-0.5 rounded-md bg-amber-900 text-amber-50 dark:bg-amber-300 dark:text-amber-950 font-mono text-[10px] font-black tracking-widest animate-pulse">
-          ELV
+      {(revealSecret || isFinished) && secretLabel && (
+        <span className="ml-0.5 px-1.5 py-0.5 rounded-md bg-tau text-white font-mono text-[10px] font-black tracking-widest">
+          {secretLabel}
         </span>
       )}
     </button>
@@ -2497,6 +2523,8 @@ export function App() {
     try { return localStorage.getItem("sb_smart_alerts_enabled") === "true"; } catch { return false; }
   });
   const notifiedSlotsRef = React.useRef(new Set());
+  const [radarStageFilter, setRadarStageFilter] = useState("all");
+  const [onlyMyStageFilter, setOnlyMyStageFilter] = useState(false);
 
   // Hash criptográfico SHA-256: la clave en texto plano NUNCA reside en el código
   const ADMIN_PIN_HASH = "409dbe6c27ffcbbdf28f41b920b91d22ded884bf0122b3b2bdbd78bdaee2b2c4";
@@ -3676,9 +3704,12 @@ export function App() {
         const diff = p.start - nowMins;
         if (diff > 0 && diff <= 5 && todaySched[p.id]) {
           const slot = todaySched[p.id];
-          const aula = slot.aula ? formatShortAula(slot.aula) : "";
-          const mat = slot.materia ? formatShortSubject(slot.materia) : "Clase";
-          fireAlert(p.id, `Próxima clase en ${diff} min`, [aula, mat].filter(Boolean).join(" · "));
+          const [typeCode, rawAula, rawMat] = Array.isArray(slot) ? slot : ["L", slot.aula, slot.materia];
+          if (typeCode === "L" || typeCode === "D") {
+            const aula = rawAula && rawAula !== "Sin Aula" ? formatShortAula(rawAula) : "";
+            const mat = rawMat ? formatShortSubject(rawMat) : (typeCode === "D" ? "Guardia / Apoyo" : "Clase");
+            fireAlert(p.id, `Próxima sesión en ${diff} min`, [aula, mat].filter(Boolean).join(" · "));
+          }
         }
       }
     };
@@ -3700,7 +3731,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-100/90 via-slate-50 to-amber-50/25 dark:from-[#070913] dark:via-[#070913] dark:to-[#0a0f1f] text-slate-900 dark:text-slate-100 font-sans selection:bg-indigo-500 selection:text-white pb-16 md:pb-0 transition-colors">
+    <div className="min-h-screen flex flex-col bg-[#FAF9F7] dark:bg-[#070913] text-stone-900 dark:text-slate-100 font-sans selection:bg-[#6D4C3D] selection:text-white pb-16 md:pb-0 transition-colors">
       
       {/* BANNER FLOTANTE DE ALERTA URGENTE */}
       {urgentNotice && (
@@ -3763,10 +3794,10 @@ export function App() {
               </button>
               <div className="shrink min-w-0">
                 <div className="flex items-center gap-1.5 sm:gap-2">
-                  <h1 className="font-extrabold text-sm sm:text-base md:text-lg text-slate-900 dark:text-white tracking-tight leading-none truncate">
+                  <h1 className="font-extrabold text-sm sm:text-base md:text-lg text-stone-900 dark:text-white tracking-tight leading-none truncate">
                     San Buenaventura
                   </h1>
-                  <span className="hidden lg:inline-flex text-[10px] font-bold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-200/60 dark:border-indigo-500/20 uppercase tracking-wider">
+                  <span className="hidden lg:inline-flex text-[10px] font-bold bg-tau-soft text-tau px-2 py-0.5 rounded-md border border-tau uppercase tracking-wider">
                     Portal Docente
                   </span>
                 </div>
@@ -3813,18 +3844,32 @@ export function App() {
               </button>
             )}
 
-            {/* BOTÓN HORARIOS & RADAR EN VIVO (ACCIÓN PRINCIPAL) */}
+            {/* BOTÓN HORARIOS, RADAR & SUSTITUCIONES (ACCIÓN PRINCIPAL TAU) */}
             <button
               onClick={() => {
                 setSelectedRadarDay(activeDayForSchedule);
                 setSelectedRadarPeriod(livePeriodIdNow);
                 setIsScheduleCenterOpen(true);
               }}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition shadow-xs active:scale-95"
-              title="Abrir Centro de Horarios Reales y Radar de Aulas/Apoyos en Vivo (Alt+H)"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-tau text-white text-xs font-extrabold transition shadow-xs active:scale-95 cursor-pointer"
+              title="Abrir Centro de Horarios, Radar 27 Aulas y Motor de Sustituciones (Alt+H)"
             >
-              <IconRenderer name="Compass" className="w-3.5 h-3.5 text-emerald-100 shrink-0" />
+              <IconRenderer name="Compass" className="w-3.5 h-3.5 text-amber-100 shrink-0" />
               <span className="hidden sm:inline">Horarios & Radar</span>
+            </button>
+
+            {/* ACCESO DIRECTO A MOTOR DE SUSTITUCIONES */}
+            <button
+              onClick={() => {
+                setSelectedRadarDay(activeDayForSchedule);
+                setScheduleCenterTab("substitutions");
+                setIsScheduleCenterOpen(true);
+              }}
+              className="hidden md:flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-tau-soft hover:opacity-90 text-tau border border-tau text-xs font-extrabold transition active:scale-95 cursor-pointer"
+              title="Abrir Generador Inteligente de Sustituciones y Salidas"
+            >
+              <IconRenderer name="RefreshCw" className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden xl:inline">Sustituciones</span>
             </button>
 
             {/* BOTÓN KIT DE AULA INTERACTIVO (INCLUYE DUA, TEMPORIZADOR Y NOTAS) */}
@@ -4272,14 +4317,14 @@ export function App() {
         <main className="flex-1 min-w-0 p-4 sm:p-6 pb-28 sm:pb-8 space-y-5 overflow-y-auto">
           
           {/* 1. CABECERA COCKPIT DIARIO + HORARIO EN VIVO + ACCESOS RÁPIDOS BENTO */}
-          <section className="bg-gradient-to-br from-white via-white to-amber-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/20 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 border-t-2 border-t-amber-600/35 dark:border-t-amber-500/30 shadow-xs transition-all space-y-4">
+          <section className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-stone-200/90 dark:border-slate-800 border-t-2 border-t-[#6D4C3D]/60 shadow-2xs transition-all space-y-3.5">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight">
+                  <h2 className="font-extrabold text-base sm:text-lg text-stone-900 dark:text-white tracking-tight">
                     {greetingText}
                   </h2>
-                  <span className="text-[11px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/15 border border-indigo-200/70 dark:border-indigo-500/30 px-2.5 py-0.5 rounded-full capitalize">
+                  <span className="text-[11px] font-bold text-tau bg-tau-soft border border-tau px-2.5 py-0.5 rounded-full capitalize">
                     📅 {formattedTodayDate}
                   </span>
 
@@ -4779,27 +4824,44 @@ export function App() {
 
               return (
                 <div>
-                  <div className="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-slate-100 dark:border-slate-800/80 pb-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-stone-100 dark:border-slate-800/80 pb-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 sm:p-2.5 rounded-2xl bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 shrink-0">
+                      <div className="p-2 sm:p-2.5 rounded-2xl bg-tau-soft text-tau border border-tau shrink-0">
                         <IconRenderer name="ClipboardList" className="w-5 h-5" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h2 className="font-display font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">
+                          <h2 className="font-display font-extrabold text-base sm:text-lg text-stone-900 dark:text-white">
                             Programación Semanal del Claustro
                           </h2>
                           {currentSelectedPlan?.isCurrent && (
-                            <span className="text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 font-extrabold px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-500/40">
-                              🌟 Semana en Curso
+                            <span className="text-[10px] bg-tau-soft text-tau font-extrabold px-2 py-0.5 rounded-full border border-tau">
+                              Semana en Curso
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Planificación, reuniones y correo enviados por Dirección</p>
+                        <p className="text-xs text-stone-500 dark:text-slate-400">Planificación sintética y circular de Dirección</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                      {/* Filtro rápido Mi Etapa */}
+                      {myTeacherObj && (
+                        <button
+                          type="button"
+                          onClick={() => setOnlyMyStageFilter(prev => !prev)}
+                          className={`px-2.5 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer flex items-center gap-1.5 ${
+                            onlyMyStageFilter
+                              ? "bg-tau text-white border-transparent shadow-2xs"
+                              : "bg-stone-100 dark:bg-slate-800 text-stone-700 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:bg-stone-200"
+                          }`}
+                          title="Atenuar eventos exclusivos de otra etapa para enfocar los tuyos"
+                        >
+                          <IconRenderer name="Filter" className="w-3.5 h-3.5" />
+                          <span>Mi etapa ({myTeacherObj.stage})</span>
+                        </button>
+                      )}
+
                       {/* Selector de Semanas Guardadas (Historial) */}
                       <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 max-w-[220px] sm:max-w-xs">
                         <IconRenderer name="History" className="w-3.5 h-3.5 text-slate-500 shrink-0" />
@@ -4965,12 +5027,27 @@ export function App() {
 
                               <div className="flex-1 min-w-0">
                                 {dayData.items && dayData.items.length > 0 ? (
-                                  <ul className="space-y-1 text-xs text-slate-700 dark:text-slate-300">
-                                    {dayData.items.map((item, iIdx) => (
-                                      <li key={iIdx} className="leading-snug break-words">
-                                        {renderFormattedText(item)}
-                                      </li>
-                                    ))}
+                                  <ul className="space-y-1 text-xs text-stone-700 dark:text-slate-300">
+                                    {dayData.items.map((item, iIdx) => {
+                                      let isDimmed = false;
+                                      if (onlyMyStageFilter && myTeacherObj) {
+                                        const low = item.toLowerCase();
+                                        const mentionsInf = /\binf\.|\binfantil\b|\b[345]\s*años|\b4–5\s*años|\boratorio\b/i.test(low);
+                                        const mentionsPrim = /\b[1-6]\.º|\bprimaria\b|\bbeti jai\b|\bcross\b|\blifeteen\b|\bcambridge\b/i.test(low);
+                                        if (myTeacherObj.stage === "Infantil" && mentionsPrim && !mentionsInf) isDimmed = true;
+                                        if (myTeacherObj.stage !== "Infantil" && mentionsInf && !mentionsPrim) isDimmed = true;
+                                      }
+                                      return (
+                                        <li
+                                          key={iIdx}
+                                          className={`leading-snug break-words transition-opacity ${
+                                            isDimmed ? "opacity-35" : "opacity-100 font-medium"
+                                          }`}
+                                        >
+                                          {renderFormattedText(item)}
+                                        </li>
+                                      );
+                                    })}
                                   </ul>
                                 ) : (
                                   <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
@@ -4989,7 +5066,7 @@ export function App() {
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <button
                               onClick={() => setIsEmailViewExpanded(!isEmailViewExpanded)}
-                              className="flex items-center gap-2 text-xs font-extrabold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 bg-indigo-50/70 dark:bg-indigo-500/10 px-3 py-1.5 rounded-xl border border-indigo-200/70 dark:border-indigo-500/25 transition"
+                              className="flex items-center gap-2 text-xs font-extrabold text-tau hover:opacity-90 bg-tau-soft px-3 py-1.5 rounded-xl border border-tau transition cursor-pointer"
                             >
                               <IconRenderer name="Mail" className="w-3.5 h-3.5" />
                               <span>{isEmailViewExpanded ? "Ocultar carta semanal del claustro" : "📖 Leer correo completo de la semana"}</span>
@@ -5211,17 +5288,20 @@ export function App() {
           <span>Recogidas</span>
         </a>
 
-        {/* 5. Alumnos Extraescolares */}
-        <a
-          href="https://alumnos-extraescolares-csb.vercel.app/"
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-[9px] p-1 rounded-xl active:scale-95 transition"
-          title="Alumnos Extraescolares"
+        {/* 5. Horarios & Sustituciones */}
+        <button
+          type="button"
+          onClick={() => {
+            setSelectedRadarDay(activeDayForSchedule);
+            setSelectedRadarPeriod(livePeriodIdNow);
+            setIsScheduleCenterOpen(true);
+          }}
+          className="flex flex-col items-center gap-0.5 text-tau font-extrabold text-[9px] p-1 rounded-xl active:scale-95 transition cursor-pointer"
+          title="Horarios, Radar y Sustituciones"
         >
-          <IconRenderer name="Users" className="w-4 h-4" />
-          <span>Extraesc.</span>
-        </a>
+          <IconRenderer name="Compass" className="w-4 h-4" />
+          <span>Horarios</span>
+        </button>
 
         {/* 6. Menú General */}
         <button
@@ -5248,23 +5328,23 @@ export function App() {
             className="w-full max-w-6xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Cabecera del Centro de Horarios */}
-            <div className="px-5 py-4 bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-700 text-white flex flex-wrap items-center justify-between gap-3">
+            {/* Cabecera del Centro de Horarios (Tau Editorial) */}
+            <div className="px-5 py-3.5 bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 border-t-[3px] border-t-[#6D4C3D] flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center shadow-inner">
-                  <IconRenderer name="Calendar" className="w-5 h-5 text-amber-300" />
+                <div className="w-9 h-9 rounded-xl bg-tau-soft border border-tau flex items-center justify-center">
+                  <IconRenderer name="Calendar" className="w-4 h-4 text-tau" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-extrabold text-base sm:text-lg leading-tight">
-                      Horarios Oficiales & Radar en Vivo · Primaria
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-extrabold text-sm sm:text-base text-stone-900 dark:text-white leading-tight">
+                      Centro de Horarios, Radar & Sustituciones
                     </h3>
-                    <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-400/20 text-emerald-200 border border-emerald-300/30">
-                      ● 26 Docentes · 18 Aulas
+                    <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-tau-soft text-tau border border-tau">
+                      38 Docentes · 27 Aulas (Infantil y Primaria)
                     </span>
                   </div>
-                  <p className="text-[11px] text-indigo-100">
-                    Consulta quién está en cada aula ahora mismo, qué docentes están en apoyo/disponibles o explora cualquier horario (Alt+H)
+                  <p className="text-[11px] text-stone-500 dark:text-slate-400">
+                    Radar en tiempo real, simulador automático de sustituciones/salidas y cuadrantes oficiales (Alt+H)
                   </p>
                 </div>
               </div>
@@ -5274,7 +5354,7 @@ export function App() {
                   href="https://drive.google.com/drive/folders/1d2feN-ffN6C0-m0-2312141q1a4a24D1"
                   target="_blank"
                   rel="noreferrer"
-                  className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold border border-white/20 transition"
+                  className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-stone-700 dark:text-slate-200 text-xs font-bold border border-stone-200 dark:border-slate-700 transition"
                   title="Abrir carpeta oficial de Google Drive con los cuadrantes originales"
                 >
                   <IconRenderer name="ExternalLink" className="w-3.5 h-3.5" />
@@ -5283,7 +5363,7 @@ export function App() {
                 <button
                   type="button"
                   onClick={() => setIsScheduleCenterOpen(false)}
-                  className="px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-xs transition"
+                  className="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-stone-700 dark:text-slate-200 font-bold text-xs transition cursor-pointer"
                 >
                   ✕ Cerrar
                 </button>
@@ -5291,25 +5371,36 @@ export function App() {
             </div>
 
             {/* Selector de Pestañas */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-2 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-xs font-extrabold">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 p-2 bg-stone-100/80 dark:bg-slate-950 border-b border-stone-200 dark:border-slate-800 text-xs font-extrabold">
               <button
                 type="button"
                 onClick={() => setScheduleCenterTab("radar")}
-                className={`py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer ${
                   scheduleCenterTab === "radar"
-                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs border border-indigo-200/60 dark:border-indigo-500/30"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    ? "bg-white dark:bg-slate-900 text-tau shadow-2xs border border-tau"
+                    : "text-stone-600 dark:text-slate-400 hover:text-stone-900 dark:hover:text-white"
                 }`}
               >
-                <span>📡 Radar en Vivo</span>
+                <span>📡 Radar (27)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setScheduleCenterTab("substitutions")}
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                  scheduleCenterTab === "substitutions"
+                    ? "bg-white dark:bg-slate-900 text-tau shadow-2xs border border-tau"
+                    : "text-stone-600 dark:text-slate-400 hover:text-stone-900 dark:hover:text-white"
+                }`}
+              >
+                <span>🔄 Sustituciones</span>
               </button>
               <button
                 type="button"
                 onClick={() => setScheduleCenterTab("teacher")}
-                className={`py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer ${
                   scheduleCenterTab === "teacher"
-                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs border border-indigo-200/60 dark:border-indigo-500/30"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    ? "bg-white dark:bg-slate-900 text-tau shadow-2xs border border-tau"
+                    : "text-stone-600 dark:text-slate-400 hover:text-stone-900 dark:hover:text-white"
                 }`}
               >
                 <span>👨‍🏫 Por Profesor</span>
@@ -5317,29 +5408,51 @@ export function App() {
               <button
                 type="button"
                 onClick={() => setScheduleCenterTab("classroom")}
-                className={`py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer ${
                   scheduleCenterTab === "classroom"
-                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs border border-indigo-200/60 dark:border-indigo-500/30"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    ? "bg-white dark:bg-slate-900 text-tau shadow-2xs border border-tau"
+                    : "text-stone-600 dark:text-slate-400 hover:text-stone-900 dark:hover:text-white"
                 }`}
               >
-                <span>🎓 Por Curso / Aula</span>
+                <span>🎓 Por Aula</span>
               </button>
               <button
                 type="button"
                 onClick={() => setScheduleCenterTab("support")}
-                className={`py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition ${
+                className={`py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer col-span-2 sm:col-span-1 ${
                   scheduleCenterTab === "support"
-                    ? "bg-white dark:bg-slate-900 text-amber-700 dark:text-amber-400 shadow-xs border border-amber-300 dark:border-amber-500/40"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    ? "bg-white dark:bg-slate-900 text-tau shadow-2xs border border-tau"
+                    : "text-stone-600 dark:text-slate-400 hover:text-stone-900 dark:hover:text-white"
                 }`}
               >
-                <span>🤝 Horario de Apoyo</span>
+                <span>🤝 Apoyos</span>
               </button>
             </div>
 
             {/* Contenido de las Pestañas */}
             <div className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1">
+              {/* TAB SUSTITUCIONES INTELIGENTES */}
+              {scheduleCenterTab === "substitutions" && (
+                <SubstitutionEngineTab
+                  teachers={SCHOOL_TEACHERS}
+                  primariaClassrooms={PRIMARIA_CLASSROOMS}
+                  infantilClassrooms={INFANTIL_CLASSROOMS}
+                  schedules={TEACHER_SCHEDULES}
+                  periodColumns={SCHEDULE_PERIOD_COLUMNS}
+                  supportAssignments={SCHOOL_SUPPORT_ASSIGNMENTS}
+                  initialDayIdx={selectedRadarDay}
+                  formatShortAula={formatShortAula}
+                  formatShortSubject={formatShortSubject}
+                  onSelectTeacher={(id) => {
+                    setSelectedViewTeacherId(id);
+                    setScheduleCenterTab("teacher");
+                  }}
+                  onNotifyToast={(msg) => {
+                    setToastMessage(msg);
+                    setTimeout(() => setToastMessage(null), 3200);
+                  }}
+                />
+              )}
               {/* TAB 1: RADAR EN VIVO */}
               {scheduleCenterTab === "radar" && (() => {
                 const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
@@ -5466,70 +5579,167 @@ export function App() {
                       )}
                     </div>
 
-                    {/* Bloque 2: Mapa en vivo de las 18 Aulas de Primaria */}
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="font-extrabold text-xs sm:text-sm uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                          <span>🏫 Mapa en Vivo de las 18 Aulas de Primaria</span>
-                          <span className="text-[11px] font-normal text-slate-500 dark:text-slate-400">
-                            (Haz clic en cualquier aula para abrir el horario completo del grupo)
-                          </span>
+                    {/* Bloque 2: Mapa en vivo de las 27 Aulas (Infantil + Primaria) */}
+                    <div className="space-y-4">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <h4 className="font-extrabold text-xs sm:text-sm uppercase tracking-wider text-stone-700 dark:text-slate-300 flex items-center gap-2">
+                          <span>🏫 Mapa en Vivo de las 27 Aulas (Infantil y Primaria)</span>
                         </h4>
+                        <div className="flex items-center gap-1 bg-stone-100 dark:bg-slate-950 p-1 rounded-xl border border-stone-200 dark:border-slate-800 text-xs font-bold">
+                          {[
+                            { id: "all", label: "Todo (27)" },
+                            { id: "Infantil", label: "Infantil (9)" },
+                            { id: "Primaria", label: "Primaria (18)" }
+                          ].map(opt => (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              onClick={() => setRadarStageFilter(opt.id)}
+                              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+                                radarStageFilter === opt.id
+                                  ? "bg-tau text-white font-extrabold shadow-2xs"
+                                  : "text-stone-600 dark:text-slate-400 hover:text-stone-900"
+                              }`}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-                        {SCHOOL_CLASSROOMS.map((aula) => {
-                          const entries = classroomOccupation[aula] || [];
-                          return (
-                            <button
-                              key={aula}
-                              type="button"
-                              onClick={() => {
-                                setSelectedViewClassroom(aula);
-                                setScheduleCenterTab("classroom");
-                              }}
-                              className="text-left p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/80 hover:bg-indigo-50/70 dark:hover:bg-indigo-950/30 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 transition flex flex-col justify-between min-h-[92px] group"
-                            >
-                              <div className="flex items-center justify-between gap-1 mb-1.5">
-                                <span title={aula} className="px-2 py-0.5 rounded-lg text-[11px] font-black bg-indigo-600 text-white">
-                                  {formatShortAula(aula)}
+                      {/* Aulas de Educación Infantil (9) */}
+                      {(radarStageFilter === "all" || radarStageFilter === "Infantil") && (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-extrabold text-emerald-800 dark:text-emerald-300">
+                              👶 Educación Infantil (9 aulas)
+                            </span>
+                            {(() => {
+                              const todayLetter = getInfantilPatioLetterForDate(currentTime);
+                              return todayLetter ? (
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-900 dark:bg-emerald-500/20 dark:text-emerald-300">
+                                  🛝 Patio Infantil Hoy: Turno {todayLetter}
                                 </span>
-                                <span className="text-[10px] font-bold text-slate-400 group-hover:text-indigo-500">
-                                  Horario →
-                                </span>
-                              </div>
-                              {entries.length === 0 ? (
-                                <p className="text-[11px] text-slate-400 dark:text-slate-500 italic">
-                                  Especialidad externa / Sin registro
-                                </p>
-                              ) : (
-                                <div className="space-y-1">
-                                  {entries.map((item, i) => (
-                                    <div key={i} className="border-l-2 border-indigo-500 pl-1.5">
-                                      <p className="text-[11px] font-extrabold text-slate-900 dark:text-white leading-tight truncate">
-                                        {item.materia}
-                                      </p>
-                                      <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                        {item.teacher.name}
-                                      </p>
-                                      {(() => {
-                                        const aulaSupports = getSupportForSession(selectedRadarDay, selectedRadarPeriod, aula);
-                                        if (aulaSupports.length === 0) return null;
-                                        return (
-                                          <p className="text-[9.5px] text-amber-700 dark:text-amber-400 font-bold truncate flex items-center gap-0.5 mt-0.5">
-                                            <span>🤝</span>
-                                            <span className="truncate">{formatSupportText(aulaSupports)}</span>
+                              ) : null;
+                            })()}
+                          </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+                            {INFANTIL_CLASSROOMS.map((aula) => {
+                              const entries = classroomOccupation[aula] || [];
+                              const tutorObj = SCHOOL_TEACHERS.find(t => t.stage === "Infantil" && (t.dept || "").toLowerCase().includes(aula.toLowerCase()));
+                              return (
+                                <button
+                                  key={aula}
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedViewClassroom(aula);
+                                    setScheduleCenterTab("classroom");
+                                  }}
+                                  className="text-left p-3 rounded-2xl bg-emerald-50/40 dark:bg-emerald-950/20 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800/50 transition flex flex-col justify-between min-h-[88px] group cursor-pointer"
+                                >
+                                  <div className="flex items-center justify-between gap-1 mb-1.5">
+                                    <span className="px-2 py-0.5 rounded-lg text-[11px] font-black bg-emerald-700 text-white">
+                                      {formatShortAula(aula)}
+                                    </span>
+                                    <span className="text-[10px] font-bold text-stone-400 group-hover:text-emerald-700">
+                                      Aula →
+                                    </span>
+                                  </div>
+                                  {entries.length > 0 ? (
+                                    <div className="space-y-1">
+                                      {entries.map((item, i) => (
+                                        <div key={i} className="border-l-2 border-emerald-600 pl-1.5">
+                                          <p className="text-[11px] font-extrabold text-stone-900 dark:text-white leading-tight truncate">
+                                            {formatShortSubject(item.materia)}
                                           </p>
-                                        );
-                                      })()}
+                                          <p className="text-[10px] text-stone-500 dark:text-slate-400 truncate">
+                                            {item.teacher.name}
+                                          </p>
+                                        </div>
+                                      ))}
                                     </div>
-                                  ))}
-                                </div>
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
+                                  ) : (
+                                    <div>
+                                      <p className="text-[11px] font-bold text-stone-700 dark:text-slate-300 truncate">
+                                        Tutoría Infantil
+                                      </p>
+                                      {tutorObj && (
+                                        <p className="text-[10px] text-stone-500 dark:text-slate-400 truncate">
+                                          {tutorObj.name}
+                                        </p>
+                                      )}
+                                    </div>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Aulas de Educación Primaria (18) */}
+                      {(radarStageFilter === "all" || radarStageFilter === "Primaria") && (
+                        <div className="space-y-2">
+                          {radarStageFilter === "all" && (
+                            <span className="font-extrabold text-xs text-tau block">
+                              🎒 Educación Primaria (18 aulas)
+                            </span>
+                          )}
+                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+                            {PRIMARIA_CLASSROOMS.map((aula) => {
+                              const entries = classroomOccupation[aula] || [];
+                              return (
+                                <button
+                                  key={aula}
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedViewClassroom(aula);
+                                    setScheduleCenterTab("classroom");
+                                  }}
+                                  className="text-left p-3 rounded-2xl bg-stone-50 dark:bg-slate-950/80 hover:bg-tau-soft dark:hover:bg-slate-900 border border-stone-200 dark:border-slate-800 hover:border-stone-400 transition flex flex-col justify-between min-h-[92px] group cursor-pointer"
+                                >
+                                  <div className="flex items-center justify-between gap-1 mb-1.5">
+                                    <span title={aula} className="px-2 py-0.5 rounded-lg text-[11px] font-black bg-tau text-white">
+                                      {formatShortAula(aula)}
+                                    </span>
+                                    <span className="text-[10px] font-bold text-stone-400 group-hover:text-tau">
+                                      Horario →
+                                    </span>
+                                  </div>
+                                  {entries.length === 0 ? (
+                                    <p className="text-[11px] text-stone-400 dark:text-slate-500 italic">
+                                      Especialidad / Sin registro
+                                    </p>
+                                  ) : (
+                                    <div className="space-y-1">
+                                      {entries.map((item, i) => (
+                                        <div key={i} className="border-l-2 border-[#6D4C3D] pl-1.5">
+                                          <p className="text-[11px] font-extrabold text-stone-900 dark:text-white leading-tight truncate">
+                                            {item.materia}
+                                          </p>
+                                          <p className="text-[10px] text-stone-500 dark:text-slate-400 truncate">
+                                            {item.teacher.name}
+                                          </p>
+                                          {(() => {
+                                            const aulaSupports = getSupportForSession(selectedRadarDay, selectedRadarPeriod, aula);
+                                            if (aulaSupports.length === 0) return null;
+                                            return (
+                                              <p className="text-[9.5px] text-amber-700 dark:text-amber-400 font-bold truncate flex items-center gap-0.5 mt-0.5">
+                                                <span>🤝</span>
+                                                <span className="truncate">{formatSupportText(aulaSupports)}</span>
+                                              </p>
+                                            );
+                                          })()}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -7351,20 +7561,20 @@ export function App() {
           aria-label="Kit de Aula Interactivo"
         >
           <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            {/* Cabecera del Kit */}
-            <div className="px-5 py-4 bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700 text-white flex items-center justify-between gap-3">
+            {/* Cabecera del Kit (Tau Editorial) */}
+            <div className="px-5 py-3.5 bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 border-t-[3px] border-t-[#6D4C3D] flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-                  <IconRenderer name="Zap" className="w-5 h-5 text-amber-300" />
+                <div className="w-9 h-9 rounded-xl bg-tau-soft border border-tau flex items-center justify-center">
+                  <IconRenderer name="Zap" className="w-4 h-4 text-tau" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm sm:text-base leading-tight">Kit de Aula & Pizarra Digital</h3>
-                  <p className="text-[11px] text-indigo-100">Herramientas rápidas para proyectar en clase o gestionar tu día (Alt+K)</p>
+                  <h3 className="font-extrabold text-sm sm:text-base text-stone-900 dark:text-white leading-tight">Kit de Aula & Pizarra Digital</h3>
+                  <p className="text-[11px] text-stone-500 dark:text-slate-400">Herramientas rápidas para proyectar en clase o gestionar tu día (Alt+K)</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsClassroomKitOpen(false)}
-                className="p-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-xs transition"
+                className="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-stone-700 dark:text-slate-200 font-bold text-xs transition cursor-pointer"
               >
                 ✕ Cerrar
               </button>
@@ -7923,19 +8133,15 @@ export function App() {
                     <button
                       type="button"
                       onClick={() => {
-                        if (myTeacherObj) {
-                          setSelectedViewTeacherId(myTeacherObj.id);
-                          setScheduleCenterTab("teacher");
-                        } else {
-                          setScheduleCenterTab("radar");
-                        }
+                        setSelectedRadarDay(activeDayForSchedule);
+                        setScheduleCenterTab("substitutions");
                         setIsScheduleCenterOpen(true);
                         setIsCommandPaletteOpen(false);
                       }}
-                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-sky-50/70 dark:bg-sky-950/30 hover:bg-sky-100 dark:hover:bg-sky-900/40 border border-sky-200/80 dark:border-sky-500/30 text-left transition"
+                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-tau-soft hover:opacity-90 border border-tau text-left transition cursor-pointer"
                     >
-                      <span className="text-base">🗓️</span>
-                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">Mi Horario</span>
+                      <span className="text-base">🔄</span>
+                      <span className="text-xs font-extrabold text-tau">Sustituciones</span>
                     </button>
                     <button
                       type="button"
@@ -7948,10 +8154,10 @@ export function App() {
                           document.getElementById("programacion-semanal")?.scrollIntoView({ behavior: "smooth" });
                         }, 100);
                       }}
-                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-rose-50/70 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/40 border border-rose-200/80 dark:border-rose-500/30 text-left transition"
+                      className="flex items-center gap-2 p-2.5 rounded-2xl bg-rose-50/70 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/40 border border-rose-200/80 dark:border-rose-500/30 text-left transition cursor-pointer"
                     >
                       <span className="text-base">✉️</span>
-                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">Circular Semanal</span>
+                      <span className="text-xs font-extrabold text-stone-800 dark:text-slate-100">Circular Semanal</span>
                     </button>
                   </div>
                 </div>

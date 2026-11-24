@@ -4,7 +4,10 @@
 
 @layer base {
   :root {
-    --bg-primary: #090d16;
+    --bg-primary: #FAF9F7;
+    --tau-primary: #6D4C3D;
+    --tau-hover: #563B2F;
+    --tau-soft: #F6F1EE;
     --bg-card: rgba(15, 23, 42, 0.7);
     --border-color: rgba(255, 255, 255, 0.1);
   }
@@ -14,6 +17,32 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
+}
+
+/* Identidad Franciscana Tau Editorial */
+.bg-tau {
+  background-color: #6D4C3D;
+}
+.bg-tau:hover {
+  background-color: #563B2F;
+}
+.bg-tau-soft {
+  background-color: #F6F1EE;
+}
+.dark .bg-tau-soft {
+  background-color: rgba(180, 130, 105, 0.14);
+}
+.text-tau {
+  color: #6D4C3D;
+}
+.dark .text-tau {
+  color: #E2BFA9;
+}
+.border-tau {
+  border-color: rgba(109, 76, 61, 0.26);
+}
+.dark .border-tau {
+  border-color: rgba(226, 191, 169, 0.25);
 }
 
 /* Custom scrollbars (theme-aware) */
